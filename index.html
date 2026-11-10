@@ -773,6 +773,7 @@ canvas#world { position: absolute; inset: 0; width: 100%; height: 100%; display:
 .duo-chat input { background: rgba(20,8,16,.94); border: 2px solid #ff8fc8; border-radius: 22px; color: #fff; padding: 10px 18px; font: 15px var(--font-body); outline: none; box-shadow: 0 8px 26px rgb(0 0 0 / .5); }
 .duo-quick { display: flex; gap: 6px; justify-content: center; } .duo-quick button { background: rgba(20,8,16,.9); border: 1px solid #ff8fc888; color: #fff; border-radius: 14px; padding: 4px 12px; cursor: pointer; font: 13px var(--font-body); }
 .duo-inv { position: fixed; right: 18px; bottom: 90px; z-index: 160; display: flex; flex-direction: column; gap: 6px; padding: 14px 16px; border-radius: 16px; background: linear-gradient(180deg, #2a1420, #160a12); border: 2px solid #ff8fc8; box-shadow: 0 0 30px rgb(255 143 200 / .45); max-width: 320px; animation: decoPulse 1.4s infinite; }
+.duo-stars { display: flex; flex-wrap: wrap; gap: 4px; } .duo-stars .sbtn { min-width: 34px; padding: 6px 0; }
 .duo-inv b { color: #ffd0e6; } .duo-inv span { font-size: 12.5px; color: #c9b893; } .duo-inv div { display: flex; gap: 8px; }
 @media (max-width: 760px) { .duo-gifts { grid-template-columns: repeat(3, 1fr); } }
 
@@ -11308,7 +11309,7 @@ async function duoStart(host, code, auto) {
   NET.host = host; NET.code = code; NET.manual = !auto;
   duoStatus(host ? 'Đang mở phòng…' : 'Đang tìm phòng ' + code + '…', '');
   const pr = new Pp(host ? DUO_PREFIX + code : undefined, { debug: 0 });
-  NET.peer = pr;
+  NET.peer = pr; duoPeerHooks(pr);
   pr.on('open', () => { NET.tries = 0; try { localStorage.setItem('pr-play', JSON.stringify({ host, code })); } catch (e) { } if (host) duoStatus('Phòng ' + code + ' đã mở · gửi mã này cho ' + pName(), 'ok'); else duoDial(); renderDuo(); });
   pr.on('connection', c => duoBind(c));
   pr.on('disconnected', () => { if (!pr.destroyed) setTimeout(() => { try { pr.reconnect(); } catch (e) { } }, 1500); });
@@ -11330,10 +11331,11 @@ function duoBind(conn) {
     duoSend({ t: 'hi', n: S.name, v: 1 }); NET.lastLook = ''; duoInfo(true);
     duoData().outbox.forEach(m => duoSend(m));
     duoStatus('Đã kết nối với ' + pName() + ' ♥', 'ok'); renderDuo();
+    if (NET.voice) setTimeout(duoCall, 900);
   });
   conn.on('data', d => { try { duoRecv(d); } catch (e) { console.error(e); } });
   conn.on('close', () => {
-    if (NET.conn !== conn) return; NET.conn = null; NET.ps = null;
+    if (NET.conn !== conn) return; NET.conn = null; NET.ps = null; duoHang();
     if (DU.on && DU.mode === 'net') { DU.gone = true; duoFoot(); vmMsg(pName() + ' đã mất kết nối · ván dở không tính tiền'); }
     duoStatus(NET.host ? pName() + ' đã rời đi · phòng ' + NET.code + ' vẫn mở, chờ vào lại' : 'Mất kết nối · đang thử vào lại…', 'warn'); renderDuo();
     if (!NET.host && NET.code) setTimeout(() => { if (!duoOn() && NET.code && NET.peer && !NET.peer.destroyed) duoDial(); }, 2500);
@@ -11341,6 +11343,8 @@ function duoBind(conn) {
   conn.on('error', () => { });
 }
 function duoLeave(silent) {
+  if (NET.voice && !silent) { NET.voice = false; if (NET.mic) NET.mic.getTracks().forEach(t => t.stop()); NET.mic = null; }
+  try { duoHang(); } catch (e) { }
   if (NET.conn) try { NET.conn.close(); } catch (e) { }
   if (NET.peer) try { NET.peer.destroy(); } catch (e) { }
   NET.conn = null; NET.peer = null; NET.ps = null;
@@ -11356,7 +11360,7 @@ function duoInfo(force) {
 setInterval(() => {
   if (!duoOn() || !S || !S.started) return;
   const ea = (performance.now() - EMOTE.t0) / 1000;
-  duoSend({ t: 's', x: Math.round(S.x), y: Math.round(S.y), f: S.floor, r: S.inRoom || null, fa: S.face, mv: !!P.moving, sit: !!S.sitting, em: EMOTE.kind && ea < 2.6 ? EMOTE.kind : null, ea });
+  duoSend({ t: 's', x: Math.round(S.x), y: Math.round(S.y), f: S.floor, r: S.inRoom || null, vis: NET.visit ? 1 : 0, fa: S.face, mv: !!P.moving, sit: !!S.sitting, em: EMOTE.kind && ea < 2.6 ? EMOTE.kind : null, ea });
 }, 110);
 setInterval(() => { if (duoOn() && S && S.started) duoInfo(false); duoHud(); if (NET.ps && performance.now() - NET.ps.at > 6000) NET.ps = null; }, 1000);
 // ----- nhận -----
@@ -11397,6 +11401,11 @@ function duoRecv(m) {
     case 'cdone': { const c = d.cGot.find(x => x.id === m.cid); if (c) { c.st = 2; save(); toast(pName() + ' đã thực hiện phiếu: ' + c.txt); renderDuo(true); } break; }
     case 'win': if (Date.now() - d.lastWinAt < 60000 && !d.duoWin) { d.duoWin = true; save(); achCheck(); duoSend({ t: 'duowin' }); } break;
     case 'duowin': if (!d.duoWin) { d.duoWin = true; save(); achCheck(); } break;
+    case 'roomReq': { const pk = duoRoomPack(); duoSend({ t: 'room', p: pk }); if (pk) toast(pName() + ' đang ghé thăm phòng ' + pk.no + ' của bạn'); break; }
+    case 'room': if (!m.p) toast(pName() + ' chưa có phòng khách sạn nào'); else duoVisit(m.p); break;
+    case 'rate': { d.rateGot = d.rateGot || {}; if (!d.rateGot[m.k]) { d.rateGot[m.k] = m.s; save(); notePop('THI TRANG TRÍ', pName() + ' chấm phòng bạn ' + m.s + '/10', d.rateGiven && d.rateGiven[m.k] ? '' : 'Ghé phòng ' + pName() + ' chấm lại để biết ai thắng hôm nay', '#ffd36a'); duoContest(); renderDuo(true); } break; }
+    case 'voice': if (m.on) toast('🎙 ' + pName() + ' đã bật micro'); else if (NET.voice) setTimeout(duoCall, 700); duoHud(); break;
+    case 'kara': if (!PEER.code) { duoKaraJoin(); toast('🎤 ' + pName() + ' đang ở phòng karaoke · Tầng 3, vào hát cùng'); } break;
     case 'dinv': duelInvited(m); break;
     case 'dacc': duelAccepted(m); break;
     case 'ddec': if (DU.on && DU.wait === m.id) { DU.wait = null; vmMsg(pName() + (m.why === 'chip' ? ' không đủ chip cho mức cược này.' : m.why === 'busy' ? ' đang bận chơi trò khác.' : ' đã từ chối lời mời.')); duoFoot(); } break;
@@ -11408,7 +11417,7 @@ function duoRecv(m) {
   duoHud();
 }
 // ----- vẽ người yêu trong thế giới -----
-function duoSamePlace() { const p = NET.ps; return !!(p && duoOn() && !p.r && !S.inRoom && p.f === S.floor); }
+function duoSamePlace() { const p = NET.ps; if (!p || !duoOn()) return false; if (p.r || S.inRoom) return !!(p.r && S.inRoom && +p.r === +S.inRoom && !!p.vis !== !!NET.visit); return p.f === S.floor; }
 function coopDraw(list) {
   const nowp = performance.now();
   if (duoSamePlace() && NET.look) {
@@ -11458,10 +11467,11 @@ function duoChatOpen() {
 // ----- đi tới chỗ người yêu -----
 async function duoGoTo() {
   const p = NET.ps; if (!p || !duoOn()) { toast('Chưa thấy ' + pName() + ' trong nhà'); return; }
-  if (p.r) { toast(pName() + ' đang ở trong phòng riêng, đợi ra hành lang nhé'); return; }
+  if (p.r) { if (p.vis) toast(pName() + ' đang ở phòng của bạn đó'); else duoVisitAsk(); duoClose(); return; }
   if (seated) { toast('Đứng dậy khỏi bàn trước đã'); return; }
   duoClose();
   await iris(1, 0, 360);
+  NET.visit = null;
   if (S.inRoom) { if (DECOR.on) toggleDecor(false); S.inRoom = null; decoBtnSync(); }
   S.floor = p.f; useFloor(p.f); S.x = p.x + 46; S.y = p.y + 6; S.face = 'left'; if (blocked(S.x, S.y)) unstick();
   PET.init = false; CAM.snap = true; try { liftLevel = levelOf(S.floor); } catch (e) { } save(); achCheck();
@@ -11515,8 +11525,8 @@ const duoModalEl = () => document.getElementById('duoModal');
 function duoHud() {
   const b = document.getElementById('duoBtn'); if (!b) return;
   const on = duoOn(), p = NET.ps, d = S && S.duo;
-  const loc = on ? (p ? (p.r ? 'phòng riêng' : FLOOR_NM(p.f)) : 'đang vào…') : '';
-  document.getElementById('duoLbl').textContent = on ? '♥ ' + loc : 'Chơi chung';
+  const loc = on ? (p ? (p.r ? (duoSamePlace() ? 'cùng phòng' : 'phòng riêng') : FLOOR_NM(p.f)) : 'đang vào…') : '';
+  document.getElementById('duoLbl').textContent = on ? (NET.voice ? '🎙 ' : '♥ ') + loc : 'Chơi chung';
   b.classList.toggle('on', on); b.classList.toggle('wait', !on && !!NET.code);
   b.title = on ? pName() + ' đang ở ' + loc + (duoSamePlace() ? ' · cùng tầng với bạn' : '') + ' · Enter để nhắn tin' : (NET.code ? 'Phòng ' + NET.code + ' · chờ kết nối' : 'Chơi chung với người yêu');
   const bd = document.getElementById('duoBadge'); const n = d ? (d.unread || 0) : 0; bd.hidden = !n; bd.textContent = n > 9 ? '9+' : n;
@@ -11538,7 +11548,8 @@ function renderDuo(soft) {
     const row = (lb, a, b2, f = fmt) => { const mx = Math.max(1, Math.abs(a), Math.abs(b2)); return `<div class="duo-cmp"><span>${lb}</span><div class="duo-bars"><i style="width:${Math.max(2, a / mx * 100)}%"></i><b>${f(a)}</b></div><div class="duo-bars them"><i style="width:${I ? Math.max(2, b2 / mx * 100) : 0}%"></i><b>${I ? f(b2) : '—'}</b></div></div>`; };
     const myNw = Math.round(netWorth()), lead = I ? (myNw === I.nw ? 'Hai bạn đang ngang nhau' : myNw > I.nw ? 'Bạn đang dẫn ' + fmt(myNw - I.nw) + ' tài sản' : nm + ' đang dẫn ' + fmt(I.nw - myNw) + ' tài sản') : '';
     h += `<div class="ln-cols"><section class="ln-box"><h3>${nm}</h3><p class="duo-loc">${loc}</p>
-      <div class="duo-acts"><button class="sbtn buy" id="duoGo" type="button" ${on && p && !p.r ? '' : 'disabled'}>Đến chỗ ${nm}</button><button class="sbtn" id="duoChatBtn" type="button" ${on ? '' : 'disabled'}>Nhắn tin (Enter)</button></div>
+      <div class="duo-acts"><button class="sbtn buy" id="duoGo" type="button" ${on && p ? '' : 'disabled'}>Đến chỗ ${nm}</button><button class="sbtn" id="duoChatBtn" type="button" ${on ? '' : 'disabled'}>Nhắn tin (Enter)</button><button class="sbtn" id="duoVoiceBtn" type="button" ${on ? '' : 'disabled'}>${NET.voice ? '🎙 Tắt micro' : '🎙 Nói chuyện'}</button><button class="sbtn" id="duoVisitBtn" type="button" ${on ? '' : 'disabled'}>Thăm phòng ${nm}</button></div>
+      <p class="note">Thi trang trí hôm nay: ${(() => { const k = duoDay(), g = d.rateGiven && d.rateGiven[k], r = d.rateGot && d.rateGot[k], c = d.contest && d.contest[k]; return (g ? 'bạn đã chấm ' + nm + ' ' + g + '/10' : 'bạn chưa chấm phòng ' + nm) + ' · ' + (r ? 'bạn được chấm ' + r + '/10' : nm + ' chưa chấm phòng bạn') + (c ? ' · <b style="color:#ffd36a">' + (c === 'win' ? 'Bạn thắng!' : c === 'lose' ? nm + ' thắng' : 'Hoà') + '</b>' : ''); })()} · thắng ${d.decorWins || 0}/5 lần.</p>
       <p class="note">Khi ở cùng tầng hai bạn thấy nhau đi lại, biểu cảm và tin nhắn hiện trên đầu. Ba bàn Bài cào, Tiến lên, Cờ caro ở Tầng 2 giờ đấu được với nhau.</p>
       <p class="note">Đồ đôi: hai bạn mặc cùng một bộ đồ (mua ở Cửa hàng thời trang) sẽ mở thành tích Đồ đôi.${d.pair ? ' <b style="color:#7fd69a">Đã mở ✓</b>' : ''}</p></section>
       <section class="ln-box"><h3>So tài</h3><div class="duo-cmp head"><span></span><b>Bạn</b><b>${nm}</b></div>
@@ -11572,7 +11583,7 @@ function renderDuo(soft) {
   }
   B.innerHTML = h;
   const $ = id => document.getElementById(id), on2 = (id, f) => { const e = $(id); if (e) e.addEventListener('click', f); };
-  on2('duoGo', duoGoTo); on2('duoChatBtn', () => { NET.tab = 'chat'; renderDuo(); });
+  on2('duoGo', duoGoTo); on2('duoVoiceBtn', () => duoVoice(!NET.voice)); on2('duoVisitBtn', () => { duoClose(); duoVisitAsk(); }); on2('duoChatBtn', () => { NET.tab = 'chat'; renderDuo(); });
   B.querySelectorAll('[data-gift]').forEach(b => b.addEventListener('click', () => duoGift(b.dataset.gift, 0, $('duoGNote') && $('duoGNote').value)));
   on2('duoGChipBtn', () => duoGift(null, +$('duoGChip').value, $('duoGNote').value));
   on2('duoRepayBtn', () => duoRepay(+$('duoRepayIn').value || d.owe)); on2('duoLendBtn', () => duoLend(+$('duoLendIn').value)); on2('duoForgiveBtn', duoForgive);
@@ -11610,6 +11621,90 @@ window.addEventListener('keydown', e => {
 });
 // tự vào lại phòng cũ khi mở game
 setTimeout(() => { try { const sv = JSON.parse(localStorage.getItem('pr-play') || 'null'); if (sv && sv.code && /^[A-Z0-9]{6}$/.test(sv.code)) duoStart(!!sv.host, sv.code, true); } catch (e) { } duoHud(); }, 1800);
+
+// ----- thăm phòng người yêu + thi trang trí -----
+NET.visit = null;
+const duoDay = () => new Date().toLocaleDateString('sv');
+function duoRoomPack() {
+  const no = S.inRoom && S.rooms[S.inRoom] && !NET.visit ? S.inRoom : Object.keys(S.rooms || {}).map(Number).sort((a, b) => a - b)[0];
+  if (!no || !S.rooms[no]) return null;
+  const items = placedIn(no).map(p => Object.assign({}, p));
+  return { no: Number(no), items, inv: items.map(p => furnById(p.uid)).filter(Boolean).map(f => ({ uid: f.uid, id: f.id })) };
+}
+function duoVisitAsk() { if (!duoOn()) { toast('Cần kết nối trước'); return; } if (seated) { toast('Đứng dậy khỏi bàn trước đã'); return; } duoSend({ t: 'roomReq' }); toast('Đang gõ cửa phòng ' + pName() + '…'); }
+async function duoVisit(pk) {
+  if (!roomInfo(pk.no)) return;
+  if (!duoModalEl().hidden) duoClose();
+  await iris(1, 0, 380);
+  if (DECOR.on) toggleDecor(false);
+  if (!S.inRoom) S.corridorX = S.floor === 5 ? S.x : null;
+  const sR = S.rooms, sI = S.furnInv;
+  S.rooms = Object.assign({}, sR, { [pk.no]: { paid: 0, items: pk.items } }); S.furnInv = pk.inv;
+  try { S.inRoom = pk.no; buildRoom(pk.no); } finally { S.rooms = sR; S.furnInv = sI; }
+  const FD = FLOOR_DATA.room; FD.interactables.length = 0;
+  FD.interactables.push({ x: ROOMMAP.w / 2, y: ROOMMAP.h - 40, r: 70, label: 'Về hành lang', act: () => duoVisitEnd() });
+  FD.interactables.push({ x: ML + 40, y: WALL + 60, r: 80, get label() { return duoData().rateGiven && duoData().rateGiven[duoDay()] ? 'Hôm nay bạn đã chấm phòng này ' + duoData().rateGiven[duoDay()] + '/10' : 'Chấm điểm phòng của ' + pName(); }, act: () => duoRateOpen() });
+  useFloor('room'); NET.visit = { no: pk.no };
+  S.x = ROOMMAP.w / 2 + 70; S.y = ROOMMAP.h - 90; S.face = 'up'; PET.init = false; CAM.snap = true; decoBtnSync();
+  floorCard('Phòng của ' + pName(), roomInfo(pk.no).name);
+  await wait(120); iris(0, 1, 900);
+  setTimeout(() => toast('Đến góc trái phía trên bấm E để chấm điểm phòng · ra cửa bấm E để về'), 1300);
+}
+async function duoVisitEnd() { NET.visit = null; await exitRoom(); }
+function duoRateOpen() {
+  const d = duoData(), k = duoDay(); d.rateGiven = d.rateGiven || {};
+  if (d.rateGiven[k]) { toast('Mỗi ngày chỉ chấm một lần · hôm nay bạn đã chấm ' + d.rateGiven[k] + '/10'); return; }
+  if (!duoOn()) { toast('Cần kết nối để chấm điểm'); return; }
+  const box = document.getElementById('duoInv');
+  box.innerHTML = `<b>Chấm phòng của ${escH(pName())}</b><span>Điểm của hai bạn được so với nhau · ai được chấm cao hơn thắng thi trang trí hôm nay (+300 chip)</span><div class="duo-stars">${[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(n => `<button class="sbtn ${n >= 8 ? 'buy' : ''}" type="button" data-rate="${n}">${n}</button>`).join('')}</div><div><button class="sbtn ghost" id="duoRateNo" type="button">Để sau</button></div>`;
+  box.hidden = false;
+  box.querySelectorAll('[data-rate]').forEach(b => b.onclick = () => { const n = +b.dataset.rate; d.rateGiven[k] = n; duoSendImp({ t: 'rate', s: n, k }); box.hidden = true; toast('Đã chấm ' + n + '/10 cho phòng của ' + pName()); save(); duoContest(); });
+  document.getElementById('duoRateNo').onclick = () => { box.hidden = true; };
+}
+function duoContest() {
+  const d = duoData(), k = duoDay(); d.contest = d.contest || {};
+  const g = d.rateGiven && d.rateGiven[k], r = d.rateGot && d.rateGot[k];
+  if (!g || !r || d.contest[k]) return;
+  d.contest[k] = r > g ? 'win' : r < g ? 'lose' : 'draw';
+  if (r > g) { d.decorWins = (d.decorWins || 0) + 1; S.chips += 300; refreshHUD(); notePop('THI TRANG TRÍ', 'Phòng bạn thắng hôm nay! +300 chip', `Bạn được ${r}/10 · ${pName()} được ${g}/10`, '#ffd36a'); }
+  else if (r < g) notePop('THI TRANG TRÍ', 'Phòng của ' + pName() + ' thắng hôm nay', `Bạn được ${r}/10 · ${pName()} được ${g}/10`, '#ff8fc8');
+  else notePop('THI TRANG TRÍ', 'Hoà! Cả hai cùng ' + r + '/10', 'Mai thi tiếp nhé', '#c9b893');
+  save(); achCheck(); renderDuo(true);
+}
+{ const _td = toggleDecor; toggleDecor = function (on) { if (on && NET.visit) { toast('Đây là phòng của ' + pName() + ', không bày đồ được'); return; } return _td(on); }; }
+{ const _ds = decoBtnSync; decoBtnSync = function () { _ds(); const b = document.getElementById('decoBtn'); if (b && NET.visit) b.hidden = true; }; }
+(() => { const a = ACH.find(x => x.id === 48); if (a) { delete a.soon; a.prog = () => [Math.min(5, duoData().decorWins || 0), 5]; a.how = 'Thắng thi trang trí phòng 5 lần (thăm phòng nhau và chấm điểm)'; } })();
+// ----- nói chuyện bằng giọng nói (ngoài karaoke) -----
+NET.voice = false; NET.mic = null; NET.calls = [];
+function duoVoicePlay(stream) {
+  let a = document.getElementById('duoVoiceOut'); if (!a) { a = document.createElement('audio'); a.id = 'duoVoiceOut'; a.autoplay = true; a.playsInline = true; document.body.appendChild(a); }
+  a.srcObject = stream; a.play && a.play().catch(() => toast('Bấm vào màn hình để nghe tiếng ' + pName()));
+}
+function duoHang() { NET.calls.forEach(c => { try { c.close(); } catch (e) { } }); NET.calls = []; }
+function duoCall() {
+  if (!NET.peer || !duoOn() || typeof NET.peer.call !== 'function') return;
+  duoHang(); const call = NET.peer.call(NET.conn.peer, NET.mic || duoSilent()); if (!call) return;
+  NET.calls.push(call); call.on('stream', duoVoicePlay); call.on('close', () => { NET.calls = NET.calls.filter(x => x !== call); });
+}
+function duoSilent() { try { const c = actx(), dst = c.createMediaStreamDestination(); return dst.stream; } catch (e) { return undefined; } }
+async function duoVoice(on) {
+  if (on) {
+    if (!duoOn()) { toast('Cần kết nối trước'); return; }
+    try { NET.mic = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: true, noiseSuppression: true, autoGainControl: true } }); }
+    catch (e) { toast('Không mở được micro · hãy cho phép trình duyệt dùng micro'); return; }
+    NET.voice = true; duoCall(); duoSend({ t: 'voice', on: 1 }); toast('Đã bật nói chuyện · đeo tai nghe để không bị vọng tiếng');
+  } else {
+    NET.voice = false; if (NET.mic) NET.mic.getTracks().forEach(t => t.stop()); NET.mic = null; duoHang(); duoSend({ t: 'voice', on: 0 }); toast('Đã tắt micro');
+  }
+  duoHud(); renderDuo(true);
+}
+function duoPeerHooks(pr) {
+  pr.on('call', call => { duoHang(); NET.calls.push(call); call.answer(NET.mic || duoSilent()); call.on('stream', duoVoicePlay); call.on('close', () => { NET.calls = NET.calls.filter(x => x !== call); }); });
+}
+// ----- karaoke dùng chung mã phòng -----
+function duoKaraJoin() { if (!duoOn() || !NET.code) return; if (PEER.code === NET.code && PEER.peer && !PEER.peer.destroyed) return; peerStart(NET.host, NET.code); }
+{ const _oc = openCinema; openCinema = function () { _oc(); try { if (duoOn()) { duoKaraJoin(); duoSend({ t: 'kara' }); } } catch (e) { } }; }
+setInterval(() => { try { if (duoOn() && !PEER.host && PEER.code && PEER.code === NET.code && !(PEER.conn && PEER.conn.open) && PEER.peer && !PEER.peer.destroyed && PEER.peer.open !== false) peerDial(); } catch (e) { } }, 5000);
 
 // =============== BÀN ĐẤU HAI NGƯỜI · Tầng 2 (Bài cào · Tiến lên · Cờ caro) ===============
 const DU = { on: false, g: null, mode: 'bot', host: true, seat: 0, st: null, bet: 100, botT: 0, wait: null, gone: false, settled: new Set(), peek: [false, false, false], sel: new Set(), hint: '' };
