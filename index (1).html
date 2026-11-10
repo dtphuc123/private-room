@@ -10113,19 +10113,116 @@ const EPILOGUE = { title: 'Câu chuyện của hai bạn', date: 'Hôm nay', tex
     cP(c, 420, 470, 2.8, me, t, { face: 'down' }); cP(c, 540, 470, 2.8, pf, t, { face: 'down' }); cP(c, 820, 470, 2.2, LAM_O, t, { face: 'left' }); for (let i = 0; i < 5; i++) { const kk = (t * 0.25 + i / 5) % 1; c.globalAlpha = Math.sin(kk * Math.PI); c.fillStyle = '#ff8aa8'; c.font = '26px serif'; c.fillText('♥', 470 + Math.sin(kk * 7 + i) * 30, 300 - kk * 160); } c.globalAlpha = 1;
     if (k > 0.55) { c.globalAlpha = Math.min(1, (k - 0.55) * 3); c.save(); c.shadowColor = '#ffd36a'; c.shadowBlur = 20; c.fillStyle = '#ffe9a8'; c.font = '900 40px "Big Shoulders Display", Impact'; c.textAlign = 'center'; c.fillText('PRIVATE ROOM', 480, 90); c.font = 'italic 20px Georgia, serif'; c.fillText('Câu chuyện của hai bạn bắt đầu từ đây', 480, 124); c.restore(); c.globalAlpha = 1; } }] };
 
+// ---------- kịch bản dẫn dắt: n = ông Lâm kể · s = nhân vật nói · d = trang nhật ký ----------
+const CS_WHO = {
+  'Ông Lâm': { col: '#ffd36a', g: 'm', p: 0.85, look: () => LAM_O },
+  'Lâm': { col: '#8ab8ff', g: 'm', p: 1.0, look: () => LAM_Y },
+  'Hạnh': { col: '#ff9ab8', g: 'f', p: 1.1, look: () => HANH },
+  'Ông thợ đồng hồ': { col: '#c9b893', g: 'm', p: 0.8, look: () => OLDMAN },
+  'Cậu sinh viên': { col: '#9ae0b0', g: 'm', p: 1.15 },
+  'Doanh nhân': { col: '#c9b893', g: 'm', p: 0.9 },
+};
+const STORY_SCRIPT = [
+  [{ n: 'Chuyện bắt đầu từ một căn hầm ẩm thấp, một đêm mưa, và một cô gái tên Hạnh.' }, { d: 0 }, { s: 'Hạnh', t: 'Anh xem, tấm biển em viết có bị xiêu không?' }, { s: 'Lâm', t: 'Xiêu một chút. Nhưng ai nhìn thấy cũng muốn bước vào.' }, { d: 1 }, { s: 'Ông thợ đồng hồ', t: 'Thêm ván nữa không cậu chủ? Thua thì coi như trả tiền cà phê cho tôi.' }, { d: 2 }, { n: 'Câu nói đùa ấy… về sau thành cả một toà nhà.' }],
+  [{ n: 'Chỉ vài tháng sau, quán đã thơm mùi bài mới nhiều hơn mùi cà phê.' }, { d: 0 }, { s: 'Hạnh', t: 'Luật của quán mình: ai cũng chỉ chơi bằng tiền trong túi. Anh hứa đi.' }, { s: 'Lâm', t: 'Anh hứa. Kể cả với chính anh.' }, { d: 1 }, { s: 'Cậu sinh viên', t: 'Chị ơi… em lỡ thua hết tiền học rồi.' }, { s: 'Hạnh', t: 'Cầm lấy. Nhưng từ mai em rửa ly cho chị một tháng nhé.' }, { d: 2 }, { n: 'Đến tận bây giờ, ta vẫn giữ đúng luật ấy.' }],
+  [{ n: 'Rồi chúng ta mua lại cả toà nhà. Và Hạnh đòi bằng được một phòng hát.' }, { d: 0 }, { s: 'Hạnh', t: 'Anh ngồi hàng đầu nhé. Em hát dở, nên cần người vỗ tay to nhất.' }, { d: 1 }, { s: 'Lâm', t: 'Em lạc tông từ câu đầu tới câu cuối đấy.' }, { s: 'Hạnh', t: 'Thế anh đã thấy ai vui hơn em chưa?' }, { d: 2 }, { n: 'Mãi rất lâu sau, ta mới hiểu cô ấy không hề nói đùa.' }],
+  [{ n: 'Tết năm ấy, sân sau có thêm một cái hồ… và một vị khách nhỏ xíu.' }, { d: 0 }, { s: 'Hạnh', t: 'Lộc ơi, ăn nhiều vào cho mau lớn. Sau này còn giữ bí mật giúp chị.' }, { d: 1 }, { s: 'Lâm', t: 'Em vừa nhét gì xuống hốc đá thế?' }, { d: 2 }, { n: 'Nếu hai cháu đủ kiên nhẫn, Lộc vẫn đang đợi ở hồ cá.' }],
+  [{ n: 'Tầng năm là giấc mơ của Hạnh: mười hai căn phòng, mười hai tháng trong năm.' }, { d: 0 }, { s: 'Hạnh', t: 'Phòng Tháng Hai để dành cho những người vừa cưới. Anh đừng cho ai khác thuê nhé.' }, { d: 1 }, { s: 'Lâm', t: 'Khách sạn bé thế này, liệu có ai nhớ không em?' }, { s: 'Hạnh', t: 'Người ta không nhớ phòng sang. Người ta nhớ phòng ấm.' }, { d: 2 }],
+  [{ n: 'Có những mùa, ta chỉ mong thời gian trôi chậm lại một chút.' }, { d: 0 }, { s: 'Lâm', t: 'Lạnh không em? Anh mang thêm chăn lên rồi đây.' }, { d: 1 }, { s: 'Hạnh', t: 'Mảnh thứ ba đây. Anh giữ cẩn thận, đừng mở ra vội.' }, { d: 2 }, { n: 'Đêm nào trời trong, ta vẫn lên đó tìm sao Bắc Cực.' }],
+  [{ n: 'Chương này… là chương ta viết lâu nhất.' }, { d: 0 }, { n: 'Suốt một năm sau đó, ta không dám bước vào phòng hát.' }, { d: 1 }, { s: 'Lâm', t: 'Hoá ra em đã chuẩn bị tất cả từ lâu rồi, phải không Hạnh?' }, { d: 2 }],
+  [{ n: 'Rồi đến lượt ta già đi.' }, { d: 0 }, { s: 'Doanh nhân', t: 'Ông Lâm, chúng tôi trả gấp đôi giá thị trường. Ông chỉ cần ký thôi.' }, { s: 'Lâm', t: 'Nơi này không bán cho người chỉ đến để mua.' }, { d: 1 }, { d: 2 }, { n: 'Và bây giờ, hai cháu đang gom từng phần ấy đấy.' }],
+  [{ n: 'Trang cuối cùng, ta viết cho người sẽ đến sau ta.' }, { d: 0 }, { d: 1 }, { d: 2 }, { d: 3 }, { n: 'Cảm ơn hai cháu đã đọc đến tận đây.' }],
+];
+const EPI_SCRIPT = [{ n: 'Ông Lâm khẽ gấp cuốn nhật ký lại, nhìn hai bạn rồi mỉm cười.', who: 'Lời kể' }, { s: 'Ông Lâm', t: 'Bốn mươi bảy lá thư của Hạnh, giờ đã có người đọc. Từ hôm nay, PRIVATE ROOM là của hai cháu. Hãy viết tiếp những trang mới nhé.' }];
+function csBuild(chs, epi) {
+  const L = [];
+  chs.forEach(i => {
+    L.push({ title: true, ch: i });
+    const scr = STORY_SCRIPT[i] || STORY[i].text.map((_, j) => ({ d: j })), n = SCENES[i].length;
+    let shot = 0;
+    scr.forEach((b, k) => {
+      if (b.d != null) shot = Math.min(b.d, n - 1);
+      else { const nx = scr.slice(k + 1).find(x => x.d != null); shot = nx ? Math.min(nx.d, n - 1) : n - 1; if (k === 0) shot = 0; }
+      if (b.d != null) L.push({ ch: i, shot, text: STORY[i].text[b.d], kind: 'd', who: i === 8 ? 'Thư của ông Lâm' : 'Nhật ký của Lâm' });
+      else if (b.n) L.push({ ch: i, shot, text: b.n, kind: 'n', who: 'Ông Lâm' });
+      else L.push({ ch: i, shot, text: b.t, kind: 's', who: b.s });
+    });
+  });
+  if (epi) { L.push({ title: true, ch: 'E' }); EPI_SCRIPT.forEach(b => L.push(b.n ? { ch: 'E', shot: 0, text: b.n, kind: 'n', who: 'Lời kể' } : { ch: 'E', shot: 0, text: b.t, kind: 's', who: b.s })); }
+  return L;
+}
+// chọn giọng: ưu tiên giọng tự nhiên (Edge có HoaiMy nữ, NamMinh nam)
+function csVoices() {
+  let vs = []; try { vs = speechSynthesis.getVoices().filter(x => /^vi/i.test(x.lang)); } catch (e) { }
+  const nat = v => /natural|online|neural/i.test(v.name) ? 0 : 1, sort = a => a.slice().sort((x, y) => nat(x) - nat(y));
+  const fem = sort(vs.filter(v => /hoaimy|female|nữ|linh|google/i.test(v.name))), male = sort(vs.filter(v => /namminh|male|nam\b|\ban\b/i.test(v.name) && !/female/i.test(v.name)));
+  const any = sort(vs);
+  return { f: fem[0] || any[0] || null, m: male[0] || any[0] || null, any: any[0] || null, natural: vs.some(v => nat(v) === 0) };
+}
+// giọng đọc trực tuyến (Google) cho trình duyệt không có giọng tiếng Việt: Chrome, Cốc Cốc, Firefox…
+function csChunks(text) {
+  const out = []; let cur = '';
+  text.replace(/["“”]/g, '').split(/(?<=[.!?…,;:])\s+/).forEach(part => { if ((cur + ' ' + part).trim().length > 180 && cur) { out.push(cur.trim()); cur = part; } else cur = (cur + ' ' + part).trim(); });
+  if (cur) out.push(cur.trim());
+  return out.flatMap(c => c.length <= 190 ? [c] : c.match(/.{1,180}(\s|$)/g).map(x => x.trim()));
+}
+function csStopVoice() { try { speechSynthesis.cancel(); } catch (e) { } if (CS.aud) { try { CS.aud.pause(); } catch (e) { } CS.aud = null; } CS.speaking = false; CS.vtok = (CS.vtok || 0) + 1; }
+function csSpeakOnline(text, who) {
+  const W = CS_WHO[who] || CS_WHO['Ông Lâm'], parts = csChunks(text), tok = CS.vtok = (CS.vtok || 0) + 1; let i = 0;
+  const next = () => {
+    if (tok !== CS.vtok || i >= parts.length) { if (tok === CS.vtok) CS.speaking = false; return; }
+    const a = new Audio('https://translate.google.com/translate_tts?ie=UTF-8&tl=vi&client=tw-ob&ttsspeed=1&q=' + encodeURIComponent(parts[i++]));
+    a.volume = SET.mute ? 0 : SET.master / 100; try { a.preservesPitch = false; a.mozPreservesPitch = false; a.webkitPreservesPitch = false; } catch (e) { }
+    a.playbackRate = W.g === 'f' ? 1.04 : W.p < 0.9 ? 0.86 : 0.92; // hạ giọng cho nhân vật nam
+    a.onended = next; a.onerror = () => { CS.online = 'fail'; CS.speaking = false; csVoiceUI(); };
+    CS.aud = a; a.play().then(() => { CS.online = 'ok'; csVoiceUI(); }).catch(() => { CS.speaking = false; });
+  };
+  CS.speaking = true; CS.speakAt = performance.now(); next();
+}
+function csSpeakAs(text, who) {
+  csStopVoice();
+  if (!CS.voice) return;
+  try {
+    const V = csVoices(); if (!V.any) { if (CS.online !== 'fail' && navigator.onLine !== false) csSpeakOnline(text, who); return; }
+    const W = CS_WHO[who] || CS_WHO['Ông Lâm'], v = W.g === 'f' ? V.f : V.m, same = V.f === V.m;
+    const u = new SpeechSynthesisUtterance(text.replace(/["“”]/g, '')); u.voice = v; u.lang = v.lang;
+    u.rate = 0.95; u.pitch = same ? (W.g === 'f' ? 1.25 : W.p) : W.p; u.volume = SET.mute ? 0 : SET.master / 100;
+    u.onend = u.onerror = () => { CS.speaking = false; };
+    speechSynthesis.cancel(); CS.speaking = true; CS.speakAt = performance.now(); speechSynthesis.speak(u);
+  } catch (e) { CS.speaking = false; }
+}
+function csBox(c, it, el) {
+  const W = CS_WHO[it.who] || { col: '#e8dcc0' }, diary = it.kind === 'd', narr = it.kind === 'n';
+  const n = Math.floor(Math.min(it.text.length, el * 32)), txt = it.text.slice(0, n);
+  const port = !diary && W.look, x0 = port ? 150 : 70, maxW = 960 - x0 - 70;
+  c.font = (diary ? 'italic 500 19px Georgia, serif' : narr ? 'italic 600 19px "Be Vietnam Pro", sans-serif' : '600 19px "Be Vietnam Pro", sans-serif');
+  const lines = []; let ln = ''; txt.split(' ').forEach(w => { if (c.measureText(ln + w).width > maxW && ln) { lines.push(ln); ln = ''; } ln += w + ' '; }); lines.push(ln);
+  const bh = Math.max(96, 46 + lines.length * 27), y0 = CH - 34 - bh - 8;
+  c.save();
+  const g = c.createLinearGradient(0, y0, 0, y0 + bh); g.addColorStop(0, diary ? 'rgba(40,28,14,.88)' : 'rgba(14,8,14,.86)'); g.addColorStop(1, diary ? 'rgba(24,16,8,.92)' : 'rgba(6,2,6,.92)');
+  c.fillStyle = g; roundRect(c, 40, y0, 880, bh, 14); c.fill(); c.strokeStyle = diary ? 'rgba(217,164,65,.55)' : W.col + '88'; c.lineWidth = 1.5; roundRect(c, 40, y0, 880, bh, 14); c.stroke();
+  if (port) { c.save(); roundRect(c, 52, y0 + 10, 84, bh - 20, 10); c.clip(); c.fillStyle = 'rgba(255,255,255,.06)'; c.fillRect(52, y0 + 10, 84, bh - 20); cP(c, 94, y0 + bh + 20, 1.35, W.look(), performance.now() / 1000, { face: 'down' }); c.restore(); }
+  const tag = diary ? '✎ ' + it.who : narr ? it.who + ' kể' : it.who; c.font = '800 13px "Be Vietnam Pro", sans-serif'; const tw = c.measureText(tag).width + 24;
+  c.fillStyle = diary ? '#d9a441' : W.col; roundRect(c, x0 - 8, y0 - 13, tw, 26, 13); c.fill(); c.fillStyle = '#1a0e08'; c.textAlign = 'left'; c.textBaseline = 'middle'; c.fillText(tag, x0 + 4, y0); c.textBaseline = 'alphabetic';
+  c.font = (diary ? 'italic 500 19px Georgia, serif' : narr ? 'italic 600 19px "Be Vietnam Pro", sans-serif' : '600 19px "Be Vietnam Pro", sans-serif');
+  c.fillStyle = diary ? '#f4e6c8' : narr ? '#ffe9b0' : '#ffffff'; c.shadowColor = '#000'; c.shadowBlur = 4;
+  lines.forEach((l, i) => c.fillText((i === 0 && it.kind === 's' ? '“' : '') + l.trim() + (i === lines.length - 1 && it.kind === 's' && n >= it.text.length ? '”' : ''), x0, y0 + 40 + i * 27));
+  c.restore();
+}
+
 // ---------- trình chiếu ----------
 const CS = { on: false, list: [], idx: 0, t0: 0, raf: 0, voice: SET.voice, music: true, after: null, mus: null };
-function csBuild(chs, epi) { const L = []; chs.forEach(i => { L.push({ title: true, ch: i }); STORY[i].text.forEach((tx, j) => L.push({ ch: i, shot: Math.min(j, SCENES[i].length - 1), text: tx })); }); if (epi) { L.push({ title: true, ch: 'E' }); EPILOGUE.text.forEach(tx => L.push({ ch: 'E', shot: 0, text: tx })); } return L; }
-const csDur = it => it.title ? 3.6 : Math.max(6, 2.5 + it.text.length / 15);
+const csDur = it => it.title ? 3.6 : Math.max(4.5, 2 + it.text.length / 14);
 function playCine(chs, epi, after) {
   const m = document.getElementById('cineStory'); m.hidden = false; promptEl.hidden = true; CS.on = true; CS.list = csBuild(chs, epi); CS.idx = 0; CS.t0 = performance.now(); CS.after = after || null; CS.spoke = -1;
   document.getElementById('csProg').innerHTML = CS.list.map(() => '<i></i>').join(''); csMusic(true); cancelAnimationFrame(CS.raf);
   const cv2 = document.getElementById('csCv'), c = cv2.getContext('2d'); const loop = now => { if (!CS.on) return; csFrame(c, now); CS.raf = requestAnimationFrame(loop); }; CS.raf = requestAnimationFrame(loop);
 }
-function csNext() { if (!CS.on) return; CS.idx++; CS.t0 = performance.now(); try { speechSynthesis.cancel(); } catch (e) { } if (CS.idx >= CS.list.length) csClose(); }
-function csClose() { if (!CS.on) return; CS.on = false; cancelAnimationFrame(CS.raf); try { speechSynthesis.cancel(); } catch (e) { } csMusic(false); hideAnim(document.getElementById('cineStory')); const a = CS.after; CS.after = null; if (a) setTimeout(a, 350); }
+function csNext() { if (!CS.on) return; CS.idx++; CS.t0 = performance.now(); csStopVoice(); if (CS.idx >= CS.list.length) csClose(); }
+function csClose() { if (!CS.on) return; CS.on = false; cancelAnimationFrame(CS.raf); csStopVoice(); csMusic(false); hideAnim(document.getElementById('cineStory')); const a = CS.after; CS.after = null; if (a) setTimeout(a, 350); }
 function csSpeak(text) { if (!CS.voice || !('speechSynthesis' in window)) return; try { const vs = speechSynthesis.getVoices(), v = vs.find(x => /^vi/i.test(x.lang)); if (!v) return; const u = new SpeechSynthesisUtterance(text.replace(/["“”]/g, '')); u.voice = v; u.lang = v.lang; u.rate = 0.95; u.pitch = 0.95; u.volume = SET.mute ? 0 : SET.master / 100; speechSynthesis.cancel(); speechSynthesis.speak(u); } catch (e) { } }
 function csHasVoice() { try { return speechSynthesis.getVoices().some(x => /^vi/i.test(x.lang)); } catch (e) { return false; } }
+let csVoiceUI = () => { };
 function csMusic(on) {
   if (CS.mus) { clearInterval(CS.mus.iv); try { CS.mus.g.gain.linearRampToValueAtTime(0, CS.mus.ctx.currentTime + 0.6); } catch (e) { } CS.mus = null; } if (!on || !CS.music) return;
   try { const ctx = actx(), g = ctx.createGain(), dl = ctx.createDelay(), fb = ctx.createGain(); g._music = true; dl._music = true; g.gain.value = 0.0001; g.gain.linearRampToValueAtTime(0.5, ctx.currentTime + 1.5); dl.delayTime.value = 0.33; fb.gain.value = 0.35; dl.connect(fb); fb.connect(dl); g.connect(ctx.destination); dl.connect(ctx.destination); g.connect(dl);
@@ -10136,7 +10233,7 @@ function csMusic(on) {
 }
 function csFrame(c, now) {
   const it = CS.list[CS.idx]; if (!it) return; const el = (now - CS.t0) / 1000, d = csDur(it), k = Math.min(1, el / d), t = now / 1000;
-  if (el >= d) { csNext(); return; }
+  if (el >= d && !(CS.speaking && el < d + 15)) { csNext(); return; }
   document.querySelectorAll('#csProg i').forEach((b, i) => { b.className = i < CS.idx ? 'done' : i === CS.idx ? 'cur' : ''; if (i === CS.idx) b.style.setProperty('--k', k); });
   c.save(); c.fillStyle = '#000'; c.fillRect(0, 0, CW, CH);
   if (it.title) { const ep = it.ch === 'E', s = ep ? EPILOGUE : STORY[it.ch]; c.fillStyle = '#0a0806'; c.fillRect(0, 0, CW, CH); cGlow(c, 480, 270, 400, 'rgba(255,200,120,A)', 0.12); const a = Math.min(1, el * 1.5) * Math.min(1, (d - el) * 1.5); c.globalAlpha = a; c.fillStyle = '#d9a441'; c.font = '700 16px "Be Vietnam Pro", sans-serif'; c.textAlign = 'center'; c.fillText(ep ? 'KẾT' : `CHƯƠNG ${it.ch + 1}`, 480, 220); c.fillStyle = '#f4ecd8'; c.font = 'italic 44px Georgia, serif'; c.fillText(s.title, 480, 280); c.fillStyle = '#a89878'; c.font = 'italic 18px Georgia, serif'; c.fillText(s.date, 480, 318); c.strokeStyle = '#d9a441'; c.beginPath(); c.moveTo(400, 340); c.lineTo(560, 340); c.stroke(); c.restore(); csFx(c, t, false); return; }
@@ -10144,10 +10241,8 @@ function csFrame(c, now) {
   c.translate(CW / 2 + px, CH / 2); c.scale(sc, sc); c.translate(-CW / 2, -CH / 2); draw(c, t, k); c.restore();
   const old = !ep && it.ch <= 4, sad = !ep && it.ch === 6; csFx(c, t, old, sad);
   const fi = Math.min(1, el * 2), fo = Math.min(1, (d - el) * 2); if (fi < 1 || fo < 1) { c.fillStyle = `rgba(0,0,0,${1 - Math.min(fi, fo)})`; c.fillRect(0, 0, CW, CH); }
-  // phụ đề
-  const n = Math.floor(Math.min(it.text.length, el * 32)), txt = it.text.slice(0, n); c.font = '600 19px "Be Vietnam Pro", sans-serif'; const lines = []; let ln = ''; txt.split(' ').forEach(w => { if (c.measureText(ln + w).width > 820) { lines.push(ln); ln = ''; } ln += w + ' '; }); lines.push(ln);
-  const bh = 24 + lines.length * 27; c.fillStyle = 'rgba(0,0,0,.55)'; c.fillRect(0, CH - 64 - bh + 24, CW, bh); c.fillStyle = '#fff'; c.textAlign = 'center'; c.shadowColor = '#000'; c.shadowBlur = 6; lines.forEach((l, i) => c.fillText(l.trim(), 480, CH - 64 - bh + 52 + i * 27)); c.shadowBlur = 0;
-  if (CS.spoke !== CS.idx) { CS.spoke = CS.idx; csSpeak(it.text); }
+  csBox(c, it, el);
+  if (CS.spoke !== CS.idx) { CS.spoke = CS.idx; csSpeakAs(it.text, it.who === 'Lời kể' ? 'Ông Lâm' : it.kind === 'd' ? 'Ông Lâm' : it.who); }
 }
 function csFx(c, t, old, sad) {
   c.fillStyle = '#000'; c.fillRect(0, 0, CW, 34); c.fillRect(0, CH - 34, CW, 34);
@@ -10161,8 +10256,8 @@ function storyStill(i) { cancelAnimationFrame(STILL_RAF); const cv2 = document.g
 (() => {
   document.getElementById('csSkip').addEventListener('click', csNext); document.getElementById('csX').addEventListener('click', csClose); document.getElementById('csCv').addEventListener('click', csNext);
   const vb = document.getElementById('csVoice'), mb = document.getElementById('csMus');
-  const vUI = () => { const has = csHasVoice(); vb.textContent = has ? (CS.voice ? 'Giọng đọc: bật' : 'Giọng đọc: tắt') : 'Máy chưa có giọng tiếng Việt'; vb.disabled = !has; vb.setAttribute('aria-pressed', CS.voice && has); };
-  vb.addEventListener('click', () => { CS.voice = !CS.voice; if (!CS.voice) try { speechSynthesis.cancel(); } catch (e) { } vUI(); }); try { speechSynthesis.onvoiceschanged = vUI; } catch (e) { } setTimeout(vUI, 500);
+  const vUI = () => { const sys = csHasVoice(), on = CS.online !== 'fail'; vb.disabled = !sys && !on; vb.textContent = !sys && !on ? 'Không tải được giọng đọc · kiểm tra mạng' : (CS.voice ? 'Giọng đọc: bật' : 'Giọng đọc: tắt') + (sys ? '' : ' · trực tuyến'); vb.title = sys ? (csVoices().natural ? 'Đang dùng giọng đọc tự nhiên của trình duyệt' : 'Đang dùng giọng tiếng Việt của máy') : 'Trình duyệt này không có giọng tiếng Việt nên dùng giọng đọc trực tuyến (cần mạng)'; vb.setAttribute('aria-pressed', CS.voice && (sys || on)); }; csVoiceUI = vUI;
+  vb.addEventListener('click', () => { CS.voice = !CS.voice; if (!CS.voice) csStopVoice(); else if (CS.on && CS.list[CS.idx] && !CS.list[CS.idx].title) { const it = CS.list[CS.idx]; csSpeakAs(it.text, it.who === 'Lời kể' || it.kind === 'd' ? 'Ông Lâm' : it.who); } vUI(); }); try { speechSynthesis.onvoiceschanged = vUI; } catch (e) { } setTimeout(vUI, 500);
   mb.addEventListener('click', () => { CS.music = !CS.music; mb.textContent = CS.music ? 'Nhạc: bật' : 'Nhạc: tắt'; mb.setAttribute('aria-pressed', CS.music); csMusic(CS.on); });
   window.addEventListener('keydown', e => { if (!CS.on) return; if (e.key === 'Escape') { csClose(); e.preventDefault(); e.stopPropagation(); } else if (e.key === ' ' || e.key === 'ArrowRight' || e.key === 'Enter') { csNext(); e.preventDefault(); e.stopPropagation(); } }, true);
 })();
