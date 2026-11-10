@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta http-equiv="Cache-Control" content="no-cache"><title>Private Room · bản 73</title><style>html,body{margin:0;padding:0;height:100%}</style></head><body>
+<html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta http-equiv="Cache-Control" content="no-cache"><title>Private Room · bản 74</title><style>html,body{margin:0;padding:0;height:100%}</style></head><body>
 <title>Private Room Casino</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -1850,7 +1850,7 @@ canvas#world { position: absolute; inset: 0; width: 100%; height: 100%; display:
   <!-- Help modal -->
   <div class="modal-wrap" id="helpModal" hidden>
     <div class="modal loan-modal set-modal" role="dialog" aria-label="Cài đặt">
-      <div class="shop-head"><h2 class="panel-title" style="margin:0">Cài đặt</h2><span class="note" id="gameVer" style="margin:0 10px 0 auto;font-weight:700;color:#ffd36a">Phiên bản 73</span><button class="xbtn" id="setX" type="button" aria-label="Đóng" style="margin-left:auto">✕</button></div>
+      <div class="shop-head"><h2 class="panel-title" style="margin:0">Cài đặt</h2><span class="note" id="gameVer" style="margin:0 10px 0 auto;font-weight:700;color:#ffd36a">Phiên bản 74</span><button class="xbtn" id="setX" type="button" aria-label="Đóng" style="margin-left:auto">✕</button></div>
       <div class="set-tabs" role="tablist"><button class="fchip" type="button" data-stab2="sound" aria-pressed="true">Âm thanh</button><button class="fchip" type="button" data-stab2="view" aria-pressed="false">Hiển thị</button><button class="fchip" type="button" data-stab2="save" aria-pressed="false">Lưu game</button><button class="fchip" type="button" data-stab2="keys" aria-pressed="false">Phím điều khiển</button></div>
       <section class="set-pane" data-pane="sound">
         <label class="set-row"><span>Âm lượng tổng <b id="vMasterV"></b></span><input type="range" id="vMaster" min="0" max="100" step="1"></label>
@@ -10552,29 +10552,45 @@ function fxTick(now) {
 const ING = [['Rum trắng', '#f2ead8'], ['Vodka', '#e8f0ff'], ['Tequila', '#f2dc9a'], ['Triple sec', '#fff2cc'], ['Blue curaçao', '#2a7ae8'], ['Siro lựu', '#c8102a'], ['Siro đường', '#fffaf0'],
   ['Nước cam', '#ffa020'], ['Nước dứa', '#ffe060'], ['Nam việt quất', '#b8203a'], ['Cốt chanh', '#d8f070'], ['Kem dừa', '#fbf6ec'], ['Soda', '#dff4ff'], ['Cola', '#3a1a0a']];
 const COCKTAILS = [
-  { n: 'Mojito', r: [[0, 45], [10, 25], [6, 20], [12, 90]], tech: 'khuấy', ice: true, extra: 'mint', g: 'lá bạc hà + lát chanh' },
-  { n: 'Cuba Libre', r: [[0, 50], [13, 120], [10, 10]], tech: 'khuấy', ice: true, g: 'lát chanh' },
-  { n: 'Piña Colada', r: [[0, 50], [11, 30], [8, 90]], tech: 'lắc', ice: true, g: 'miếng dứa + anh đào' },
-  { n: 'Tequila Sunrise', r: [[2, 45], [7, 90], [5, 15]], tech: 'giữ tầng', ice: true, last: 5, g: 'lát cam' },
-  { n: 'Margarita', r: [[2, 50], [3, 20], [10, 25]], tech: 'lắc', ice: false, extra: 'salt', g: 'viền muối + lát chanh' },
-  { n: 'Cosmopolitan', r: [[1, 40], [3, 15], [9, 30], [10, 15]], tech: 'lắc', ice: false, g: 'vỏ cam xoắn' },
-  { n: 'Blue Lagoon', r: [[1, 40], [4, 20], [12, 120]], tech: 'khuấy', ice: true, g: 'lát chanh' },
-  { n: 'Screwdriver', r: [[1, 50], [7, 120]], tech: 'khuấy', ice: true, g: 'lát cam' },
+  { n: 'Mojito', r: [[0, 45], [10, 25], [6, 20], [12, 90]], tech: 'khuấy', ice: true, extra: 'mint', gar: ['mint', 'lime'] },
+  { n: 'Cuba Libre', r: [[0, 50], [13, 120], [10, 10]], tech: 'khuấy', ice: true, gar: ['lime'] },
+  { n: 'Piña Colada', r: [[0, 50], [11, 30], [8, 90]], tech: 'lắc', ice: true, gar: ['pine', 'cherry'] },
+  { n: 'Tequila Sunrise', r: [[2, 45], [7, 90], [5, 15]], tech: 'giữ tầng', ice: true, last: 5, gar: ['orange', 'cherry'] },
+  { n: 'Margarita', r: [[2, 50], [3, 20], [10, 25]], tech: 'lắc', ice: false, gar: ['salt', 'lime'] },
+  { n: 'Cosmopolitan', r: [[1, 40], [3, 15], [9, 30], [10, 15]], tech: 'lắc', ice: false, gar: ['twist'] },
+  { n: 'Blue Lagoon', r: [[1, 40], [4, 20], [12, 120]], tech: 'khuấy', ice: true, gar: ['lime', 'cherry'] },
+  { n: 'Screwdriver', r: [[1, 50], [7, 120]], tech: 'khuấy', ice: true, gar: ['orange'] },
 ];
+// đồ trang trí: bắt buộc theo công thức; ô giấy và ống hút trang trí tự do
+const GARN = [['lime', 'Lát chanh'], ['orange', 'Lát cam'], ['twist', 'Vỏ cam xoắn'], ['pine', 'Miếng dứa'], ['cherry', 'Anh đào'], ['mint', 'Nhánh bạc hà'], ['salt', 'Viền muối'], ['sugar', 'Viền đường'], ['umbrella', 'Ô giấy'], ['straw', 'Ống hút']];
+const GARN_FREE = ['umbrella', 'straw'];
+const garnPos = k => [262 + (k % 2) * 84, 48 + Math.floor(k / 2) * 41];
+function garnIcon(c, id, x, y, s) {
+  c.save(); c.translate(x, y); c.scale(s, s); const t = performance.now() / 1000;
+  if (id === 'lime' || id === 'orange') { const col = id === 'lime' ? ['#6ab82a', '#d8f070'] : ['#f08a10', '#ffd27a']; c.fillStyle = col[0]; c.beginPath(); c.arc(0, 0, 11, 0, 7); c.fill(); c.fillStyle = col[1]; c.beginPath(); c.arc(0, 0, 9, 0, 7); c.fill(); c.strokeStyle = col[0]; c.lineWidth = 1; for (let i = 0; i < 8; i++) { c.beginPath(); c.moveTo(0, 0); c.lineTo(Math.cos(i * Math.PI / 4) * 9, Math.sin(i * Math.PI / 4) * 9); c.stroke(); } }
+  else if (id === 'twist') { c.strokeStyle = '#f08a10'; c.lineWidth = 3.5; c.lineCap = 'round'; c.beginPath(); for (let a = 0; a < 12; a += 0.3) c.lineTo(Math.cos(a * 1.2) * 6, -12 + a * 2); c.stroke(); }
+  else if (id === 'pine') { c.fillStyle = '#ffd040'; c.beginPath(); c.moveTo(-11, 8); c.lineTo(11, 8); c.lineTo(0, -6); c.closePath(); c.fill(); c.strokeStyle = '#c89a20'; c.lineWidth = 1; c.stroke(); c.fillStyle = '#3a9a3a'; [-4, 0, 4].forEach(dx => { c.beginPath(); c.ellipse(dx, -10, 2.2, 6, dx * 0.12, 0, 7); c.fill(); }); }
+  else if (id === 'cherry') { c.strokeStyle = '#3a6a2a'; c.lineWidth = 1.6; c.beginPath(); c.moveTo(0, 0); c.quadraticCurveTo(4, -10, 8, -14); c.stroke(); c.fillStyle = '#d0102a'; c.beginPath(); c.arc(0, 3, 7, 0, 7); c.fill(); c.fillStyle = 'rgba(255,255,255,.6)'; c.beginPath(); c.arc(-2.5, 0.5, 2, 0, 7); c.fill(); }
+  else if (id === 'mint') { c.fillStyle = '#2f9a3f'; [[-5, -2, -0.6], [5, -2, 0.6], [0, -8, 0], [-3, 5, -0.3], [3, 5, 0.3]].forEach(([dx, dy, r]) => { c.beginPath(); c.ellipse(dx, dy, 4, 7, r, 0, 7); c.fill(); }); c.strokeStyle = '#1f6a2a'; c.lineWidth = 1; c.beginPath(); c.moveTo(0, 10); c.lineTo(0, -8); c.stroke(); }
+  else if (id === 'salt' || id === 'sugar') { c.fillStyle = id === 'salt' ? '#ffffff' : '#ffe9c8'; c.fillRect(-12, -4, 24, 8); c.fillStyle = id === 'salt' ? '#c8d0dc' : '#e8c890'; for (let i = 0; i < 9; i++) c.fillRect(-11 + (i * 7) % 22, -3 + (i * 5) % 6, 2, 2); }
+  else if (id === 'umbrella') { c.strokeStyle = '#8a5a30'; c.lineWidth = 1.5; c.beginPath(); c.moveTo(0, -4); c.lineTo(4, 14); c.stroke(); ['#ff5a8a', '#ffd040', '#40c0ff', '#7fe0a0'].forEach((col, i) => { c.fillStyle = col; c.beginPath(); c.moveTo(0, -4); c.arc(0, -4, 13, Math.PI + i * Math.PI / 4, Math.PI + (i + 1) * Math.PI / 4); c.closePath(); c.fill(); }); }
+  else if (id === 'straw') { c.save(); c.rotate(0.25); for (let i = 0; i < 6; i++) { c.fillStyle = i % 2 ? '#fff' : '#ff4a6a'; c.fillRect(-2.5, -16 + i * 5.4, 5, 5.4); } c.restore(); }
+  c.restore();
+}
 const MIX_RATE = 40, GLASS_ML = 260;
 let BX = null;
 function barData() { if (!S.bar3) S.bar3 = { made: 0, perfect: 0, book: {} }; return S.bar3; }
 function openMix(ci) {
   vmOpen('mix', 'Quầy bar · Pha chế cocktail'); const ck = COCKTAILS[ci != null ? ci : Math.floor(Math.random() * COCKTAILS.length)];
-  BX = { ck, pour: null, amt: {}, order: [], ice: false, tech: null, mint: false, salt: false, served: false, t: 0 };
-  vmMsg(`Khách gọi <b>${ck.n}</b>. Bấm giữ chai để rót (40 ml mỗi giây, bảng bên trái đếm từng ml), thả tay là dừng. Rót đủ rồi chọn cách pha và bấm <b>Phục vụ</b>.`);
-  document.getElementById('vmFoot').innerHTML = `<button class="sbtn ghost" id="bxIce" type="button">🧊 Thêm đá</button>${ck.extra === 'mint' ? '<button class="sbtn ghost" id="bxMint" type="button">🌿 Dầm bạc hà</button>' : ''}${ck.extra === 'salt' ? '<button class="sbtn ghost" id="bxSalt" type="button">🧂 Viền muối</button>' : ''}<button class="sbtn ghost" data-tech="lắc" type="button">Lắc</button><button class="sbtn ghost" data-tech="khuấy" type="button">Khuấy</button><button class="sbtn ghost" data-tech="giữ tầng" type="button">Giữ tầng (không khuấy)</button><button class="sbtn" id="bxDump" type="button">Đổ đi</button><button class="sbtn buy" id="bxServe" type="button">Phục vụ</button>`;
+  BX = { ck, pour: null, amt: {}, order: [], ice: false, tech: null, mint: false, gar: new Set(), served: false, t: 0 };
+  vmMsg(`Khách gọi <b>${ck.n}</b>. Bấm giữ chai để rót (40 ml mỗi giây, bảng bên trái đếm từng ml), thả tay là dừng. Rót đủ, chọn cách pha, bấm vào khay <b>đồ trang trí</b> bên trái ly để gắn lên ly, rồi bấm <b>Phục vụ</b>.`);
+  document.getElementById('vmFoot').innerHTML = `<button class="sbtn ghost" id="bxIce" type="button">🧊 Thêm đá</button>${ck.extra === 'mint' ? '<button class="sbtn ghost" id="bxMint" type="button">🌿 Dầm bạc hà</button>' : ''}<button class="sbtn ghost" data-tech="lắc" type="button">Lắc</button><button class="sbtn ghost" data-tech="khuấy" type="button">Khuấy</button><button class="sbtn ghost" data-tech="giữ tầng" type="button">Giữ tầng (không khuấy)</button><button class="sbtn" id="bxDump" type="button">Đổ đi</button><button class="sbtn buy" id="bxServe" type="button">Phục vụ</button>`;
   const flag = (id, k) => { const b = document.getElementById(id); if (b) b.addEventListener('click', () => { BX[k] = true; b.setAttribute('aria-pressed', 'true'); vmBeep(1400, 0.05, 0.05, 'triangle'); }); };
-  flag('bxIce', 'ice'); flag('bxMint', 'mint'); flag('bxSalt', 'salt');
+  flag('bxIce', 'ice'); flag('bxMint', 'mint');
   document.querySelectorAll('[data-tech]').forEach(b => b.addEventListener('click', () => { BX.tech = b.dataset.tech; document.querySelectorAll('[data-tech]').forEach(x => x.setAttribute('aria-pressed', x === b)); if (BX.tech === 'lắc') { BX.shakeT = 1.2; for (let i = 0; i < 6; i++) setTimeout(() => vmBeep(300 + Math.random() * 200, 0.05, 0.05, 'square'), i * 120); } if (BX.tech === 'khuấy') BX.stirT = 1.2; }));
   document.getElementById('bxDump').addEventListener('click', () => openMix(COCKTAILS.indexOf(BX.ck)));
   document.getElementById('bxServe').addEventListener('click', mixServe);
-  VM.down = (x, y) => { if (BX.served) return; const i = mixBottleAt(x, y); if (i >= 0) { BX.pour = i; BX.pourAt = performance.now(); } };
+  VM.down = (x, y) => { if (BX.served) return; for (let k = 0; k < GARN.length; k++) { const [gx2, gy2] = garnPos(k); if (Math.abs(x - gx2 - 30) < 40 && Math.abs(y - gy2) < 19) { const id = GARN[k][0]; if (BX.gar.has(id)) BX.gar.delete(id); else BX.gar.add(id); vmBeep(BX.gar.has(id) ? 1200 : 700, 0.05, 0.05, 'triangle'); return; } } const i = mixBottleAt(x, y); if (i >= 0) { BX.pour = i; BX.pourAt = performance.now(); } };
   VM.up = () => { if (BX.pour != null && !BX.served) { const nowP = performance.now(), pdt = Math.min(0.25, (nowP - (BX.pourAt || nowP)) / 1000); BX.amt[BX.pour] = (BX.amt[BX.pour] || 0) + pdt * MIX_RATE; } BX.pour = null; };
   VM.tick = dt => { BX.t += dt; if (BX.pour != null && !BX.served) { const nowP = performance.now(), pdt = Math.min(0.25, (nowP - (BX.pourAt || nowP)) / 1000); BX.pourAt = nowP; const sum = Object.values(BX.amt).reduce((a, b) => a + b, 0); if (sum < GLASS_ML) { BX.amt[BX.pour] = (BX.amt[BX.pour] || 0) + pdt * MIX_RATE; if (BX.order[BX.order.length - 1] !== BX.pour) BX.order.push(BX.pour); } } BX.shakeT = Math.max(0, (BX.shakeT || 0) - dt); BX.stirT = Math.max(0, (BX.stirT || 0) - dt); };
   VM.draw = mixDraw;
@@ -10588,11 +10604,14 @@ function mixDraw(c, t) {
   let y = 66; ck.r.forEach(([i, ml]) => { const a = B.amt[i] || 0, err = (a - ml) / ml, ok = Math.abs(err) <= 0.1, over = err > 0.15; c.fillStyle = ING[i][1]; c.fillRect(26, y - 10, 12, 12); c.fillStyle = '#fff'; c.font = '700 12px "Be Vietnam Pro", sans-serif'; c.fillText(ING[i][0], 44, y); c.textAlign = 'right'; c.fillStyle = ok ? '#7fe0a0' : over ? '#ff8a7a' : '#ffd36a'; c.fillText(`${Math.round(a)}/${ml} ml${ok ? ' ✓' : ''}`, 210, y); c.textAlign = 'left';
     c.fillStyle = 'rgba(255,255,255,.12)'; c.fillRect(26, y + 5, 184, 6); c.fillStyle = 'rgba(127,224,160,.35)'; c.fillRect(26 + 184 * 0.9 / 1.5, y + 5, 184 * 0.2 / 1.5, 6); c.fillStyle = ok ? '#7fe0a0' : over ? '#ff8a7a' : '#ffd36a'; c.fillRect(26, y + 5, Math.min(184, 184 * a / ml / 1.5), 6); y += 34; });
   const extras = Object.keys(B.amt).filter(i => !ck.r.some(r => r[0] === +i) && B.amt[i] > 2); extras.forEach(i => { c.fillStyle = '#ff8a7a'; c.font = '700 11px "Be Vietnam Pro", sans-serif'; c.fillText(`✗ ${ING[i][0]} ${Math.round(B.amt[i])} ml (thừa)`, 26, y); y += 18; });
-  y += 6; c.fillStyle = '#c8d0ff'; c.font = '600 12px "Be Vietnam Pro", sans-serif'; [[`Đá: ${ck.ice ? 'có' : 'không'}`, B.ice === ck.ice], [`Cách pha: ${ck.tech}`, B.tech === ck.tech], ...(ck.extra === 'mint' ? [['Dầm bạc hà', B.mint]] : []), ...(ck.extra === 'salt' ? [['Viền muối', B.salt]] : []), ...(ck.last != null ? [[`Rót ${ING[ck.last][0]} sau cùng`, B.order[B.order.length - 1] === ck.last]] : [])].forEach(([txt, ok]) => { c.fillStyle = ok ? '#7fe0a0' : '#c8d0ff'; c.fillText((ok ? '✓ ' : '• ') + txt, 26, y); y += 20; });
-  c.fillStyle = '#a89878'; c.fillText(`Trang trí: ${ck.g}`, 26, y + 4);
+  y += 6; c.fillStyle = '#c8d0ff'; c.font = '600 12px "Be Vietnam Pro", sans-serif'; [[`Đá: ${ck.ice ? 'có' : 'không'}`, B.ice === ck.ice], [`Cách pha: ${ck.tech}`, B.tech === ck.tech], ...(ck.extra === 'mint' ? [['Dầm bạc hà', B.mint]] : []), ...(ck.last != null ? [[`Rót ${ING[ck.last][0]} sau cùng`, B.order[B.order.length - 1] === ck.last]] : [])].forEach(([txt, ok]) => { c.fillStyle = ok ? '#7fe0a0' : '#c8d0ff'; c.fillText((ok ? '✓ ' : '• ') + txt, 26, y); y += 20; });
+  y += 4; c.fillStyle = '#ffd36a'; c.font = '800 12px "Be Vietnam Pro", sans-serif'; c.fillText('Trang trí', 26, y); y += 20; c.font = '600 12px "Be Vietnam Pro", sans-serif'; ck.gar.forEach(g => { const ok = B.gar.has(g); c.fillStyle = ok ? '#7fe0a0' : '#c8d0ff'; c.fillText((ok ? '✓ ' : '• ') + GARN.find(x => x[0] === g)[1], 26, y); y += 20; }); [...B.gar].filter(g => !ck.gar.includes(g) && !GARN_FREE.includes(g)).forEach(g => { c.fillStyle = '#ff8a7a'; c.fillText('✗ ' + GARN.find(x => x[0] === g)[1] + ' (không hợp)', 26, y); y += 18; });
+  // khay đồ trang trí
+  c.fillStyle = 'rgba(0,0,0,.35)'; roundRect(c, 238, 10, 184, 236, 10); c.fill(); c.fillStyle = '#e9c8d6'; c.font = '800 11px "Be Vietnam Pro", sans-serif'; c.textAlign = 'left'; c.fillText('KHAY TRANG TRÍ · bấm để gắn', 248, 26);
+  GARN.forEach(([id, nm], k) => { const [x2, y2] = garnPos(k), on = B.gar.has(id); c.fillStyle = on ? 'rgba(127,224,160,.22)' : 'rgba(255,255,255,.06)'; roundRect(c, x2 - 18, y2 - 16, 80, 34, 8); c.fill(); if (on) { c.strokeStyle = '#7fe0a0'; c.lineWidth = 1.5; roundRect(c, x2 - 18, y2 - 16, 80, 34, 8); c.stroke(); } garnIcon(c, id, x2, y2 + 1, 0.85); c.fillStyle = '#fff'; c.font = '600 9.5px "Be Vietnam Pro", sans-serif'; c.textAlign = 'left'; const w2 = nm.split(' '); c.fillText(w2.slice(0, 2).join(' '), x2 + 14, y2 + (w2.length > 2 ? -2 : 4)); if (w2.length > 2) c.fillText(w2.slice(2).join(' '), x2 + 14, y2 + 9); });
   // ly
-  const gx = 500, gy = 40, gw = 130, gh = 190, sh = B.shakeT ? Math.sin(t * 50) * 6 : 0, unit = gh / GLASS_ML; c.save(); c.translate(sh, 0);
-  if (B.salt) { c.fillStyle = '#fff'; c.fillRect(gx - gw / 2 - 2, gy - 4, gw + 4, 6); }
+  const gx = 500, gy = 62, gw = 130, gh = 170, sh = B.shakeT ? Math.sin(t * 50) * 6 : 0, unit = gh / GLASS_ML; c.save(); c.translate(sh, 0);
+  ['salt', 'sugar'].forEach(r => { if (B.gar.has(r)) { c.fillStyle = r === 'salt' ? '#ffffff' : '#ffe9c8'; c.fillRect(gx - gw / 2 - 2, gy - 4, gw + 4, 7); c.fillStyle = r === 'salt' ? '#c8d0dc' : '#e8c890'; for (let i = 0; i < 26; i++) c.fillRect(gx - gw / 2 + (i * 11) % gw, gy - 3 + (i % 3) * 2, 2, 2); } });
   const layers = B.order.map(i => [i, B.amt[i] || 0]); let filled = 0, sum = layers.reduce((a, b) => a + b[1], 0);
   if (B.tech === 'lắc' || B.tech === 'khuấy') { let r = 0, g = 0, b = 0; layers.forEach(([i, a]) => { const h = ING[i][1]; r += parseInt(h.slice(1, 3), 16) * a; g += parseInt(h.slice(3, 5), 16) * a; b += parseInt(h.slice(5, 7), 16) * a; }); if (sum) { c.fillStyle = `rgb(${r / sum | 0},${g / sum | 0},${b / sum | 0})`; c.fillRect(gx - gw / 2 + 6, gy + gh - sum * unit, gw - 12, sum * unit); } }
   else layers.forEach(([i, a]) => { c.fillStyle = ING[i][1]; c.fillRect(gx - gw / 2 + 6, gy + gh - (filled + a) * unit, gw - 12, a * unit); filled += a; });
@@ -10600,6 +10619,7 @@ function mixDraw(c, t) {
   if (B.ice) for (let k = 0; k < 6; k++) { c.fillStyle = 'rgba(230,245,255,.55)'; c.fillRect(gx - 46 + (k * 31) % 80, gy + gh - 50 - (k % 3) * 40, 24, 22); }
   if (B.stirT) { c.strokeStyle = '#ccc'; c.lineWidth = 4; c.beginPath(); c.moveTo(gx + Math.sin(t * 12) * 30, gy - 30); c.lineTo(gx + Math.sin(t * 12) * 20, gy + gh - 20); c.stroke(); }
   c.strokeStyle = 'rgba(255,255,255,.75)'; c.lineWidth = 3; c.beginPath(); c.moveTo(gx - gw / 2, gy); c.lineTo(gx - gw / 2 + 6, gy + gh); c.lineTo(gx + gw / 2 - 6, gy + gh); c.lineTo(gx + gw / 2, gy); c.stroke();
+  { const G2 = B.gar, rimR = gx + gw / 2, rimL = gx - gw / 2; if (G2.has('straw')) garnIcon(c, 'straw', gx + 22, gy - 6, 2.2); if (G2.has('mint')) garnIcon(c, 'mint', gx - 18, gy - 6, 1.6); if (G2.has('lime')) garnIcon(c, 'lime', rimR - 2, gy + 2, 1.5); if (G2.has('orange')) garnIcon(c, 'orange', G2.has('lime') ? rimL + 2 : rimR - 2, gy + 2, 1.5); if (G2.has('pine')) garnIcon(c, 'pine', rimL + 6, gy - 4, 1.5); if (G2.has('twist')) garnIcon(c, 'twist', rimR - 12, gy + 8, 1.4); if (G2.has('cherry')) garnIcon(c, 'cherry', gx + 4, gy - 4, 1.5); if (G2.has('umbrella')) garnIcon(c, 'umbrella', gx - 34, gy - 18, 1.7); }
   const tgt = ck.r.reduce((a, b) => a + b[1], 0); c.setLineDash([5, 4]); c.strokeStyle = '#ffd36a'; c.lineWidth = 2; c.beginPath(); c.moveTo(gx - gw / 2 - 10, gy + gh - tgt * unit); c.lineTo(gx + gw / 2 + 10, gy + gh - tgt * unit); c.stroke(); c.setLineDash([]); c.fillStyle = '#ffd36a'; c.font = '700 11px "Be Vietnam Pro", sans-serif'; c.textAlign = 'left'; c.fillText(`tổng ${tgt} ml`, gx + gw / 2 + 14, gy + gh - tgt * unit + 4); c.fillStyle = '#fff'; c.fillText(`đang có ${Math.round(sum)} ml`, gx + gw / 2 + 14, gy + gh - 4);
   c.restore();
   if (B.pour != null) { c.fillStyle = 'rgba(0,0,0,.6)'; roundRect(c, 380, 4, 240, 26, 8); c.fill(); c.fillStyle = '#fff'; c.font = '800 13px "Be Vietnam Pro", sans-serif'; c.textAlign = 'center'; c.fillText(`Đang rót ${ING[B.pour][0]}: ${Math.round(B.amt[B.pour] || 0)} ml`, 500, 22); }
@@ -10613,7 +10633,7 @@ function mixServe() {
   ck.r.forEach(([i, ml]) => { const a = B.amt[i] || 0, err = Math.abs(a - ml) / ml, s = Math.max(0, 1 - Math.max(0, err - 0.1) * 2.5); acc += s / ck.r.length; if (err > 0.1) notes.push(`${ING[i][0]}: ${Math.round(a)} ml (cần ${ml})`); });
   acc *= 100; Object.keys(B.amt).forEach(i => { if (!ck.r.some(r => r[0] === +i) && B.amt[i] > 2) { acc -= 15; notes.push(`Thừa ${ING[i][0]}`); } });
   if (B.ice !== ck.ice) { acc -= 10; notes.push(ck.ice ? 'Quên cho đá' : 'Món này không dùng đá'); } if (B.tech !== ck.tech) { acc -= 20; notes.push(`Cách pha đúng là: ${ck.tech}`); }
-  if (ck.extra === 'mint' && !B.mint) { acc -= 10; notes.push('Quên dầm bạc hà'); } if (ck.extra === 'salt' && !B.salt) { acc -= 10; notes.push('Quên viền muối'); } if (ck.last != null && B.order[B.order.length - 1] !== ck.last) { acc -= 15; notes.push(`${ING[ck.last][0]} phải rót sau cùng`); }
+  if (ck.extra === 'mint' && !B.mint) { acc -= 10; notes.push('Quên dầm bạc hà'); } ck.gar.forEach(g => { if (!B.gar.has(g)) { acc -= 6; notes.push('Thiếu trang trí: ' + GARN.find(x => x[0] === g)[1].toLowerCase()); } }); [...B.gar].forEach(g => { if (!ck.gar.includes(g) && !GARN_FREE.includes(g)) { acc -= 5; notes.push(GARN.find(x => x[0] === g)[1] + ' không hợp món này'); } }); if (ck.last != null && B.order[B.order.length - 1] !== ck.last) { acc -= 15; notes.push(`${ING[ck.last][0]} phải rót sau cùng`); }
   acc = Math.max(0, Math.round(acc)); const tip0 = acc >= 92 ? 160 : acc >= 75 ? 90 : acc >= 50 ? 40 : 0, tip = tip0 ? Math.round(tip0 * dayCap('mix', 10)) : 0, D = barData(); D.made++; if (acc >= 92) D.perfect++; D.book[ck.n] = Math.max(D.book[ck.n] || 0, acc);
   B.served = true; B.res = { title: acc >= 92 ? 'TUYỆT HẢO!' : acc >= 75 ? 'NGON LẮM' : acc >= 50 ? 'TẠM ĐƯỢC' : 'KHÁCH NHĂN MẶT', sub: `Độ chuẩn ${acc}%${tip ? ` · khách boa ${tip} chip` : ''}`, notes: notes.length ? notes : ['Chuẩn từng ml, đúng kỹ thuật!'] };
   if (tip) vmReward(tip, 'Pha chế ' + ck.n); vmMsg(`Đã pha ${D.made} ly · ${D.perfect} ly tuyệt hảo. Bấm <b>Khách tiếp theo</b> để nhận order mới.`); document.getElementById('bxServe').textContent = 'Khách tiếp theo';
