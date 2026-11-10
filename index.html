@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta http-equiv="Cache-Control" content="no-cache"><title>Private Room · bản 76</title><style>html,body{margin:0;padding:0;height:100%}</style></head><body>
+<html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta http-equiv="Cache-Control" content="no-cache"><title>Private Room · bản 77</title><style>html,body{margin:0;padding:0;height:100%}</style></head><body>
 <title>Private Room Casino</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -1850,7 +1850,7 @@ canvas#world { position: absolute; inset: 0; width: 100%; height: 100%; display:
   <!-- Help modal -->
   <div class="modal-wrap" id="helpModal" hidden>
     <div class="modal loan-modal set-modal" role="dialog" aria-label="Cài đặt">
-      <div class="shop-head"><h2 class="panel-title" style="margin:0">Cài đặt</h2><span class="note" id="gameVer" style="margin:0 10px 0 auto;font-weight:700;color:#ffd36a">Phiên bản 76</span><button class="xbtn" id="setX" type="button" aria-label="Đóng" style="margin-left:auto">✕</button></div>
+      <div class="shop-head"><h2 class="panel-title" style="margin:0">Cài đặt</h2><span class="note" id="gameVer" style="margin:0 10px 0 auto;font-weight:700;color:#ffd36a">Phiên bản 77</span><button class="xbtn" id="setX" type="button" aria-label="Đóng" style="margin-left:auto">✕</button></div>
       <div class="set-tabs" role="tablist"><button class="fchip" type="button" data-stab2="sound" aria-pressed="true">Âm thanh</button><button class="fchip" type="button" data-stab2="view" aria-pressed="false">Hiển thị</button><button class="fchip" type="button" data-stab2="save" aria-pressed="false">Lưu game</button><button class="fchip" type="button" data-stab2="keys" aria-pressed="false">Phím điều khiển</button></div>
       <section class="set-pane" data-pane="sound">
         <label class="set-row"><span>Âm lượng tổng <b id="vMasterV"></b></span><input type="range" id="vMaster" min="0" max="100" step="1"></label>
@@ -10948,6 +10948,18 @@ function kcDone() {
   useFloor(3);
   drawables.push({ y: 160, draw(c) { const x = 1000, y = 110; c.fillStyle = '#2a1a10'; c.beginPath(); c.arc(x, y, 40, 0, 7); c.fill(); for (let i = 0; i < 20; i++) { const a0 = i / 20 * Math.PI * 2, a1 = a0 + Math.PI / 10; c.fillStyle = i % 2 ? '#f4ecd8' : '#111'; c.beginPath(); c.moveTo(x, y); c.arc(x, y, 34, a0, a1); c.fill(); } c.strokeStyle = '#1d8a43'; c.lineWidth = 3; c.beginPath(); c.arc(x, y, 34, 0, 7); c.stroke(); c.fillStyle = '#c8202a'; c.beginPath(); c.arc(x, y, 5, 0, 7); c.fill(); sign(c, 'PHI TIÊU', x, 168, '#ff8fb1', 12); } });
   interactables.push({ x: 1000, y: 250, r: 70, label: 'Ném phi tiêu · 30 chip/lượt', act: () => openDarts() });
+  // bàn bi-a và bàn bi lắc
+  solid(1122, 838, 256, 96); solid(232, 922, 196, 66);
+  drawables.push({ y: 950, draw(c) { const x = 1250, y = 880; shadow(c, x, y + 66, 150, 18, .45); c.fillStyle = '#4a2410'; roundRect(c, x - 138, y - 78, 276, 152, 16); c.fill(); c.fillStyle = '#6a3418'; roundRect(c, x - 130, y - 70, 260, 136, 12); c.fill(); c.fillStyle = '#1a7a4a'; c.fillRect(x - 116, y - 56, 232, 108); c.fillStyle = 'rgba(255,255,255,.06)'; c.fillRect(x - 116, y - 56, 232, 40);
+    [[-118, -58], [0, -60], [118, -58], [-118, 54], [0, 56], [118, 54]].forEach(([dx, dy]) => { c.fillStyle = '#080808'; c.beginPath(); c.arc(x + dx, y + dy, 8, 0, 7); c.fill(); });
+    const cols = ['#f5c518', '#1f4fd0', '#d42a2a', '#6a2aa8', '#f07a10', '#1a8a3a', '#111', '#8a1a1a', '#1f4fd0', '#d42a2a']; let k = 0; for (let r = 0; r < 4; r++) for (let j = 0; j <= r; j++) { c.fillStyle = cols[k++ % cols.length]; c.beginPath(); c.arc(x + 40 + r * 9, y - 1 + (j - r / 2) * 10, 4.6, 0, 7); c.fill(); }
+    c.fillStyle = '#fbf7ec'; c.beginPath(); c.arc(x - 60, y, 4.6, 0, 7); c.fill(); c.strokeStyle = '#d8b880'; c.lineWidth = 3; c.beginPath(); c.moveTo(x - 160, y + 40); c.lineTo(x - 66, y + 3); c.stroke();
+    c.fillStyle = '#ffd36a'; c.font = '800 13px "Be Vietnam Pro", sans-serif'; c.textAlign = 'center'; c.fillText('BI-A', x, y - 88); } });
+  interactables.push({ x: 1250, y: 975, r: 95, label: 'Bàn bi-a · đấu với người yêu hoặc máy', act: () => openDuel('bida') });
+  drawables.push({ y: 1000, draw(c) { const x = 330, y = 950; shadow(c, x, y + 52, 120, 14, .45); c.fillStyle = '#2a1a10'; roundRect(c, x - 106, y - 56, 212, 108, 10); c.fill(); c.fillStyle = '#2a9a4a'; c.fillRect(x - 92, y - 44, 184, 84); c.strokeStyle = 'rgba(255,255,255,.6)'; c.lineWidth = 1.2; c.strokeRect(x - 92, y - 44, 184, 84); c.beginPath(); c.moveTo(x, y - 44); c.lineTo(x, y + 40); c.stroke();
+    [-78, -54, -30, -6, 18, 42, 66].forEach((dx, i) => { c.fillStyle = '#c8c8d0'; c.fillRect(x + dx - 1.5, y - 62, 3, 120); const cnt = [1, 2, 3, 5, 5, 3, 2][i] || 1; for (let m = 0; m < cnt; m++) { c.fillStyle = i % 2 ? '#1f5fd0' : '#d42a2a'; c.fillRect(x + dx - 4, y - 36 + (m + 0.5) * (76 / cnt) - 5, 8, 10); } });
+    c.fillStyle = '#fff'; c.beginPath(); c.arc(x + 4, y - 2, 4, 0, 7); c.fill(); c.fillStyle = '#ffd36a'; c.font = '800 13px "Be Vietnam Pro", sans-serif'; c.textAlign = 'center'; c.fillText('BI LẮC', x, y - 70); } });
+  interactables.push({ x: 330, y: 1030, r: 85, label: 'Bàn bi lắc · đấu với người yêu hoặc máy', act: () => openDuel('bilac') });
   useFloor(5);
   solid(1250, 378, 220, 40);
   drawables.push({ y: 420, draw(c) { const x = 1360, y = 418; shadow(c, x, y + 4, 120, 12, .4); c.fillStyle = '#f4ecd8'; c.fillRect(x - 110, y - 40, 220, 40); c.fillStyle = '#c8b890'; c.fillRect(x - 114, y - 46, 228, 8); c.fillStyle = '#3a3e48'; [[-60], [0]].forEach(([dx]) => { c.beginPath(); c.ellipse(x + dx, y - 46, 20, 6, 0, 0, 7); c.fill(); }); c.fillStyle = '#5a5e68'; c.fillRect(x - 78, y - 66, 36, 18); for (let i = 0; i < 3; i++) { const k = (perf / 1000 * 0.6 + i / 3) % 1; c.strokeStyle = `rgba(255,255,255,${0.5 * (1 - k)})`; c.beginPath(); c.moveTo(x - 66 + i * 6, y - 70 - k * 30); c.quadraticCurveTo(x - 60 + i * 6, y - 80 - k * 30, x - 66 + i * 6, y - 90 - k * 30); c.stroke(); } c.fillStyle = '#c8a070'; c.fillRect(x + 40, y - 52, 50, 8); c.fillStyle = '#7fd06a'; c.fillRect(x + 48, y - 56, 10, 5); c.fillStyle = '#ff7a3a'; c.fillRect(x + 64, y - 56, 8, 5); sign(c, 'BẾP CHUNG', x, y - 100, '#ffd36a', 13); } });
@@ -11956,7 +11968,7 @@ function duoRecv(m) {
     case 'dinv': duelInvited(m); break;
     case 'dacc': duelAccepted(m); break;
     case 'ddec': if (DU.on && DU.wait === m.id) { DU.wait = null; vmMsg(pName() + (m.why === 'chip' ? ' không đủ chip cho mức cược này.' : m.why === 'busy' ? ' đang bận chơi trò khác.' : ' đã từ chối lời mời.')); duoFoot(); } break;
-    case 'dst': if (DU.on && DU.mode === 'net' && !DU.host) { DU.st = m.st; duelAfter(); } break;
+    case 'dst': if (DU.on && DU.mode === 'net' && !DU.host) { const nr = !DU.st || m.st.rid !== DU.st.rid; DU.st = m.st; if (DU.g !== 'bilac' || m.st.res || nr) duelAfter(); } break;
     case 'dact': if (DU.on && DU.mode === 'net' && DU.host && DU.st) { duelApply(1, m.a); } break;
     case 'dleave': if (DU.on && DU.mode === 'net') { DU.gone = true; vmMsg(pName() + ' đã rời bàn' + (DU.st && !DU.st.res ? ' · ván dở không tính tiền' : '')); duoFoot(); } const inv = document.getElementById('duoInv'); if (inv && !inv.hidden) inv.hidden = true; break;
   }
@@ -12408,6 +12420,225 @@ function caroEval(b, i, p) {
   return sc;
 }
 const DGAME = { baicao: BAICAO, tienlen: TIENLEN, caro: CARO };
+// =============== TẦNG 3: BI-A LỖ (8 bi) · BI LẮC — chơi với máy hoặc với người yêu ===============
+Object.assign(DUEL_INFO, {
+  bida: { n: 'Bi-a lỗ', bets: [50, 100, 200, 500, 1000], unit: 'chip mỗi ván', need: b => b,
+    rule: 'Luật 8 bi: người cho bi vào lỗ đầu tiên nhận nhóm bi (trơn 1–7 hoặc sọc 9–15). Ăn hết nhóm mình rồi ăn bi số 8 là thắng. Đưa chuột để ngắm, bấm giữ rồi kéo lùi để lấy lực, thả ra để đánh. Phím ← → để ngắm tinh.' },
+  bilac: { n: 'Bi lắc', bets: [50, 100, 200, 500, 1000], unit: 'chip mỗi trận', need: b => b,
+    rule: 'Ai ghi 5 bàn trước thắng. Di chuột lên xuống (hoặc W/S, ↑/↓) để kéo các thanh cầu thủ, bấm chuột hoặc Space để sút. Bạn đá đội đỏ.' },
+});
+// ---------- BI-A ----------
+const PT = { x0: 95, y0: 88, w: 570, h: 285 }, BBR = 9, BPR = 17;
+const PKS = [[PT.x0, PT.y0], [PT.x0 + PT.w / 2, PT.y0 - 4], [PT.x0 + PT.w, PT.y0], [PT.x0, PT.y0 + PT.h], [PT.x0 + PT.w / 2, PT.y0 + PT.h + 4], [PT.x0 + PT.w, PT.y0 + PT.h]];
+const BCOL = ['#fbf7ec', '#f5c518', '#1f4fd0', '#d42a2a', '#6a2aa8', '#f07a10', '#1a8a3a', '#8a1a1a', '#111111', '#f5c518', '#1f4fd0', '#d42a2a', '#6a2aa8', '#f07a10', '#1a8a3a', '#8a1a1a'];
+const bType = id => id === 0 ? 'cue' : id === 8 ? 'eight' : id < 8 ? 'solid' : 'stripe';
+const GNAME = { solid: 'bi trơn (1–7)', stripe: 'bi sọc (9–15)' };
+function bRack() {
+  const fx = PT.x0 + PT.w * 0.72, fy = PT.y0 + PT.h / 2, ids = [1, 2, 3, 4, 5, 6, 7, 9, 10, 11, 12, 13, 14, 15];
+  for (let i = ids.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [ids[i], ids[j]] = [ids[j], ids[i]]; }
+  const solids = ids.filter(i => i < 8), stripes = ids.filter(i => i > 8), rest = ids.slice(); const pick = arr => { const v = arr.shift(); rest.splice(rest.indexOf(v), 1); return v; };
+  const slots = []; for (let r = 0; r < 5; r++) for (let k = 0; k <= r; k++) slots.push([r, k]);
+  const balls = [{ id: 0, x: PT.x0 + PT.w * 0.25, y: fy, vx: 0, vy: 0, in: false }], order = {};
+  order['4,0'] = pick(solids); order['4,4'] = pick(stripes); order['2,1'] = 8;
+  slots.forEach(([r, k]) => { const key = r + ',' + k; const id = order[key] != null ? order[key] : rest.shift(); balls.push({ id, x: fx + r * (BBR * 2 * 0.866 + 0.4), y: fy + (k - r / 2) * (BBR * 2 + 0.4), vx: 0, vy: 0, in: false }); });
+  return balls.sort((a, b) => a.id - b.id);
+}
+function bSim(balls, vx, vy, frames) { // vật lý cố định bước, chạy giống hệt nhau trên mọi máy
+  const cue = balls[0], dt = 1 / 240, out = { pocketed: [], first: null, rails: 0 }; cue.vx = vx; cue.vy = vy;
+  const L = PT.x0 + BBR, R = PT.x0 + PT.w - BBR, T = PT.y0 + BBR, B = PT.y0 + PT.h - BBR;
+  for (let step = 0; step < 240 * 14; step++) {
+    let moving = false;
+    for (const b of balls) { if (b.in) continue; const s = Math.sqrt(b.vx * b.vx + b.vy * b.vy); if (s < 0.5) { b.vx = 0; b.vy = 0; continue; } moving = true; const ns = Math.max(0, s - (95 + s * 0.22) * dt), k = ns / s; b.vx *= k; b.vy *= k; b.x += b.vx * dt; b.y += b.vy * dt;
+      for (const [px, py] of PKS) { const dx = b.x - px, dy = b.y - py; if (dx * dx + dy * dy < BPR * BPR) { b.in = true; b.vx = 0; b.vy = 0; out.pocketed.push(b.id); break; } } if (b.in) continue;
+      if (b.x < L) { b.x = L + (L - b.x); b.vx = -b.vx * 0.78; out.rails++; } else if (b.x > R) { b.x = R - (b.x - R); b.vx = -b.vx * 0.78; out.rails++; }
+      if (b.y < T) { b.y = T + (T - b.y); b.vy = -b.vy * 0.78; out.rails++; } else if (b.y > B) { b.y = B - (b.y - B); b.vy = -b.vy * 0.78; out.rails++; } }
+    for (let i = 0; i < balls.length; i++) { const a = balls[i]; if (a.in) continue; for (let j = i + 1; j < balls.length; j++) { const b = balls[j]; if (b.in) continue; const dx = b.x - a.x, dy = b.y - a.y, d2 = dx * dx + dy * dy; if (d2 >= 4 * BBR * BBR || d2 === 0) continue;
+      const d = Math.sqrt(d2), nx = dx / d, ny = dy / d, ov = 2 * BBR - d; a.x -= nx * ov / 2; a.y -= ny * ov / 2; b.x += nx * ov / 2; b.y += ny * ov / 2;
+      const vn = (a.vx - b.vx) * nx + (a.vy - b.vy) * ny; if (vn > 0) { const im = vn * 0.97; a.vx -= im * nx; a.vy -= im * ny; b.vx += im * nx; b.vy += im * ny; if (out.first == null) { if (a.id === 0) out.first = b.id; else if (b.id === 0) out.first = a.id; } } } }
+    if (frames && step % 4 === 0) frames.push(balls.map(b => [b.x, b.y, b.in]));
+    if (!moving) break;
+  }
+  balls.forEach(b => { b.vx = 0; b.vy = 0; });
+  return out;
+}
+const bLeft = (st, grp) => st.balls.filter(b => !b.in && bType(b.id) === grp).length;
+function bFree(st, x, y) { return x > PT.x0 + BBR && x < PT.x0 + PT.w - BBR && y > PT.y0 + BBR && y < PT.y0 + PT.h - BBR && !st.balls.some(b => b.id && !b.in && Math.hypot(b.x - x, b.y - y) < 2 * BBR + 1); }
+const BIDA = {
+  init(bet, start, rid) { return { g: 'bida', rid, bet, start, balls: bRack(), turn: start, grp: [null, null], bih: null, brk: true, seq: 0, last: null, res: null, msg: '' }; },
+  turn: st => st.res ? -1 : st.turn,
+  apply(st, s, a) {
+    if (st.res) return 'Ván đã xong'; const o = 1 - s;
+    if (a.type === 'resign') { st.res = { w: o, d: o === 0 ? [st.bet, -st.bet] : [-st.bet, st.bet], resign: s }; return; }
+    if (st.turn !== s) return 'Chưa đến lượt';
+    if (a.type === 'place') { if (st.bih !== s) return 'Không có bi trong tay'; if (!bFree(st, a.x, a.y)) return 'Chỗ này không đặt được bi cái'; const c0 = st.balls[0]; c0.x = a.x; c0.y = a.y; c0.in = false; st.bih = null; return; }
+    if (a.type !== 'shot') return 'Không hợp lệ'; if (st.bih === s) return 'Đặt bi cái trước đã';
+    let vx = +a.vx || 0, vy = +a.vy || 0; const sp = Math.hypot(vx, vy); if (sp > 1400) { vx *= 1400 / sp; vy *= 1400 / sp; } if (sp < 20) return 'Lực quá nhẹ';
+    const pre = st.balls.map(b => ({ id: b.id, x: b.x, y: b.y, in: b.in })), mine = st.grp[s], leftBefore = mine ? bLeft(st, mine) : 7;
+    st.balls.forEach(b => { b.vx = 0; b.vy = 0; }); const r = bSim(st.balls, vx, vy); st.seq++; st.last = { pre, vx, vy, seq: st.seq, by: s };
+    const pk = r.pocketed, cueIn = pk.includes(0), eightIn = pk.includes(8), wasBreak = st.brk; st.brk = false;
+    let foul = cueIn || r.first == null, why = cueIn ? 'Bi cái rơi lỗ' : r.first == null ? 'Bi cái không chạm bi nào' : '';
+    if (!foul && mine && r.first !== null && bType(r.first) !== mine && !(leftBefore === 0 && r.first === 8)) { foul = true; why = 'Chạm bi nhóm khác trước'; }
+    if (!foul && !mine && r.first === 8 && !wasBreak) { foul = true; why = 'Chạm bi 8 trước'; }
+    if (eightIn) {
+      if (wasBreak) { const b8 = st.balls[8]; b8.in = false; b8.x = PT.x0 + PT.w * 0.72; b8.y = PT.y0 + PT.h / 2; while (!bFree(st, b8.x, b8.y)) b8.x += 3; }
+      else { const win = mine && leftBefore === 0 && !foul, w = win ? s : o; st.res = { w, d: w === 0 ? [st.bet, -st.bet] : [-st.bet, st.bet], eight: true, why: win ? 'Ăn bi số 8' : (mine && leftBefore > 0 ? 'Ăn bi 8 khi chưa hết nhóm' : 'Ăn bi 8 kèm phạm lỗi') }; if (cueIn) { st.balls[0].in = false; } return; }
+    }
+    const scored = pk.filter(id => id !== 0 && id !== 8);
+    if (!st.grp[s] && !foul && scored.length && !wasBreak) { const tp = bType(scored[0]); st.grp[s] = tp; st.grp[o] = tp === 'solid' ? 'stripe' : 'solid'; }
+    const mine2 = st.grp[s], cont = !foul && scored.some(id => !mine2 || bType(id) === mine2);
+    if (cueIn) { const c0 = st.balls[0]; c0.in = false; c0.x = PT.x0 + PT.w * 0.25; c0.y = PT.y0 + PT.h / 2; while (!bFree(st, c0.x, c0.y)) c0.y += 5; }
+    st.turn = cont ? s : o; st.bih = foul ? o : null;
+    st.msg = foul ? `Phạm lỗi: ${why} · đối thủ được đặt bi cái` : scored.length ? `Ăn ${scored.length} bi${cont ? ' · đánh tiếp' : ''}` : 'Không ăn bi nào';
+  },
+  bot(st, s) {
+    if (st.bih === s) { let best = null; for (let gx = 0; gx < 10; gx++) for (let gy = 0; gy < 5; gy++) { const x = PT.x0 + 40 + gx * (PT.w - 80) / 9, y = PT.y0 + 30 + gy * (PT.h - 60) / 4; if (!bFree(st, x, y)) continue; const sh = bBestShot(st, s, x, y); if (sh && (!best || sh.score > best.score)) best = Object.assign(sh, { x, y }); } return best ? { type: 'place', x: best.x, y: best.y } : { type: 'place', x: PT.x0 + PT.w * 0.25, y: PT.y0 + PT.h / 2 }; }
+    const c0 = st.balls[0], sh = bBestShot(st, s, c0.x, c0.y);
+    if (st.brk) { const a = (Math.random() - 0.5) * 0.03; return { type: 'shot', vx: 1350 * Math.cos(a), vy: 1350 * Math.sin(a) }; }
+    if (!sh) { const tg = bTargets(st, s).sort((a, b) => Math.hypot(a.x - c0.x, a.y - c0.y) - Math.hypot(b.x - c0.x, b.y - c0.y))[0] || st.balls.find(b => !b.in && b.id); const an = Math.atan2(tg.y - c0.y, tg.x - c0.x); return { type: 'shot', vx: 750 * Math.cos(an), vy: 750 * Math.sin(an) }; }
+    const an = sh.ang + (Math.random() - 0.5) * 0.045; return { type: 'shot', vx: sh.sp * Math.cos(an), vy: sh.sp * Math.sin(an) };
+  },
+};
+function bTargets(st, s) { const g = st.grp[s]; const live = st.balls.filter(b => !b.in && b.id); if (!g) return live.filter(b => b.id !== 8); const own = live.filter(b => bType(b.id) === g); return own.length ? own : live.filter(b => b.id === 8); }
+function segClear(st, x1, y1, x2, y2, skip) { const dx = x2 - x1, dy = y2 - y1, L2 = dx * dx + dy * dy || 1; return !st.balls.some(b => { if (b.in || skip.includes(b.id)) return false; const t = Math.max(0, Math.min(1, ((b.x - x1) * dx + (b.y - y1) * dy) / L2)); return Math.hypot(b.x - (x1 + t * dx), b.y - (y1 + t * dy)) < 2 * BBR - 0.5; }); }
+function bBestShot(st, s, cx, cy) {
+  let best = null;
+  bTargets(st, s).forEach(T => PKS.forEach(([px, py]) => {
+    const tx = px - T.x, ty = py - T.y, tl = Math.hypot(tx, ty), ux = tx / tl, uy = ty / tl, gx = T.x - ux * 2 * BBR, gy = T.y - uy * 2 * BBR, cgx = gx - cx, cgy = gy - cy, cl = Math.hypot(cgx, cgy); if (cl < 1) return;
+    const cos = (cgx * ux + cgy * uy) / cl; if (cos < 0.3) return;
+    if (!segClear(st, cx, cy, gx, gy, [0, T.id]) || !segClear(st, T.x, T.y, px, py, [T.id, 0])) return;
+    const score = cos * cos / (cl + tl * 0.7); if (!best || score > best.score) best = { score, ang: Math.atan2(cgy, cgx), sp: Math.max(420, Math.min(1300, 300 + (cl + tl) * 1.5 / Math.max(0.5, cos))) };
+  }));
+  return best;
+}
+function bRay(st, x, y, ang) { // đường ngắm: bi đầu tiên bị chạm + bi ma
+  const dx = Math.cos(ang), dy = Math.sin(ang); let tMin = Infinity, hit = null;
+  st.balls.forEach(b => { if (b.in || b.id === 0) return; const fx = b.x - x, fy = b.y - y, t = fx * dx + fy * dy; if (t <= 0) return; const d2 = fx * fx + fy * fy - t * t, r2 = 4 * BBR * BBR; if (d2 > r2) return; const tt = t - Math.sqrt(r2 - d2); if (tt < tMin) { tMin = tt; hit = b; } });
+  const wall = Math.min(dx > 0 ? (PT.x0 + PT.w - BBR - x) / dx : dx < 0 ? (PT.x0 + BBR - x) / dx : Infinity, dy > 0 ? (PT.y0 + PT.h - BBR - y) / dy : dy < 0 ? (PT.y0 + BBR - y) / dy : Infinity);
+  if (wall < tMin) return { t: wall, hit: null }; return { t: tMin, hit };
+}
+function drawBida(c, t, st, me, op, turn) {
+  // khung bàn
+  c.fillStyle = '#5a2e14'; roundRect(c, PT.x0 - 34, PT.y0 - 34, PT.w + 68, PT.h + 68, 22); c.fill();
+  c.fillStyle = '#7a4220'; roundRect(c, PT.x0 - 26, PT.y0 - 26, PT.w + 52, PT.h + 52, 16); c.fill();
+  const fg = c.createRadialGradient(PT.x0 + PT.w / 2, PT.y0 + PT.h / 2, 30, PT.x0 + PT.w / 2, PT.y0 + PT.h / 2, PT.w * 0.6); fg.addColorStop(0, '#1f8a5a'); fg.addColorStop(1, '#0f5a38'); c.fillStyle = fg; c.fillRect(PT.x0 - 12, PT.y0 - 12, PT.w + 24, PT.h + 24);
+  c.fillStyle = 'rgba(255,240,200,.9)'; for (let i = 1; i < 8; i++) { if (i === 4) continue; c.beginPath(); c.arc(PT.x0 + PT.w * i / 8, PT.y0 - 22, 2, 0, 7); c.fill(); c.beginPath(); c.arc(PT.x0 + PT.w * i / 8, PT.y0 + PT.h + 22, 2, 0, 7); c.fill(); } for (let i = 1; i < 4; i++) { c.beginPath(); c.arc(PT.x0 - 22, PT.y0 + PT.h * i / 4, 2, 0, 7); c.fill(); c.beginPath(); c.arc(PT.x0 + PT.w + 22, PT.y0 + PT.h * i / 4, 2, 0, 7); c.fill(); }
+  c.strokeStyle = 'rgba(255,255,255,.12)'; c.beginPath(); c.moveTo(PT.x0 + PT.w * 0.25, PT.y0); c.lineTo(PT.x0 + PT.w * 0.25, PT.y0 + PT.h); c.stroke();
+  PKS.forEach(([x, y]) => { c.fillStyle = '#050505'; c.beginPath(); c.arc(x, y, BPR, 0, 7); c.fill(); c.strokeStyle = '#2a1408'; c.lineWidth = 3; c.stroke(); });
+  // bi (đang chạy hoạt ảnh thì lấy vị trí theo khung hình)
+  const A = DU.anim, pos = A ? A.frames[Math.min(A.frames.length - 1, Math.floor(A.i))] : null;
+  const balls = st.balls.map((b, i) => pos ? { id: b.id, x: pos[i][0], y: pos[i][1], in: pos[i][2] } : b);
+  if (st.bih === me && !A && DU.hov) { const ok = bFree(st, DU.hov[0], DU.hov[1]); balls[0] = { id: 0, x: DU.hov[0], y: DU.hov[1], in: false, ghost: !ok }; }
+  balls.forEach(b => { if (b.in) return; c.save(); c.fillStyle = 'rgba(0,0,0,.3)'; c.beginPath(); c.arc(b.x + 2, b.y + 3, BBR, 0, 7); c.fill(); if (b.ghost) c.globalAlpha = 0.45;
+    const tp = bType(b.id); c.fillStyle = tp === 'stripe' ? '#fbf7ec' : BCOL[b.id]; c.beginPath(); c.arc(b.x, b.y, BBR, 0, 7); c.fill();
+    if (tp === 'stripe') { c.save(); c.beginPath(); c.arc(b.x, b.y, BBR, 0, 7); c.clip(); c.fillStyle = BCOL[b.id]; c.fillRect(b.x - BBR, b.y - BBR * 0.55, BBR * 2, BBR * 1.1); c.restore(); }
+    if (b.id) { c.fillStyle = '#fff'; c.beginPath(); c.arc(b.x, b.y, 4.2, 0, 7); c.fill(); c.fillStyle = '#111'; c.font = '700 6px sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText(b.id, b.x, b.y + 0.3); }
+    const gl = c.createRadialGradient(b.x - 3, b.y - 3, 0, b.x - 3, b.y - 3, 7); gl.addColorStop(0, 'rgba(255,255,255,.7)'); gl.addColorStop(1, 'rgba(255,255,255,0)'); c.fillStyle = gl; c.beginPath(); c.arc(b.x, b.y, BBR, 0, 7); c.fill(); c.restore(); });
+  // ngắm & gậy
+  const myTurn = turn === me && !A && !st.res && st.bih !== me && !DU.gone;
+  if (myTurn) { const c0 = st.balls[0], an = DU.aim || 0, r = bRay(st, c0.x, c0.y, an), ex = c0.x + Math.cos(an) * r.t, ey = c0.y + Math.sin(an) * r.t;
+    c.save(); c.setLineDash([5, 5]); c.strokeStyle = 'rgba(255,255,255,.55)'; c.lineWidth = 1.2; c.beginPath(); c.moveTo(c0.x, c0.y); c.lineTo(ex, ey); c.stroke(); c.setLineDash([]); c.strokeStyle = 'rgba(255,255,255,.6)'; c.beginPath(); c.arc(ex, ey, BBR, 0, 7); c.stroke();
+    if (r.hit) { const nx = r.hit.x - ex, ny = r.hit.y - ey, nl = Math.hypot(nx, ny) || 1; c.strokeStyle = 'rgba(255,230,120,.7)'; c.beginPath(); c.moveTo(r.hit.x, r.hit.y); c.lineTo(r.hit.x + nx / nl * 60, r.hit.y + ny / nl * 60); c.stroke(); }
+    const pull = 14 + (DU.pow || 0) * 70, sx = c0.x - Math.cos(an) * (BBR + pull), sy = c0.y - Math.sin(an) * (BBR + pull), L = 300; c.lineCap = 'round'; c.strokeStyle = '#2a1408'; c.lineWidth = 7; c.beginPath(); c.moveTo(sx - Math.cos(an) * L, sy - Math.sin(an) * L); c.lineTo(sx, sy); c.stroke(); c.strokeStyle = '#e8c890'; c.lineWidth = 5; c.beginPath(); c.moveTo(sx - Math.cos(an) * L * 0.55, sy - Math.sin(an) * L * 0.55); c.lineTo(sx, sy); c.stroke(); c.strokeStyle = '#3a8ad8'; c.lineWidth = 5; c.beginPath(); c.moveTo(sx - Math.cos(an) * 6, sy - Math.sin(an) * 6); c.lineTo(sx, sy); c.stroke(); c.restore();
+    if (DU.drag) { c.fillStyle = 'rgba(0,0,0,.5)'; roundRect(c, 690, 120, 18, 220, 9); c.fill(); const p = DU.pow || 0; c.fillStyle = p > 0.8 ? '#ff6a5a' : p > 0.5 ? '#ffd36a' : '#7fe0a0'; roundRect(c, 692, 338 - 216 * p, 14, 216 * p, 7); c.fill(); } }
+  // bảng thông tin
+  c.save(); c.font = '700 13px "Be Vietnam Pro", sans-serif'; c.textBaseline = 'middle';
+  [[op, 30, 'left'], [me, 730, 'right']].forEach(([s, x, al]) => { duelName(c, al === 'left' ? 110 : 650, 24, s, turn === s && !st.res); c.textAlign = 'center'; c.fillStyle = '#f6ead2'; c.font = '600 11.5px "Be Vietnam Pro", sans-serif'; const g = st.grp[s]; c.fillText(g ? `${GNAME[g]} · còn ${bLeft(st, g)}` : 'chưa có nhóm', al === 'left' ? 110 : 650, 48); });
+  c.textAlign = 'center'; c.fillStyle = '#ffd36a'; c.font = '700 13px "Be Vietnam Pro", sans-serif'; c.fillText(A ? '…' : st.bih === me ? 'Bạn được đặt bi cái: bấm vào chỗ trống trên bàn' : turn === me && !st.res ? (st.brk ? 'Bạn phá bi · kéo lùi thật mạnh rồi thả' : 'Đến lượt bạn') : st.res ? '' : 'Đến lượt ' + DU.names[op], 380, 452);
+  if (st.msg && !A) { c.fillStyle = 'rgba(246,234,210,.7)'; c.font = '600 12px "Be Vietnam Pro", sans-serif'; c.fillText(st.msg, 380, 432); }
+  c.restore();
+}
+function bidaTick(dt) { const A = DU.anim; if (!A) return; A.i += dt * 60; if (A.i >= A.frames.length - 1) { DU.anim = null; vmBeep(300, 0.05, 0.03); } else if (Math.floor(A.i) !== A.lastI) { A.lastI = Math.floor(A.i); } }
+function bidaStartAnim(st) { // dựng lại cú đánh từ trạng thái trước để xem chuyển động
+  if (!st.last || st.last.seq === DU.animSeq) return; DU.animSeq = st.last.seq;
+  const balls = st.last.pre.map(b => ({ id: b.id, x: b.x, y: b.y, vx: 0, vy: 0, in: b.in })), frames = []; bSim(balls, st.last.vx, st.last.vy, frames); frames.push(st.balls.map(b => [b.x, b.y, b.in]));
+  DU.anim = { frames, i: 0 }; vmBeep(520, 0.04, 0.05, 'square');
+}
+// ---------- BI LẮC ----------
+const FB = { x0: 60, x1: 700, y0: 74, y1: 406, cy: 240, gh: 56 };
+const RODS = [[100, 0, 'G'], [178, 0, 'D'], [258, 1, 'A'], [340, 0, 'M'], [420, 1, 'M'], [502, 0, 'A'], [582, 1, 'D'], [660, 1, 'G']];
+const MEN = { G: [0], D: [-58, 58], M: [-128, -64, 0, 64, 128], A: [-92, 0, 92] }, MRANGE = { G: 60, D: 100, M: 30, A: 66 };
+const BILAC = {
+  init(bet, start, rid) { return { g: 'bilac', rid, bet, start, score: [0, 0], ball: { x: 380, y: 240, vx: (start ? 1 : -1) * 90, vy: (Math.random() - 0.5) * 120 }, off: [0, 0], kick: [-1, -1], inp: [{ y: 0, k: 0 }, { y: 0, k: 0 }], pause: 1, res: null, flash: null }; },
+  turn: st => st.res ? -1 : -2,
+  apply(st, s, a) {
+    if (st.res) return 'Trận đã xong';
+    if (a.type === 'resign') { const o = 1 - s; st.res = { w: o, d: o === 0 ? [st.bet, -st.bet] : [-st.bet, st.bet], resign: s }; return; }
+    if (a.type === 'in') { st.inp[s] = { y: Math.max(-1, Math.min(1, +a.y || 0)), k: a.k ? 1 : 0 }; return; }
+    return 'Không hợp lệ';
+  },
+};
+function blMenY(st, ri, m) { const [, s, tp] = RODS[ri]; return FB.cy + m + st.off[s] * MRANGE[tp]; }
+function bilacStep(st, dt) {
+  if (st.res) return;
+  for (let s = 0; s < 2; s++) { const tg = st.inp[s].y, d = tg - st.off[s], mv = 3.2 * dt; st.off[s] += Math.abs(d) < mv ? d : Math.sign(d) * mv; if (st.inp[s].k && st.kick[s] < -0.12) { st.kick[s] = 0.18; st.inp[s].k = 0; } st.kick[s] -= dt; }
+  if (st.pause > 0) { st.pause -= dt; return; }
+  const b = st.ball, R = 8; const sp = Math.hypot(b.vx, b.vy); if (sp > 0) { const k = Math.max(0, 1 - 0.45 * dt); b.vx *= k; b.vy *= k; }
+  if (sp < 25) { b.vx += (b.x < 380 ? 1 : -1) * 6 * dt; } // bàn hơi nghiêng để bóng không đứng yên
+  b.x += b.vx * dt; b.y += b.vy * dt;
+  if (b.y < FB.y0 + R) { b.y = FB.y0 + R; b.vy = Math.abs(b.vy) * 0.85; } if (b.y > FB.y1 - R) { b.y = FB.y1 - R; b.vy = -Math.abs(b.vy) * 0.85; }
+  const inGoal = Math.abs(b.y - FB.cy) < FB.gh - R * 0.3;
+  if (b.x < FB.x0 + R) { if (inGoal && b.x < FB.x0 - 6) return blGoal(st, 1); if (!inGoal) { b.x = FB.x0 + R; b.vx = Math.abs(b.vx) * 0.85; } }
+  if (b.x > FB.x1 - R) { if (inGoal && b.x > FB.x1 + 6) return blGoal(st, 0); if (!inGoal) { b.x = FB.x1 - R; b.vx = -Math.abs(b.vx) * 0.85; } }
+  RODS.forEach(([rx, s, tp], ri) => { const dir = s === 0 ? 1 : -1, kk = st.kick[s], swing = kk > 0 ? Math.sin((0.18 - kk) / 0.18 * Math.PI) * 16 : 0, mx = rx + dir * swing;
+    MEN[tp].forEach(m => { const my = blMenY(st, ri, m), dx = b.x - mx, dy = b.y - my, d = Math.hypot(dx, dy), rr = R + 11; if (d >= rr || d === 0) return;
+      const nx = dx / d, ny = dy / d; b.x = mx + nx * rr; b.y = my + ny * rr; const vn = b.vx * nx + b.vy * ny; if (vn < 0) { b.vx -= 1.6 * vn * nx; b.vy -= 1.6 * vn * ny; }
+      if (kk > 0 && dx * dir > -6) { b.vx = dir * (560 + Math.random() * 160); b.vy = dy * 9 + (Math.random() - 0.5) * 80; vmBeep(180 + Math.random() * 60, 0.04, 0.05, 'square'); }
+      else if (Math.abs(vn) > 40) vmBeep(420, 0.02, 0.025); }); });
+  const s2 = Math.hypot(b.vx, b.vy); if (s2 > 900) { b.vx *= 900 / s2; b.vy *= 900 / s2; }
+}
+function blGoal(st, s) {
+  st.score[s]++; st.flash = { s, at: Date.now() }; vmBeep(880, 0.25, 0.08); setTimeout(() => vmBeep(1175, 0.3, 0.08), 160);
+  if (st.score[s] >= 5) { st.res = { w: s, d: s === 0 ? [st.bet, -st.bet] : [-st.bet, st.bet], goals: st.score.slice() }; return; }
+  st.ball = { x: 380, y: 240, vx: (s === 0 ? 1 : -1) * 90, vy: (Math.random() - 0.5) * 140 }; st.pause = 1.2;
+}
+function bilacBot(st, s, dt) {
+  const B = DU.botM || (DU.botM = { t: 0, u: 0 }); B.t -= dt; const b = st.ball, dir = s === 0 ? 1 : -1;
+  if (B.t <= 0) { B.t = 0.1 + Math.random() * 0.08; const py = b.y + b.vy * 0.12 + (Math.random() - 0.5) * 16;
+    const own = RODS.map((r, i) => [r, i]).filter(([r]) => r[1] === s), coming = b.vx * dir < 0;
+    const cand = own.filter(([r]) => coming ? (b.x - r[0]) * dir > -10 : (b.x - r[0]) * dir > -14).sort((p, q) => Math.abs(b.x - p[0][0]) - Math.abs(b.x - q[0][0]))[0] || own[0];
+    const [[, , tp]] = [cand]; let bu = 0, bd = Infinity; MEN[tp].forEach(m => { const u = Math.max(-1, Math.min(1, (py - FB.cy - m) / MRANGE[tp])), err = Math.abs(FB.cy + m + u * MRANGE[tp] - py); if (err < bd) { bd = err; bu = u; } }); B.u = bu; }
+  st.inp[s].y = B.u;
+  RODS.forEach(([rx, rs, tp], ri) => { if (rs !== s) return; MEN[tp].forEach(m => { const my = blMenY(st, ri, m), ahead = (b.x - rx) * dir; if (ahead > -4 && ahead < 26 && Math.abs(b.y - my) < 17 && Math.random() < 0.5) st.inp[s].k = 1; }); });
+}
+function bilacTick(dt) {
+  const st = DU.st; if (!st) return; const me = DU.seat;
+  // điều khiển của mình
+  const K = VM.keys; if (K.has('w') || K.has('arrowup')) DU.ctrlU = Math.max(-1, (DU.ctrlU || 0) - 2.4 * dt); if (K.has('s') || K.has('arrowdown')) DU.ctrlU = Math.min(1, (DU.ctrlU || 0) + 2.4 * dt);
+  if (!st.res && !DU.gone) { st.inp[me].y = DU.ctrlU || 0; if (DU.kickReq) { st.inp[me].k = 1; } }
+  if (DU.mode === 'bot' || DU.host) {
+    if (DU.mode === 'bot' && !st.res) bilacBot(st, 1, dt);
+    const n = Math.ceil(dt / 0.004); for (let i = 0; i < n; i++) bilacStep(st, dt / n);
+    DU.kickReq = false;
+    if (DU.mode === 'net') { DU.sendT = (DU.sendT || 0) - dt; if (DU.sendT <= 0 || st.res) { DU.sendT = 0.05; duoSend({ t: 'dst', st }); } }
+    if (st.res && !DU.settled.has(st.rid)) duelAfter();
+  } else { // người chơi phía bên kia: tự chạy dự đoán, gửi điều khiển 30 lần/giây
+    const n = Math.ceil(dt / 0.004); for (let i = 0; i < n; i++) bilacStep(st, dt / n);
+    DU.sendT = (DU.sendT || 0) - dt; if (DU.sendT <= 0 || DU.kickReq) { DU.sendT = 0.033; if (!DU.gone) duoSend({ t: 'dact', a: { type: 'in', y: DU.ctrlU || 0, k: DU.kickReq ? 1 : 0 } }); DU.kickReq = false; }
+  }
+}
+function drawBilac(c, t, st, me, op) {
+  c.fillStyle = '#3a2414'; roundRect(c, FB.x0 - 30, FB.y0 - 30, FB.x1 - FB.x0 + 60, FB.y1 - FB.y0 + 60, 18); c.fill();
+  const g = c.createLinearGradient(0, FB.y0, 0, FB.y1); g.addColorStop(0, '#2a9a4a'); g.addColorStop(1, '#1f7a3a'); c.fillStyle = g; c.fillRect(FB.x0, FB.y0, FB.x1 - FB.x0, FB.y1 - FB.y0);
+  for (let i = 0; i < 8; i++) { c.fillStyle = i % 2 ? 'rgba(255,255,255,.03)' : 'rgba(0,0,0,.03)'; c.fillRect(FB.x0 + i * 80, FB.y0, 80, FB.y1 - FB.y0); }
+  c.strokeStyle = 'rgba(255,255,255,.75)'; c.lineWidth = 2; c.strokeRect(FB.x0 + 1, FB.y0 + 1, FB.x1 - FB.x0 - 2, FB.y1 - FB.y0 - 2); c.beginPath(); c.moveTo(380, FB.y0); c.lineTo(380, FB.y1); c.stroke(); c.beginPath(); c.arc(380, FB.cy, 42, 0, 7); c.stroke();
+  c.strokeRect(FB.x0, FB.cy - 90, 60, 180); c.strokeRect(FB.x1 - 60, FB.cy - 90, 60, 180);
+  c.fillStyle = '#111'; c.fillRect(FB.x0 - 16, FB.cy - FB.gh, 16, FB.gh * 2); c.fillRect(FB.x1, FB.cy - FB.gh, 16, FB.gh * 2);
+  const col = ['#d42a2a', '#1f5fd0'];
+  // bóng (vẽ dưới thanh)
+  const b = st.ball; c.fillStyle = 'rgba(0,0,0,.3)'; c.beginPath(); c.arc(b.x + 2, b.y + 3, 8, 0, 7); c.fill(); c.fillStyle = '#fff'; c.beginPath(); c.arc(b.x, b.y, 8, 0, 7); c.fill(); c.fillStyle = '#222'; c.beginPath(); c.arc(b.x - 2, b.y - 1, 2.6, 0, 7); c.fill(); c.beginPath(); c.arc(b.x + 3, b.y + 3, 2, 0, 7); c.fill();
+  RODS.forEach(([rx, s, tp], ri) => { const dir = s === 0 ? 1 : -1, kk = st.kick[s], swing = kk > 0 ? Math.sin((0.18 - kk) / 0.18 * Math.PI) * 16 : 0;
+    c.fillStyle = '#c8c8d0'; c.fillRect(rx - 3, FB.y0 - 26, 6, FB.y1 - FB.y0 + 52); c.fillStyle = s === me ? '#ffd36a' : '#888'; c.fillRect(rx - 7, s === 0 ? FB.y1 + 22 : FB.y0 - 34, 14, 12);
+    MEN[tp].forEach(m => { const my = blMenY(st, ri, m), mx = rx + dir * swing; c.fillStyle = 'rgba(0,0,0,.25)'; c.beginPath(); c.ellipse(mx + 3, my + 4, 10, 12, 0, 0, 7); c.fill();
+      c.fillStyle = col[s]; roundRect(c, mx - 9, my - 12, 18, 24, 6); c.fill(); c.fillStyle = '#f2c8a0'; c.beginPath(); c.arc(mx, my - 15, 6, 0, 7); c.fill(); c.fillStyle = '#2a1a10'; c.fillRect(mx + dir * 6 - 2, my + 6, 6 * dir, 6); }); });
+  // bảng tỉ số
+  c.fillStyle = 'rgba(0,0,0,.55)'; roundRect(c, 300, 8, 160, 34, 10); c.fill(); c.font = '900 22px "Big Shoulders Display", Impact'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillStyle = col[0]; c.fillText(st.score[0], 340, 26); c.fillStyle = '#fff'; c.fillText(':', 380, 26); c.fillStyle = col[1]; c.fillText(st.score[1], 420, 26); c.textBaseline = 'alphabetic';
+  c.font = '700 12px "Be Vietnam Pro", sans-serif'; c.fillStyle = col[0]; c.textAlign = 'left'; c.fillText((DU.names[0] || '') + (me === 0 ? ' (bạn)' : ''), 20, 28); c.fillStyle = col[1]; c.textAlign = 'right'; c.fillText((DU.names[1] || '') + (me === 1 ? ' (bạn)' : ''), 740, 28);
+  if (st.flash && Date.now() - st.flash.at < 1300) { const k = (Date.now() - st.flash.at) / 1300; c.save(); c.globalAlpha = 1 - k; c.fillStyle = col[st.flash.s]; c.font = '900 64px "Big Shoulders Display", Impact'; c.textAlign = 'center'; c.fillText('VÀO!', 380, 250 - k * 30); c.restore(); }
+  else if (st.pause > 0 && !st.res) { c.fillStyle = 'rgba(255,255,255,.8)'; c.font = '800 16px "Be Vietnam Pro", sans-serif'; c.textAlign = 'center'; c.fillText('Chuẩn bị…', 380, 210); }
+  c.fillStyle = 'rgba(246,234,210,.7)'; c.font = '600 11.5px "Be Vietnam Pro", sans-serif'; c.textAlign = 'center'; c.fillText(`Bạn đá đội ${me === 0 ? 'ĐỎ, tấn công sang phải' : 'XANH, tấn công sang trái'} · chuột lên/xuống kéo thanh · bấm chuột hoặc Space để sút`, 380, 470);
+}
+Object.assign(DGAME, { bida: BIDA, bilac: BILAC });
+
 // ---------- điều phối ván ----------
 function openDuel(g) {
   if (DU.on && DU.mode === 'net' && VM.mode === 'duel') return;
@@ -12415,7 +12646,7 @@ function openDuel(g) {
   Object.assign(DU, { on: true, g, mode: null, st: null, wait: null, gone: false, wins: [0, 0], round: 0, hint: '', sel: new Set(), peek: [false, false, false] });
   if (!I.bets.includes(DU.bet)) DU.bet = I.bets[1];
   VM.onClose = () => { if (DU.mode === 'net') duoSend({ t: 'dleave' }); DU.on = false; DU.st = null; DU.mode = null; };
-  VM.draw = duelDraw; VM.tick = duelTick; VM.down = duelDown; VM.key = duelKey;
+  VM.draw = duelDraw; VM.tick = duelTick; VM.down = duelDown; VM.key = duelKey; VM.move = duelMove; VM.up = duelUp; DU.anim = null; DU.drag = false; DU.ctrlU = 0;
   duoFoot(); vmMsg(I.rule);
 }
 function duelLobbyBet(b) { DU.bet = b; duoFoot(); }
@@ -12459,6 +12690,7 @@ function duelAct(a) {
   duelApply(DU.seat, a);
 }
 function duelApply(s, a) {
+  if (DU.g === 'bilac' && a.type === 'in') { if (DU.st) DGAME.bilac.apply(DU.st, s, a); return; }
   if (a.type === 'next') { if (DU.st && DU.st.res) duelNewRound(); return; }
   if (!DU.st) return;
   const err = DGAME[DU.g].apply(DU.st, s, a);
@@ -12468,7 +12700,8 @@ function duelApply(s, a) {
 }
 function duelAfter() {
   const st = DU.st; if (!st) return;
-  if (st.rid !== DU.lastRid) { DU.lastRid = st.rid; DU.peek = [false, false, false]; DU.sel.clear(); }
+  if (st.rid !== DU.lastRid) { DU.lastRid = st.rid; DU.peek = [false, false, false]; DU.sel.clear(); DU.anim = null; DU.animSeq = st.last ? st.last.seq : 0; }
+  if (DU.g === 'bida') bidaStartAnim(st);
   if (st.res && !DU.settled.has(st.rid)) {
     DU.settled.add(st.rid);
     if (DU.host) { if (st.res.w >= 0) DU.wins[st.res.w]++; st.wins = DU.wins.slice(); }
@@ -12485,8 +12718,10 @@ function duelAfter() {
   duoFoot();
 }
 function duelTick(dt) {
+  if (DU.g === 'bilac') { if (DU.st && DU.mode) bilacTick(dt); return; }
+  if (DU.g === 'bida' && DU.anim) { bidaTick(dt); return; }
   const st = DU.st; if (!st || DU.mode !== 'bot' || st.res) return;
-  if (DGAME[DU.g].turn(st) === 1) { DU.botT += dt; if (DU.botT > (DU.g === 'caro' ? 0.55 : 0.9)) { DU.botT = 0; const a = DGAME[DU.g].bot(st, 1); const err = DGAME[DU.g].apply(st, 1, a); if (err && DU.g === 'tienlen') DGAME[DU.g].apply(st, 1, { type: 'pass' }); duelAfter(); } }
+  if (DGAME[DU.g].turn(st) === 1) { DU.botT += dt; if (DU.botT > (DU.g === 'caro' ? 0.55 : 0.9)) { DU.botT = 0; const a = DGAME[DU.g].bot(st, 1); const err = DGAME[DU.g].apply(st, 1, a); if (err && DU.g === 'tienlen') DGAME[DU.g].apply(st, 1, { type: 'pass' }); if (err && DU.g === 'bida') { if (st.bih === 1) { for (let k = 0; k < 400; k++) { const x = PT.x0 + 20 + Math.random() * (PT.w - 40), y = PT.y0 + 20 + Math.random() * (PT.h - 40); if (bFree(st, x, y)) { DGAME.bida.apply(st, 1, { type: 'place', x, y }); break; } } } else { const an = Math.random() * 6.28; DGAME.bida.apply(st, 1, { type: 'shot', vx: 700 * Math.cos(an), vy: 700 * Math.sin(an) }); } } duelAfter(); } }
 }
 function duoFoot() {
   const F = document.getElementById('vmFoot'); if (!F || VM.mode !== 'duel') return;
@@ -12503,7 +12738,8 @@ function duoFoot() {
     h += `<button class="sbtn ghost" id="dPeek" type="button">Nặn hết bài</button>`;
   } else if (DU.g === 'tienlen') {
     h = my ? `<button class="sbtn buy" data-da="play" type="button">Đánh (Space)</button><button class="sbtn" data-da="pass" type="button" ${st.trick ? '' : 'disabled'}>Bỏ lượt (P)</button><button class="sbtn ghost" id="dClr" type="button">Bỏ chọn</button>` : `<span class="note" style="margin:0">Đến lượt ${escH(DU.names[1 - DU.seat])}…</span>`;
-  } else if (DU.g === 'caro') h = `<span class="note" style="margin:0">${my ? 'Đến lượt bạn · bấm vào ô để đặt quân' : 'Đến lượt ' + escH(DU.names[1 - DU.seat]) + '…'}</span><button class="sbtn ghost" data-da="resign" type="button">Xin thua</button>`;
+  } else if (DU.g === 'bida' || DU.g === 'bilac') h = `<span class="note" style="margin:0">${DU.g === 'bida' ? 'Đưa chuột để ngắm · bấm giữ, kéo lùi lấy lực, thả để đánh · ← → ngắm tinh' : 'Chuột lên/xuống kéo thanh · bấm chuột hoặc Space để sút'}</span><button class="sbtn ghost" data-da="resign" type="button">Xin thua</button>`;
+  else if (DU.g === 'caro') h = `<span class="note" style="margin:0">${my ? 'Đến lượt bạn · bấm vào ô để đặt quân' : 'Đến lượt ' + escH(DU.names[1 - DU.seat]) + '…'}</span><button class="sbtn ghost" data-da="resign" type="button">Xin thua</button>`;
   if (DU.mode === 'net') h += `<span class="note" style="margin:0 0 0 auto">Đấu với ${escH(DU.names[1 - DU.seat])} · ${fmt(DU.bet)} ${I.unit}</span>`;
   else if (DU.mode === 'bot') h += `<span class="note" style="margin:0 0 0 auto">Đấu với máy · ${fmt(DU.bet)} ${I.unit}</span>`;
   F.innerHTML = h;
@@ -12525,6 +12761,8 @@ function duelKey(k, down) {
   if (!down || !DU.st) return false; const st = DU.st;
   if ((k === ' ' || k === 'enter') && st.res) { duelAct({ type: 'next' }); return true; }
   if (DU.g === 'tienlen' && !st.res) { if (k === ' ' || k === 'enter') { duelBtn('play'); return true; } if (k === 'p') { duelBtn('pass'); return true; } }
+  if (DU.g === 'bilac') { if (k === ' ') { DU.kickReq = true; return true; } if (['w', 's', 'arrowup', 'arrowdown'].includes(k)) return true; }
+  if (DU.g === 'bida' && !st.res) { if (k === 'arrowleft' || k === 'arrowright') { DU.aim = (DU.aim || 0) + (k === 'arrowleft' ? -0.006 : 0.006); return true; } }
   if (DU.g === 'baicao' && !st.res && DGAME.baicao.turn(st) === DU.seat) { const facing = st.raised >= 0 && st.raised !== DU.seat; if (k === '1') { duelBtn(facing ? 'call' : 'check'); return true; } if (k === '2') { duelBtn(facing ? 'fold' : 'raise'); return true; } }
   return false;
 }
@@ -12538,7 +12776,7 @@ function duelName(c, x, y, s, active) {
 }
 function duelDraw(c, t) {
   const g = DU.g, st = DU.st;
-  duelFelt(c, g === 'caro' ? '#6b5a3a' : g === 'tienlen' ? '#245a7a' : '#1d6a52');
+  duelFelt(c, g === 'caro' ? '#6b5a3a' : g === 'tienlen' ? '#245a7a' : g === 'bida' ? '#2a1a14' : g === 'bilac' ? '#1a2a3a' : '#1d6a52');
   if (!st) {
     c.save(); c.textAlign = 'center'; c.fillStyle = '#ffd36a'; c.font = '900 40px "Big Shoulders Display", Impact'; c.fillText(DUEL_INFO[g].n.toUpperCase(), 380, 150);
     c.fillStyle = '#f6ead2'; c.font = '600 15px "Be Vietnam Pro", sans-serif';
@@ -12552,9 +12790,11 @@ function duelDraw(c, t) {
   const me = DU.seat, op = 1 - me, turn = DGAME[g].turn(st);
   if (g === 'caro') drawCaro(c, t, st, me, op, turn);
   else if (g === 'baicao') drawBaiCao(c, t, st, me, op, turn);
+  else if (g === 'bida') drawBida(c, t, st, me, op, turn);
+  else if (g === 'bilac') drawBilac(c, t, st, me, op);
   else drawTienLen(c, t, st, me, op, turn);
   if (DU.hint && performance.now() - DU.hintT < 2200) { c.save(); c.fillStyle = 'rgba(160,30,40,.92)'; c.font = '700 14px "Be Vietnam Pro", sans-serif'; c.textAlign = 'center'; const w = c.measureText(DU.hint).width + 30; roundRect(c, 380 - w / 2, 224, w, 32, 16); c.fill(); c.fillStyle = '#fff'; c.textBaseline = 'middle'; c.fillText(DU.hint, 380, 241); c.restore(); }
-  if (st.res) {
+  if (st.res && !DU.anim) {
     const w = st.res.w, win = w === me, draw = w < 0, d = st.res.d[me];
     c.save(); c.fillStyle = 'rgba(10,4,8,.55)'; c.fillRect(0, g === 'caro' ? 400 : 196, 760, 76); c.textAlign = 'center';
     c.fillStyle = draw ? '#f6ead2' : win ? '#ffd36a' : '#ff8a7a'; c.font = '900 30px "Big Shoulders Display", Impact';
@@ -12619,8 +12859,18 @@ function drawTienLen(c, t, st, me, op, turn) {
   duelName(c, 90, 454, me, turn === me);
   if (DU.sel.size && !st.res) { const cb = tlDetect(h.filter(cd => DU.sel.has(ckey(cd)))); c.save(); c.textAlign = 'right'; c.font = '700 12px "Be Vietnam Pro", sans-serif'; c.fillStyle = cb && tlBeats(cb, st.trick) ? '#7fd69a' : '#ff8a7a'; c.fillText(cb ? (tlBeats(cb, st.trick) ? 'Đánh được ✓' : 'Không chặn được') : 'Bộ chưa hợp lệ', 736, 454); c.restore(); }
 }
+function duelMove(x, y) {
+  const st = DU.st; if (!st) return;
+  if (DU.g === 'bida') { DU.hov = [x, y]; if (DU.drag) DU.pow = Math.max(0, Math.min(1, Math.hypot(x - DU.dragAt[0], y - DU.dragAt[1]) / 170)); else if (!DU.anim && st.bih !== DU.seat) { const c0 = st.balls[0]; DU.aim = Math.atan2(y - c0.y, x - c0.x); } }
+  if (DU.g === 'bilac') DU.ctrlU = Math.max(-1, Math.min(1, (y - FB.cy) / 135));
+}
+function duelUp() {
+  if (DU.g === 'bida' && DU.drag) { DU.drag = false; const p = DU.pow || 0; DU.pow = 0; if (p > 0.04 && DU.st && !DU.anim) { const sp = 120 + p * 1280; duelAct({ type: 'shot', vx: sp * Math.cos(DU.aim || 0), vy: sp * Math.sin(DU.aim || 0) }); } }
+}
 function duelDown(x, y) {
   const st = DU.st; if (!st || st.res) return;
+  if (DU.g === 'bida') { if (DU.anim || DGAME.bida.turn(st) !== DU.seat || DU.gone) return; if (st.bih === DU.seat) { duelAct({ type: 'place', x, y }); return; } DU.drag = true; DU.dragAt = [x, y]; DU.pow = 0; return; }
+  if (DU.g === 'bilac') { DU.kickReq = true; return; }
   if (DU.g === 'caro') { const cs = 27, ox = 30, oy = 34, cx = Math.floor((x - ox) / cs), cy = Math.floor((y - oy) / cs); if (cx >= 0 && cy >= 0 && cx < CN && cy < CN) duelAct({ type: 'move', i: cy * CN + cx }); return; }
   if (DU.g === 'baicao') { for (let i = 0; i < 3; i++) { const cx = 290 + i * 90; if (Math.abs(x - cx) < 36 && Math.abs(y - 340) < 52) { DU.peek[i] = true; vmBeep(520 + i * 80, 0.06, 0.04); } } return; }
   if (DU.g === 'tienlen') { const h = st.h[DU.seat], L = tlLayout(h.length); for (let i = h.length - 1; i >= 0; i--) { const cx = L.x0 + i * L.gap, sel = DU.sel.has(ckey(h[i])), cy = L.y - (sel ? 18 : 0); if (Math.abs(x - cx) < 23 && Math.abs(y - cy) < 34) { const k = ckey(h[i]); if (sel) DU.sel.delete(k); else DU.sel.add(k); vmBeep(600, 0.04, 0.03); return; } } }
