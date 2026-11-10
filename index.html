@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta http-equiv="Cache-Control" content="no-cache"><title>Private Room · bản 77</title><style>html,body{margin:0;padding:0;height:100%}</style></head><body>
+<html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta http-equiv="Cache-Control" content="no-cache"><title>Private Room · bản 79</title><style>html,body{margin:0;padding:0;height:100%}</style></head><body>
 <title>Private Room Casino</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -764,6 +764,8 @@ canvas#world { position: absolute; inset: 0; width: 100%; height: 100%; display:
 .acc-adv summary { cursor: pointer; font-size: 12px; color: #a3927a; } .acc-adv[open] { display: flex; flex-direction: column; gap: 6px; }
 /* ---- chơi chung ---- */
 .tplot.gmine { box-shadow: inset 0 0 0 2px #ffd36a99; } .tplot.gtheirs { box-shadow: inset 0 0 0 2px #ff8fc899; }
+/* ẩn lịch sử kết quả và thống kê thắng thua, lời lỗ ở các bàn chơi */
+#history, #stats, #gHist, #gStats, #bcStats, #bjStats, #rlHistory, #rlStats, #bacHistory, #bacStats { display: none !important; }
 .duo-btn.on { border-color: #ff8fc8 !important; box-shadow: 0 0 14px rgb(255 143 200 / .55); color: #ffd0e6; }
 .duo-btn.wait { border-color: #ffd36a88 !important; }
 .duo-modal { gap: 10px; }
@@ -1256,7 +1258,7 @@ canvas#world { position: absolute; inset: 0; width: 100%; height: 100%; display:
   <section class="panel" id="taixiu" hidden aria-label="Bàn Tài Xỉu">
     <div class="panel-head">
       <h2 class="panel-title">Tài Xỉu</h2>
-      <div class="panel-sub">Chế độ Vui vẻ · cược 100 nhận lại trung bình ~112</div>
+      
     </div>
     <div class="dice-row" id="dice"></div>
     <div class="result" id="result">
@@ -1313,7 +1315,7 @@ canvas#world { position: absolute; inset: 0; width: 100%; height: 100%; display:
   <section class="panel red" id="baucua" hidden aria-label="Bàn Bầu cua">
     <div class="panel-head">
       <h2 class="panel-title">Bầu cua</h2>
-      <div class="panel-sub">Chế độ Vui vẻ · cược 100 nhận lại trung bình ~112</div>
+      
     </div>
     <div class="dice-row" id="bcDice"></div>
     <div class="result" id="bcResult">
@@ -1345,7 +1347,7 @@ canvas#world { position: absolute; inset: 0; width: 100%; height: 100%; display:
   <section class="panel blue" id="blackjack" hidden aria-label="Bàn Xì dách">
     <div class="panel-head">
       <h2 class="panel-title">Xì dách</h2>
-      <div class="panel-sub">Chế độ Vui vẻ · cược 100 nhận lại trung bình ~111</div>
+      
     </div>
     <div class="bj-row"><div class="bj-label"><span>Nhà cái</span><b id="bjDealerTotal"></b></div><div class="hand" id="bjDealer"></div></div>
     <div class="bj-row"><div class="bj-label"><span>Bạn</span><b id="bjPlayerTotal"></b></div><div class="hand" id="bjPlayer"></div></div>
@@ -1382,7 +1384,7 @@ canvas#world { position: absolute; inset: 0; width: 100%; height: 100%; display:
   <section class="panel" id="roulette" hidden aria-label="Bàn Roulette">
     <div class="panel-head">
       <h2 class="panel-title">Roulette</h2>
-      <div class="panel-sub">Chế độ Vui vẻ · cược 100 nhận lại trung bình ~111</div>
+      
     </div>
     <div class="rl-top">
       <div class="wheel-wrap"><canvas id="wheel" width="380" height="380" aria-label="Bánh xe Roulette"></canvas><div class="wheel-ptr"></div></div>
@@ -1419,7 +1421,7 @@ canvas#world { position: absolute; inset: 0; width: 100%; height: 100%; display:
   <section class="panel gold" id="baccarat" hidden aria-label="Bàn Baccarat">
     <div class="panel-head">
       <h2 class="panel-title">Baccarat</h2>
-      <div class="panel-sub">Chế độ Vui vẻ · cược 100 nhận lại trung bình ~112</div>
+      
     </div>
     <div class="bac-hands">
       <div class="bac-side" id="bacPSide"><div class="bj-label"><span>Con</span><b id="bacPTotal"></b></div><div class="hand" id="bacP"></div></div>
@@ -1850,7 +1852,7 @@ canvas#world { position: absolute; inset: 0; width: 100%; height: 100%; display:
   <!-- Help modal -->
   <div class="modal-wrap" id="helpModal" hidden>
     <div class="modal loan-modal set-modal" role="dialog" aria-label="Cài đặt">
-      <div class="shop-head"><h2 class="panel-title" style="margin:0">Cài đặt</h2><span class="note" id="gameVer" style="margin:0 10px 0 auto;font-weight:700;color:#ffd36a">Phiên bản 77</span><button class="xbtn" id="setX" type="button" aria-label="Đóng" style="margin-left:auto">✕</button></div>
+      <div class="shop-head"><h2 class="panel-title" style="margin:0">Cài đặt</h2><span class="note" id="gameVer" style="margin:0 10px 0 auto;font-weight:700;color:#ffd36a">Phiên bản 79</span><button class="xbtn" id="setX" type="button" aria-label="Đóng" style="margin-left:auto">✕</button></div>
       <div class="set-tabs" role="tablist"><button class="fchip" type="button" data-stab2="sound" aria-pressed="true">Âm thanh</button><button class="fchip" type="button" data-stab2="view" aria-pressed="false">Hiển thị</button><button class="fchip" type="button" data-stab2="save" aria-pressed="false">Lưu game</button><button class="fchip" type="button" data-stab2="keys" aria-pressed="false">Phím điều khiển</button></div>
       <section class="set-pane" data-pane="sound">
         <label class="set-row"><span>Âm lượng tổng <b id="vMasterV"></b></span><input type="range" id="vMaster" min="0" max="100" step="1"></label>
@@ -5236,7 +5238,7 @@ function npcReact(win) {
     if (Math.random() < 0.7) { n.emote = win === null ? (Math.random() < .5 ? 'think' : 'shock') : (Math.random() < .5 === !!win ? 'party' : ['cry', 'angry', 'shock'][i % 3]); n.t0 = performance.now() + i * 250; }
   });
 }
-function gameDone(game, net, bet, tag) { try { if (net > 0) { const [eb, why] = eventWinBonus(net); if (eb > 0) { S.chips += eb; refreshHUD(); setTimeout(() => toast(`+${fmt(eb)} chip · ${why}`), 1100); } } } catch (e) { } try { const cb = corpWinBonus(); if (net > 0 && cb) { const bo = Math.max(1, Math.round(net * cb)); S.chips += bo; refreshHUD(); setTimeout(() => toast(`+${fmt(bo)} chip thưởng cổ đông (${Math.round(cb * 100)}%)`), 700); } } catch (e) { } try { achGame(game, net, bet, tag); } catch (e) { } if (S.pet) { const pp = petInfo(S.pet); pp.mood = Math.min(100, pp.mood + 4); addPetXp(S.pet, net > 0 ? 35 : 20); } missionEvent('play'); missionEvent('play', game); if (net > 0) missionEvent('win'); if (net >= 200) missionEvent('bigwin'); }
+function gameDone(game, net, bet, tag) { try { if (net > 0 && isVIP()) { const vb = Math.max(1, Math.round(net * VIP_BONUS)); S.chips += vb; S.vipBonusTot = (S.vipBonusTot || 0) + vb; refreshHUD(); setTimeout(() => toast(`+${fmt(vb)} chip · thưởng VIP 10%`), 900); } } catch (e) { } try { if (net > 0) { const [eb, why] = eventWinBonus(net); if (eb > 0) { S.chips += eb; refreshHUD(); setTimeout(() => toast(`+${fmt(eb)} chip · ${why}`), 1100); } } } catch (e) { } try { const cb = corpWinBonus(); if (net > 0 && cb) { const bo = Math.max(1, Math.round(net * cb)); S.chips += bo; refreshHUD(); setTimeout(() => toast(`+${fmt(bo)} chip thưởng cổ đông (${Math.round(cb * 100)}%)`), 700); } } catch (e) { } try { achGame(game, net, bet, tag); } catch (e) { } if (S.pet) { const pp = petInfo(S.pet); pp.mood = Math.min(100, pp.mood + 4); addPetXp(S.pet, net > 0 ? 35 : 20); } missionEvent('play'); missionEvent('play', game); if (net > 0) missionEvent('win'); if (net >= 200) missionEvent('bigwin'); }
 function sceneFlash(text, cls) { SC.flash = { text, cls, t0: performance.now() }; }
 // ----- dice -----
 function rollDice(results) {
@@ -5615,7 +5617,7 @@ function whIcon(c, id, x, y, s) {
   c.fillStyle = d.col2; c.font = `800 ${s * 0.9}px "Big Shoulders Display", Impact`; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText(id === 'cu' ? '1' : id === 'ag' ? '2' : '3', x, y + 1);
 }
 G2.wh = {
-  title: 'Vòng quay may mắn', sub: 'Chế độ Vui vẻ · cược 100 nhận lại trung bình ~112', cls: 'gold', cols: 4,
+  title: 'Vòng quay may mắn', sub: '', cls: 'gold', cols: 4,
   hint: ['Chọn một biểu tượng rồi bấm Quay', 'Kim dừng đúng biểu tượng đã chọn là thắng · Đầu lâu thì mọi cược đều thua'],
   rules: 'Vòng quay có 20 ô: 10 ô Đồng, 5 ô Bạc, 3 ô Vàng, 1 ô Kim cương, 1 ô Đầu lâu. Chọn một biểu tượng rồi quay. Kim dừng ở biểu tượng đã chọn thì nhận về tiền cược nhân hệ số (đã gồm tiền gốc): Đồng ×2,24, Bạc ×4,48, Vàng ×7,47, Kim cương ×22,4. Kim dừng ở Đầu lâu thì thua. Phím 1 – 4 chọn biểu tượng, Space để quay.',
   options: () => ['cu', 'ag', 'au', 'kc'].map(id => ({ b: WH_SYM[id].name, span: `nhận ×${fmtX(WH_SYM[id].mul)} · ${WH_SEG.filter(s => s === id).length}/20 ô`, sel: WH.sel === id, icon: `<i class="gico" style="background:${WH_SYM[id].col}"></i>` })),
@@ -5673,7 +5675,7 @@ function hrHorse(c, x, y, s, col, t, run, num) {
   c.restore();
 }
 G2.hr = {
-  title: 'Đua ngựa cơ khí', sub: 'Chế độ Vui vẻ · cược 100 nhận lại trung bình ~112', cls: 'green', cols: 3,
+  title: 'Đua ngựa cơ khí', sub: '', cls: 'green', cols: 3,
   hint: ['Chọn một con ngựa rồi bấm Xuất phát', 'Bảng phong độ đổi sau mỗi cuộc đua'],
   rules: '6 con ngựa cơ khí chạy đua. Mỗi con có cơ hội thắng in trên bảng phong độ, đổi sau mỗi cuộc đua. Đặt cược con về nhất. Tiền nhận về = tiền cược × 1,12 ÷ cơ hội thắng của con đó (ví dụ con có 25% cơ hội thì nhận về ×4,48). Phím 1 – 6 chọn ngựa, Space để xuất phát.',
   options: () => HR_NAMES.map(([n, col], i) => ({ b: `${i + 1}. ${n}`, span: `${Math.round(HR.p[i] * 100)}% · nhận ×${fmtX(1.12 / HR.p[i])}`, sel: HR.sel === i, icon: `<i class="gico" style="background:${col}"></i>` })),
@@ -5733,7 +5735,7 @@ function slSym(c, id, x, y, s) {
 }
 const SL = { mine: ['seven', 'seven', 'seven'], side: ['bell', 'star', 'cherry'], spin: null, win: 0 };
 G2.sl = {
-  title: 'Máy xèng đôi', sub: 'Chế độ Vui vẻ · cược 100 nhận lại trung bình ~112', cls: 'red',
+  title: 'Máy xèng đôi', sub: '', cls: 'red',
   hint: ['Đặt cược rồi kéo cần', `3 số 7 nhận ×${fmtX(SL_PAY.seven)} · hai máy cùng ra bộ ba thì thưởng gấp đôi`],
   rules: `Máy có 3 cuộn. Ra 3 biểu tượng giống nhau trên đường giữa thì nhận về tiền cược nhân: số 7 ×${fmtX(SL_PAY.seven)}, Kim cương ×${fmtX(SL_PAY.diamond)}, Ngôi sao ×${fmtX(SL_PAY.star)}, Chuông ×${fmtX(SL_PAY.bell)}, Chanh ×${fmtX(SL_PAY.lemon)}, Anh đào ×${fmtX(SL_PAY.cherry)}. Đúng 2 quả anh đào ở bất kỳ đâu: ×${fmtX(SL_PAY.two)}. Máy bên cạnh quay cùng lúc: nếu cả hai máy cùng ra bộ ba thì phần thưởng của bạn được nhân đôi (Đôi may mắn). Space để kéo cần.`,
   options: () => [], bet: true,
@@ -5788,7 +5790,7 @@ const XD_OPT = [['chan', 'Chẵn', '0, 2, 4 đỏ', 1.24], ['le', 'Lẻ', '1 ho�
 const XD = { sel: 'chan', coins: [1, 0, 1, 0], phase: 'idle', t0: 0 };
 const xdWin = (sel, reds) => sel === 'chan' ? reds % 2 === 0 : sel === 'le' ? reds % 2 === 1 : sel === 'd3' ? reds === 3 : sel === 't3' ? reds === 1 : sel === 'd4' ? reds === 4 : reds === 0;
 G2.xd = {
-  title: 'Xóc đĩa', sub: 'Chế độ Vui vẻ · cược 100 nhận lại trung bình ~112', cls: 'red', cols: 3,
+  title: 'Xóc đĩa', sub: '', cls: 'red', cols: 3,
   hint: ['Chọn cửa rồi bấm Xóc', '4 đồng xu hai mặt đỏ và trắng'],
   rules: 'Nhà cái úp bát xóc 4 đồng xu hai mặt đỏ, trắng. Chẵn (0, 2 hoặc 4 mặt đỏ) và Lẻ (1 hoặc 3 mặt đỏ) trả 1 ăn 1,24. 3 đỏ 1 trắng hoặc 3 trắng 1 đỏ trả 1 ăn 3,48. 4 đỏ hoặc 4 trắng trả 1 ăn 16,9. Phím 1 – 6 chọn cửa, Space để xóc.',
   options: () => XD_OPT.map(([id, n, d, x]) => ({ b: n, span: `1 ăn ${fmtX(x)}${d ? ' · ' + d : ''}`, sel: XD.sel === id })),
@@ -5865,7 +5867,7 @@ G2.hl = {
 const PK_MUL = [7, 2.3, 1.4, 1.15, 0.4, 1.15, 1.4, 2.3, 7];
 const PK = { balls: [], hits: [] };
 G2.pk = {
-  title: 'Plinko', sub: 'Chế độ Vui vẻ · cược 100 nhận lại trung bình ~112', cls: 'blue',
+  title: 'Plinko', sub: '', cls: 'blue',
   hint: ['Đặt cược rồi bấm Thả bi', 'Bi rơi qua 8 hàng cọc vào 1 trong 9 ô · thả nhiều bi liền nhau được'],
   rules: 'Thả bi từ đỉnh qua 8 hàng cọc, bi rơi vào 1 trong 9 ô. Hệ số nhận về (đã gồm tiền gốc), từ ngoài vào giữa: ×7, ×2,3, ×1,4, ×1,15, ô giữa ×0,4. Có thể thả tối đa 5 bi cùng lúc, mỗi bi trừ một lần cược. Space để thả bi.',
   options: () => [], bet: true, pickWhileBusy: true,
@@ -5955,7 +5957,9 @@ Object.assign(FELTS, { wh: ['#3a1a4a', '#14081e'], hr: ['#1d5a3a', '#0b2a1a'], s
 // =============== TẦNG 4 · PHÒNG VIP ===============
 FLOOR_DATA[4] = { solids: [], drawables: [], interactables: [], lights: [], overlays: [] };
 const isVIP = () => S.floor === 4 && !S.inRoom;
-const vipFee = () => Math.max(100, Math.ceil(netWorth() * 0.02));
+const vipFee = () => Math.min(2000, Math.max(100, Math.ceil(netWorth() * 0.01)));
+const vipPaid = () => Math.max(S.vipUntil || 0, S.vipDay || 0) >= S.day;
+const VIP_BONUS = 0.10;
 const marble4 = document.createElement('canvas'); marble4.width = 220; marble4.height = 220;
 (() => { const c = marble4.getContext('2d'); c.fillStyle = '#121016'; c.fillRect(0, 0, 220, 220);
   for (let i = 0; i < 2; i++) for (let j = 0; j < 2; j++) { c.fillStyle = (i + j) % 2 ? '#17141c' : '#100e14'; c.fillRect(i * 110, j * 110, 110, 110); }
@@ -6032,17 +6036,17 @@ function drawShell4(c) {
 function vipGate() {
   return new Promise(res => {
     const nw = netWorth(), fee = vipFee(), m = document.getElementById('vipModal');
-    const okNW = nw >= 3000, okChips = S.chips >= 1000, paid = S.vipDay === S.day;
+    const okNW = nw >= 3000, okChips = S.chips >= 1000, paid = vipPaid();
     if (paid) { res(true); return; }
     document.getElementById('vipBody').innerHTML = `
       <div class="vip-req ${okNW ? 'ok' : 'no'}"><b>${okNW ? '✓' : '✗'}</b> Tài sản ròng từ 3.000 <span>Bạn có ${fmt(nw)}</span></div>
       <div class="vip-req ${okChips ? 'ok' : 'no'}"><b>${okChips ? '✓' : '✗'}</b> Đang cầm từ 1.000 chip <span>Bạn cầm ${fmt(S.chips)}</span></div>
-      <div class="vip-fee">Phí vào cửa hôm nay <b>${fmt(fee)} chip</b><small>100 chip hoặc 2% tài sản ròng, lấy mức cao hơn · trả 1 lần, ra vào thoải mái đến hết ngày</small></div>
-      <ul class="vip-perks"><li>Cược tối đa gấp 3: <b>1.500 chip</b> mỗi ván (vẫn không quá 25% số chip đang cầm)</li><li>4 bàn VIP: Tài Xỉu, Baccarat, Roulette, Xì dách</li><li>Quầy rượu riêng, ly chào mừng miễn phí mỗi ngày</li></ul>`;
+      <div class="vip-fee">Phí vào cửa <b>${fmt(fee)} chip</b><small>1% tài sản ròng (từ 100 đến tối đa 2.000 chip) · trả 1 lần, ra vào thoải mái trong 3 ngày</small></div>
+      <ul class="vip-perks"><li><b>Thưởng VIP +10%</b> tiền thắng ở mọi ván chơi trong phòng VIP</li><li>Cược tối đa gấp 3: <b>1.500 chip</b> mỗi ván (vẫn không quá 25% số chip đang cầm)</li><li>4 bàn VIP: Tài Xỉu, Baccarat, Roulette, Xì dách</li><li>Quầy rượu riêng, ly chào mừng miễn phí mỗi ngày</li></ul>`;
     const pay = document.getElementById('vipPay'); pay.disabled = !(okNW && okChips && S.chips >= fee); pay.textContent = okNW && okChips ? `Trả ${fmt(fee)} chip và vào` : 'Chưa đủ điều kiện';
     m.hidden = false;
     const done = v => { m.hidden = true; pay.onclick = null; document.getElementById('vipBack').onclick = null; res(v); };
-    pay.onclick = () => { S.chips -= fee; S.vipDay = S.day; refreshHUD(); save(); toast(`Đã trả phí VIP ${fmt(fee)} chip. Chúc may mắn!`); done(true); };
+    pay.onclick = () => { S.chips -= fee; S.vipDay = S.day; S.vipUntil = S.day + 2; refreshHUD(); save(); toast(`Đã trả phí VIP ${fmt(fee)} chip. Chúc may mắn!`); done(true); };
     document.getElementById('vipBack').onclick = () => done(false);
   });
 }
@@ -7889,7 +7893,7 @@ async function pressFloor(lv) {
     const b = document.querySelector(`.lbtn[data-lv="${lv}"]`); b.classList.add('lit'); setTimeout(() => b.classList.remove('lit'), 350);
     return;
   }
-  if (lv === 4 && S.vipDay !== S.day && !corpN()) { const ok = await vipGate(); if (!ok) { msg.textContent = 'Phòng VIP: chưa vào'; return; } }
+  if (lv === 4 && !vipPaid() && !corpN()) { const ok = await vipGate(); if (!ok) { msg.textContent = 'Phòng VIP: chưa vào'; return; } }
   liftMoving = true;
   renderButtons(lv);
   msg.textContent = lv > liftLevel ? 'Đang đi lên…' : 'Đang đi xuống…';
