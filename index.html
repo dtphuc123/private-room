@@ -742,6 +742,22 @@ canvas#world { position: absolute; inset: 0; width: 100%; height: 100%; display:
 .fx-cv { position: fixed; inset: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 40; }
 #eventBtn { position: relative; } #eventBtn.need { border-color: #ffd36a !important; box-shadow: 0 0 12px rgb(255 211 106 / .6); }
 .ev-list { display: flex; flex-direction: column; gap: 8px; }
+
+/* ---- tài khoản ---- */
+.acc-wrap { position: fixed; inset: 0; z-index: 300; display: grid; place-items: center; background: radial-gradient(ellipse at 50% 30%, rgb(90 20 40 / .92), rgb(10 3 8 / .97)); backdrop-filter: blur(6px); }
+.acc-wrap[hidden] { display: none; }
+.acc-card { width: min(400px, 92vw); display: flex; flex-direction: column; gap: 12px; padding: 28px 26px 20px; border-radius: 22px; background: linear-gradient(180deg, #2a1420, #160a12); border: 2px solid var(--brass, #d9a441); box-shadow: 0 0 60px rgb(217 164 65 / .25), 0 20px 50px rgb(0 0 0 / .6); }
+.acc-logo { font: 900 38px "Big Shoulders Display", Impact, sans-serif; letter-spacing: .08em; color: #ffd36a; text-align: center; text-shadow: 0 0 22px rgb(255 211 106 / .45); }
+.acc-sub { margin: -8px 0 4px; text-align: center; color: #c9b893; font-size: 13px; }
+.acc-tabs { display: flex; gap: 6px; justify-content: center; }
+.acc-f { display: flex; flex-direction: column; gap: 5px; font-size: 12.5px; color: #c9b893; }
+.acc-f input { background: #120a10; border: 1px solid #ffd36a66; border-radius: 10px; color: #fff; padding: 10px 12px; font: 15px var(--font-body); outline: none; } .acc-f input:focus { border-color: #ffd36a; }
+.acc-go { padding: 11px; font-size: 15px; }
+.acc-err { margin: 0; min-height: 18px; font-size: 13px; color: #ff9a8a; text-align: center; } .acc-err.ok { color: #7fd69a; }
+.acc-skip { background: none; border: none; color: #a3927a; font: 12.5px var(--font-body); text-decoration: underline; cursor: pointer; }
+.acc-box { display: flex; flex-direction: column; gap: 8px; }
+.acc-line { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; padding: 10px 12px; border-radius: 12px; background: rgba(255,211,106,.08); border: 1px solid rgb(255 211 106 / .25); font-size: 13px; } .acc-line b { color: #ffd36a; } .acc-line span { flex: 1; min-width: 160px; color: #c9b893; }
+.acc-adv summary { cursor: pointer; font-size: 12px; color: #a3927a; } .acc-adv[open] { display: flex; flex-direction: column; gap: 6px; }
 /* ---- chơi chung ---- */
 .duo-btn.on { border-color: #ff8fc8 !important; box-shadow: 0 0 14px rgb(255 143 200 / .55); color: #ffd0e6; }
 .duo-btn.wait { border-color: #ffd36a88 !important; }
@@ -1677,6 +1693,20 @@ canvas#world { position: absolute; inset: 0; width: 100%; height: 100%; display:
   </div>
   <div class="duo-chat" id="duoChat" hidden><input id="duoChatIn" maxlength="140" placeholder="Nhắn cho người yêu… (Enter gửi, Esc đóng)" autocomplete="off"><div class="duo-quick"><button type="button" data-q="♥">♥</button><button type="button" data-q="😘">😘</button><button type="button" data-q="😂">😂</button><button type="button" data-q="Lại đây nè">Lại đây nè</button></div></div>
   <div class="duo-inv" id="duoInv" hidden></div>
+  <div class="acc-wrap" id="accKick" hidden><div class="acc-card"><div class="acc-logo" style="font-size:28px">ĐĂNG NHẬP Ở NƠI KHÁC</div><p class="acc-sub" style="margin:0">Tài khoản này vừa được mở trên một máy hoặc tab khác. Máy này đã ngừng lưu để không ghi đè tiến trình mới.</p><button class="sbtn buy acc-go" id="accKickGo" type="button">Chơi tiếp ở máy này</button></div></div>
+  <div class="acc-wrap" id="accModal" hidden>
+    <div class="acc-card" role="dialog" aria-label="Đăng nhập">
+      <div class="acc-logo">PRIVATE ROOM</div><p class="acc-sub">Casino và dinh thự của hai bạn</p>
+      <div class="acc-tabs"><button class="fchip" type="button" data-acct="login">Đăng nhập</button><button class="fchip" type="button" data-acct="reg">Đăng ký</button></div>
+      <label class="acc-f">Tên đăng nhập<input id="accUser" autocomplete="username" maxlength="20" placeholder="ví dụ: phuc.dinh" spellcheck="false"></label>
+      <label class="acc-f">Mật khẩu<input id="accPass" type="password" autocomplete="current-password" placeholder="ít nhất 6 ký tự"></label>
+      <label class="acc-f" id="accPass2Row" hidden>Nhập lại mật khẩu<input id="accPass2" type="password" autocomplete="new-password"></label>
+      <label class="set-chk" id="accBringRow" hidden><input type="checkbox" id="accBring" checked> Mang tiến trình đang chơi trên máy này lên tài khoản mới</label>
+      <button class="sbtn buy acc-go" id="accGo" type="button" disabled>Đang kết nối…</button>
+      <p class="acc-err" id="accErr"></p>
+      <button class="acc-skip" id="accSkip" type="button">Chơi không cần tài khoản (chỉ lưu trên máy này)</button>
+    </div>
+  </div>
   <div class="modal-wrap" id="guestModal" hidden>
     <div class="modal guest-modal" role="dialog" aria-label="Khách đặc biệt">
       <div class="shop-head"><h2 class="panel-title" style="margin:0" id="guestTitle">Khách</h2><button class="xbtn" id="guestX" type="button" aria-label="Đóng" style="margin-left:auto">✕</button></div>
@@ -1835,6 +1865,7 @@ canvas#world { position: absolute; inset: 0; width: 100%; height: 100%; display:
         <p class="note" style="margin:0">Máy yếu bị giật thì tắt bớt hiệu ứng ngày lễ và bật Giảm chuyển động.</p>
       </section>
       <section class="set-pane" data-pane="save" hidden>
+        <div id="accBox" class="acc-box"></div>
         <div class="ln-sum" id="saveInfo" style="grid-template-columns:repeat(3,1fr)"></div>
         <div class="set-btns"><button class="sbtn buy" type="button" id="sNow">Lưu ngay</button><button class="sbtn" type="button" id="sExport">Xuất file lưu</button><button class="sbtn" type="button" id="sImport">Nhập file lưu</button><input type="file" id="sFile" accept=".json,.prsave,application/json" hidden></div>
         <p class="note" style="margin:0">Game tự lưu liên tục trên trình duyệt này. Xuất file lưu để giữ an toàn, hoặc chuyển tiến trình sang máy khác hay sang bản đưa lên GitHub.</p>
@@ -1883,7 +1914,7 @@ const DAY_NAMES = ['Thứ Hai','Thứ Ba','Thứ Tư','Thứ Năm','Thứ Sáu',
 const GAME_MIN_PER_SEC = 1440 / 1800; // 1 ngày = 30 phút
 const SHIRTS = ['#c0392b','#2e86c1','#d9a441','#8e44ad','#16a085','#f4f1ea','#e67e22','#2c3e50'];
 const OLD_SAVE_KEY = 'private-room-web-v1';
-const SAVE_KEY = (() => { try { return localStorage.getItem('pr-test') === '1' ? 'private-room-test-v1' : 'private-room-main-v1'; } catch (e) { return 'private-room-main-v1'; } })();
+const SAVE_KEY = (() => { try { if (localStorage.getItem('pr-test') === '1') return 'private-room-test-v1'; const ac = localStorage.getItem('pr-acc'); return ac ? 'private-room-acc-' + ac : 'private-room-main-v1'; } catch (e) { return 'private-room-main-v1'; } })();
 // lần đầu lên bản chính: tiến trình cũ (chơi ở bản thử) chuyển sang file lưu bản thử, bản chính hỏi người chơi muốn gì
 (() => { try { if (localStorage.getItem('pr-mode-v') !== '1') { const old = localStorage.getItem(OLD_SAVE_KEY); if (old) { if (!localStorage.getItem('private-room-test-v1')) localStorage.setItem('private-room-test-v1', old); localStorage.setItem('pr-main-choice', '1'); } localStorage.setItem('pr-mode-v', '1'); } } catch (e) { } })();
 // ----- CÀI ĐẶT (lưu riêng trên máy này) -----
@@ -1912,9 +1943,10 @@ let S = fresh();
 function load() {
   try { const raw = localStorage.getItem(SAVE_KEY); if (raw) S = Object.assign(fresh(), JSON.parse(raw)); } catch (e) {}
 }
-function save() { if (window.__noSave) return; try { localStorage.setItem(SAVE_KEY, JSON.stringify(S)); if (typeof lastSaveAt !== 'undefined') lastSaveAt = Date.now(); } catch (e) {} }
+function save() { if (window.__noSave) return; try { const pa = S._at; S._at = 0; const body = JSON.stringify(S); S._at = body !== save.last ? Date.now() : pa; save.last = body; localStorage.setItem(SAVE_KEY, JSON.stringify(S)); if (typeof lastSaveAt !== 'undefined') lastSaveAt = Date.now(); } catch (e) {} }
 const hotData = window.claude?.hot?.data;
 if (hotData && hotData.S) S = Object.assign(fresh(), hotData.S); else load();
+window.__bootAt = (S && S._at) || 0;
 window.claude?.hot?.snapshot?.(() => ({ S }));
 
 // ---------- canvas ----------
@@ -4066,7 +4098,7 @@ const look = () => ({ outfit: S.outfit, shoeItem: S.shoeItem, acc: S.acc || {}, 
 // ---------- input ----------
 const keys = new Set();
 const touchDirs = new Set();
-const modalOpen = () => !document.getElementById('mainChoice').hidden || !document.getElementById('startModal').hidden || !document.getElementById('helpModal').hidden || !document.getElementById('liftModal').hidden || !document.getElementById('shopModal').hidden || !document.getElementById('recModal').hidden || !document.getElementById('furnModal').hidden || !document.getElementById('missionModal').hidden || !document.getElementById('petModal').hidden || !document.getElementById('wardModal').hidden || !document.getElementById('vipModal').hidden || !document.getElementById('barModal').hidden || !document.getElementById('cineModal').hidden || !document.getElementById('achModal').hidden || !document.getElementById('starModal').hidden || !document.getElementById('golfModal').hidden || !document.getElementById('vaultModal').hidden || !document.getElementById('loanModal').hidden || !document.getElementById('stockModal').hidden || !document.getElementById('corpModal').hidden || !document.getElementById('storyModal').hidden || !document.getElementById('eventModal').hidden || !document.getElementById('guestModal').hidden || !document.getElementById('cineStory').hidden || !document.getElementById('corpEnd').hidden || !document.getElementById('treeModal').hidden || !document.getElementById('fishModal').hidden || !document.getElementById('photoModal').hidden || !document.getElementById('liftFx').hidden || !document.getElementById('duoModal').hidden;
+const modalOpen = () => !document.getElementById('mainChoice').hidden || !document.getElementById('startModal').hidden || !document.getElementById('helpModal').hidden || !document.getElementById('liftModal').hidden || !document.getElementById('shopModal').hidden || !document.getElementById('recModal').hidden || !document.getElementById('furnModal').hidden || !document.getElementById('missionModal').hidden || !document.getElementById('petModal').hidden || !document.getElementById('wardModal').hidden || !document.getElementById('vipModal').hidden || !document.getElementById('barModal').hidden || !document.getElementById('cineModal').hidden || !document.getElementById('achModal').hidden || !document.getElementById('starModal').hidden || !document.getElementById('golfModal').hidden || !document.getElementById('vaultModal').hidden || !document.getElementById('loanModal').hidden || !document.getElementById('stockModal').hidden || !document.getElementById('corpModal').hidden || !document.getElementById('storyModal').hidden || !document.getElementById('eventModal').hidden || !document.getElementById('guestModal').hidden || !document.getElementById('cineStory').hidden || !document.getElementById('corpEnd').hidden || !document.getElementById('treeModal').hidden || !document.getElementById('fishModal').hidden || !document.getElementById('photoModal').hidden || !document.getElementById('liftFx').hidden || !document.getElementById('duoModal').hidden || !document.getElementById('accModal').hidden || !document.getElementById('accKick').hidden;
 window.addEventListener('keydown', e => {
   if (e.target.tagName === 'INPUT') return;
   const k = e.key.toLowerCase();
@@ -11601,11 +11633,11 @@ function renderDuo(soft) {
 const duoLeft = ms => { const h = ms / 3600000; return h >= 24 ? Math.ceil(h / 24) + ' ngày' : h >= 1 ? Math.ceil(h) + ' giờ' : Math.ceil(ms / 60000) + ' phút'; };
 document.getElementById('duoBtn').addEventListener('click', () => openDuo());
 document.getElementById('duoX').addEventListener('click', duoClose);
-document.getElementById('duoHost').addEventListener('click', () => duoStart(true, peerCodeGen()));
-document.getElementById('duoJoin').addEventListener('click', () => { const c = document.getElementById('duoIn').value.trim().toUpperCase().replace(/[^A-Z0-9]/g, ''); if (c.length !== 6) { toast('Mã phòng gồm 6 ký tự'); return; } duoStart(false, c); });
+document.getElementById('duoHost').addEventListener('click', async () => { if (accBound()) { duoStatus('Đang tạo phòng…', ''); const c = await accCreateRoom(); if (c) duoStart(true, c); } else duoStart(true, peerCodeGen()); });
+document.getElementById('duoJoin').addEventListener('click', () => { const c = document.getElementById('duoIn').value.trim().toUpperCase().replace(/[^A-Z0-9]/g, ''); if (c.length !== 6) { toast('Mã phòng gồm 6 ký tự'); return; } if (accBound()) { duoStatus('Đang tìm phòng…', ''); accJoinRoom(c).then(r => { if (r) duoStart(r.host, c); }); } else duoStart(false, c); });
 document.getElementById('duoIn').addEventListener('keydown', e => { e.stopPropagation(); if (e.key === 'Enter') document.getElementById('duoJoin').click(); });
 document.getElementById('duoCopy').addEventListener('click', () => { try { navigator.clipboard.writeText(NET.code); toast('Đã chép mã ' + NET.code); } catch (e) { toast('Mã: ' + NET.code); } });
-document.getElementById('duoLeave').addEventListener('click', () => { if (DU.on && DU.mode === 'net') vmClose(); duoLeave(false); });
+document.getElementById('duoLeave').addEventListener('click', () => { if (DU.on && DU.mode === 'net') vmClose(); duoLeave(false); try { accLeaveRoom(); } catch (e) { } });
 document.querySelectorAll('[data-dtab]').forEach(b => b.addEventListener('click', () => { NET.tab = b.dataset.dtab; NET.readId = null; renderDuo(); }));
 (() => {
   const i = document.getElementById('duoChatIn'), box = document.getElementById('duoChat');
@@ -11620,7 +11652,7 @@ window.addEventListener('keydown', e => {
   else if (e.key.toLowerCase() === 'h' && !e.repeat && S.started && !modalOpen() && !seated && !DECOR.on) openDuo();
 });
 // tự vào lại phòng cũ khi mở game
-setTimeout(() => { try { const sv = JSON.parse(localStorage.getItem('pr-play') || 'null'); if (sv && sv.code && /^[A-Z0-9]{6}$/.test(sv.code)) duoStart(!!sv.host, sv.code, true); } catch (e) { } duoHud(); }, 1800);
+setTimeout(() => { try { if (localStorage.getItem('pr-acc')) { duoHud(); return; } const sv = JSON.parse(localStorage.getItem('pr-play') || 'null'); if (sv && sv.code && /^[A-Z0-9]{6}$/.test(sv.code)) duoStart(!!sv.host, sv.code, true); } catch (e) { } duoHud(); }, 1800);
 
 // ----- thăm phòng người yêu + thi trang trí -----
 NET.visit = null;
@@ -12079,6 +12111,196 @@ function duelDown(x, y) {
   if (DU.g === 'tienlen') { const h = st.h[DU.seat], L = tlLayout(h.length); for (let i = h.length - 1; i >= 0; i--) { const cx = L.x0 + i * L.gap, sel = DU.sel.has(ckey(h[i])), cy = L.y - (sel ? 18 : 0); if (Math.abs(x - cx) < 23 && Math.abs(y - cy) < 34) { const k = ckey(h[i]); if (sel) DU.sel.delete(k); else DU.sel.add(k); vmBeep(600, 0.04, 0.03); return; } } }
 }
 (() => { const cvv = document.getElementById('vmCv'); cvv.addEventListener('pointermove', e => { if (VM.mode !== 'duel' || DU.g !== 'caro') return; const [x, y] = vmPos(e), cx = Math.floor((x - 30) / 27), cy = Math.floor((y - 34) / 27); DU.hov = cx >= 0 && cy >= 0 && cx < CN && cy < CN ? cy * CN + cx : -1; }); })();
+
+// =============== TÀI KHOẢN + LƯU LÊN MẠNG (Firebase) ===============
+const FB_CONFIG_BUILTIN = { apiKey: "AIzaSyDmeM_UfS4_LV7cKdLx0fTaqcW6wCK1lzU", authDomain: "private-room-6ee09.firebaseapp.com", projectId: "private-room-6ee09", storageBucket: "private-room-6ee09.firebasestorage.app", messagingSenderId: "61547343912", appId: "1:61547343912:web:6b2d9c461d4c2e91e1c51d" };
+const FB_VER = '10.12.2';
+const ACC = { cfg: null, auth: null, db: null, user: null, prof: null, upAt: 0, dirty: true, err: null, ready: false, tab: 'login', loading: false, checked: false, last: '', base: 0 };
+const accBaseK = () => 'pr-acc-base-' + (ACC.user ? ACC.user.uid : '');
+const accSetBase = v => { ACC.base = v; try { localStorage.setItem(accBaseK(), String(v)); } catch (e) { } };
+const accName = u => (u && u.email ? u.email.split('@')[0] : '');
+const accMail = n => n + '@privateroom.game';
+function accCfg() { try { const o = JSON.parse(localStorage.getItem('pr-fbcfg') || 'null'); if (o && o.apiKey && o.projectId) return o; } catch (e) { } return FB_CONFIG_BUILTIN; }
+const accSkipHost = () => /claude/.test(location.hostname);
+const accBound = () => !!(ACC.user && localStorage.getItem('pr-acc') === ACC.user.uid && !TEST_MODE);
+function loadScript(srcs) { return new Promise((res, rej) => { const tryN = i => { if (i >= srcs.length) { rej(new Error('load')); return; } const sc = document.createElement('script'); sc.src = srcs[i]; sc.onload = () => res(); sc.onerror = () => { sc.remove(); tryN(i + 1); }; document.head.appendChild(sc); }; tryN(0); }); }
+let FB_LIB = null;
+function fbLib() {
+  if (FB_LIB) return FB_LIB;
+  const src = n => [`https://www.gstatic.com/firebasejs/${FB_VER}/firebase-${n}-compat.js`, `https://cdn.jsdelivr.net/npm/firebase@${FB_VER}/firebase-${n}-compat.js`];
+  FB_LIB = (async () => { if (!window.firebase) await loadScript(src('app')); if (!firebase.auth) await loadScript(src('auth')); if (!firebase.firestore) await loadScript(src('firestore')); return window.firebase; })();
+  FB_LIB.catch(() => { FB_LIB = null; });
+  return FB_LIB;
+}
+async function accInit() {
+  ACC.cfg = accCfg(); accBox();
+  if (!ACC.cfg || accSkipHost() || TEST_MODE) return;
+  const bound = localStorage.getItem('pr-acc'), off = localStorage.getItem('pr-offline') === '1';
+  if (!bound && !off) accShow();
+  try { await fbLib(); } catch (e) { accErr('Không tải được hệ thống tài khoản. Kiểm tra mạng rồi tải lại trang, hoặc chơi không cần tài khoản.'); return; }
+  try {
+    if (!firebase.apps.length) firebase.initializeApp(ACC.cfg);
+    ACC.auth = firebase.auth(); ACC.db = firebase.firestore();
+    try { await ACC.db.enablePersistence({ synchronizeTabs: true }); } catch (e) { }
+  } catch (e) { accErr('Cấu hình máy chủ chưa đúng (' + (e.code || e.message) + ').'); return; }
+  ACC.ready = true; accUI();
+  ACC.auth.onAuthStateChanged(u => { accOnUser(u).catch(e => { console.error(e); accErr('Lỗi tài khoản: ' + (e.code || e.message)); }); });
+}
+function accReload(msg) {
+  let n = 0; try { const r = JSON.parse(sessionStorage.getItem('pr-acc-rl') || '{"n":0,"t":0}'); n = Date.now() - r.t < 20000 ? r.n : 0; } catch (e) { }
+  if (n >= 2) { toast('Đang đồng bộ, thử tải lại trang sau ít giây'); return; }
+  try { sessionStorage.setItem('pr-acc-rl', JSON.stringify({ n: n + 1, t: Date.now() })); if (msg) sessionStorage.setItem('pr-acc-msg', msg); } catch (e) { }
+  window.__noSave = true; location.reload();
+}
+async function accDown(uid) {
+  const ref = ACC.db.collection('saves').doc(uid), d = await ref.get(); if (!d.exists) return null;
+  const m = d.data(), n = m.n || 1, parts = await Promise.all(Array.from({ length: n }, (_, i) => ref.collection('parts').doc('p' + i).get()));
+  const str = parts.map(p => (p.exists ? p.data().s : '')).join(''); if (!str) return null;
+  return { data: str, savedAt: m.savedAt || 0, name: m.name };
+}
+async function accPoll() {
+  if (!accBound() || !ACC.checked || ACC.polling) return; ACC.polling = true;
+  try { const ud = await ACC.db.collection('users').doc(ACC.user.uid).get(); const sid = ud.exists ? ud.data().sid : null;
+    if (sid && ACC.sid && sid !== ACC.sid) { ACC.checked = false; ACC.polling = false; accKick(); return; }
+    const d = await ACC.db.collection('saves').doc(ACC.user.uid).get(); const m = d.exists ? d.data() : null;
+    if (m && m.savedAt > ACC.base + 1000) { const c = await accDown(ACC.user.uid); if (c) { ACC.checked = false; localStorage.setItem(SAVE_KEY, c.data); accSetBase(c.savedAt); accReload('Tài khoản vừa được chơi ở máy khác · đã tải tiến trình mới nhất'); return; } }
+    await accUpload(false);
+  } catch (e) { ACC.err = e.code || e.message; accBox(); }
+  ACC.polling = false;
+}
+function accUpload(force) {
+  if (!accBound() || !ACC.checked || !S.started) return Promise.resolve(false);
+  const cmp = JSON.stringify(Object.assign({}, S, { _at: 0 })); if (!force && cmp === ACC.last) return Promise.resolve(false);
+  ACC.dirty = false; ACC.last = cmp;
+  try {
+    if (!S._at) S._at = Date.now();
+    const str = JSON.stringify(S), CH = 700000, n = Math.max(1, Math.ceil(str.length / CH)), ref = ACC.db.collection('saves').doc(ACC.user.uid), b = ACC.db.batch();
+    for (let i = 0; i < n; i++) b.set(ref.collection('parts').doc('p' + i), { s: str.slice(i * CH, (i + 1) * CH) });
+    const sa = S._at; b.set(ref, { n, savedAt: sa, name: S.name || '', day: S.day || 1, nw: Math.round(netWorth()), v: 1 }); ACC.base = Math.max(ACC.base, sa);
+    return b.commit().then(() => { accSetBase(Math.max(+(localStorage.getItem(accBaseK()) || 0), sa)); ACC.upAt = Date.now(); ACC.err = null; accBox(); return true; }, e => { ACC.last = ''; ACC.err = e.code || e.message; accBox(); return false; });
+  } catch (e) { ACC.dirty = true; ACC.err = e.message; return Promise.resolve(false); }
+}
+async function accOnUser(u) {
+  ACC.user = u || null;
+  const bound = localStorage.getItem('pr-acc');
+  if (!u) {
+    if (bound) { ACC.err = 'Phiên đăng nhập đã hết, đăng nhập lại để tiếp tục lưu lên mạng'; accShow(); }
+    accBox(); return;
+  }
+  if (bound !== u.uid) { // vừa đăng nhập: chọn tiến trình rồi tải lại
+    accMsg('Đang tải tiến trình…');
+    const cloud = await accDown(u.uid);
+    let data = cloud ? cloud.data : null;
+    if (!data && S.started && document.getElementById('accBring').checked && !bound) { S._at = Date.now(); data = JSON.stringify(S); }
+    const key = 'private-room-acc-' + u.uid;
+    if (data) localStorage.setItem(key, data); else localStorage.removeItem(key);
+    localStorage.setItem('pr-acc', u.uid); localStorage.removeItem('pr-offline');
+    try { localStorage.setItem('pr-acc-base-' + u.uid, String(cloud ? cloud.savedAt : data ? JSON.parse(data)._at || 0 : 0)); } catch (e) { }
+    if (data && !cloud) { try { const o = JSON.parse(data); const ref = ACC.db.collection('saves').doc(u.uid), b = ACC.db.batch(); const CH = 700000, n = Math.max(1, Math.ceil(data.length / CH)); for (let i = 0; i < n; i++) b.set(ref.collection('parts').doc('p' + i), { s: data.slice(i * CH, (i + 1) * CH) }); b.set(ref, { n, savedAt: o._at || Date.now(), name: o.name || '', day: o.day || 1, v: 1 }); await Promise.race([b.commit(), wait(6000)]); } catch (e) { } }
+    accReload(cloud ? 'Chào mừng trở lại, ' + accName(u) + '!' : 'Đã tạo tài khoản ' + accName(u) + ' ♥');
+    return;
+  }
+  accHide();
+  // đã gắn tài khoản: giữ phiên rồi kiểm tra bản trên mạng có mới hơn không (chơi ở máy khác)
+  ACC.sid = Math.random().toString(36).slice(2); try { await ACC.db.collection('users').doc(u.uid).set({ sid: ACC.sid, sidAt: Date.now(), name: accName(u) }, { merge: true }); } catch (e) { }
+  await wait(1500);
+  try {
+    const cloud = await accDown(u.uid);
+    const base = +(localStorage.getItem(accBaseK()) || 0);
+    if (cloud && cloud.savedAt > base + 500) { localStorage.setItem(SAVE_KEY, cloud.data); accSetBase(cloud.savedAt); accReload('Đã tải tiến trình mới nhất từ tài khoản'); return; }
+    ACC.base = cloud ? cloud.savedAt : 0; ACC.checked = true; accUpload(true);
+  } catch (e) { ACC.err = e.code || e.message; ACC.checked = true; }
+  try { const pd = await ACC.db.collection('users').doc(u.uid).get(); ACC.prof = pd.exists ? pd.data() : {}; } catch (e) { ACC.prof = {}; }
+  accBox();
+  if (ACC.prof.room && !duoOn()) { try { const r = await ACC.db.collection('rooms').doc(ACC.prof.room).get(); if (r.exists) duoStart(r.data().host === u.uid, ACC.prof.room, true); } catch (e) { } }
+}
+function accKick() {
+  if (duoOn() || NET.code) duoLeave(true);
+  const k = document.getElementById('accKick'); k.hidden = false; promptEl.hidden = true;
+  document.getElementById('accKickGo').onclick = () => accReload('Đã quay lại chơi ở máy này');
+}
+// ----- phòng gắn với tài khoản -----
+async function accCreateRoom() {
+  if (ACC.prof && ACC.prof.room) { try { const r = await ACC.db.collection('rooms').doc(ACC.prof.room).get(); if (r.exists && r.data().host === ACC.user.uid) return ACC.prof.room; } catch (e) { } }
+  for (let k = 0; k < 4; k++) {
+    const code = peerCodeGen(), ref = ACC.db.collection('rooms').doc(code);
+    try { const ex = await ref.get(); if (ex.exists) continue; await ref.set({ host: ACC.user.uid, members: [ACC.user.uid], hostName: S.name || accName(ACC.user), at: Date.now() }); await ACC.db.collection('users').doc(ACC.user.uid).set({ room: code, name: accName(ACC.user) }, { merge: true }); ACC.prof = Object.assign(ACC.prof || {}, { room: code }); return code; }
+    catch (e) { duoStatus('Không tạo được phòng: ' + (e.code || e.message), 'warn'); return null; }
+  }
+  return null;
+}
+async function accJoinRoom(code) {
+  try {
+    const ref = ACC.db.collection('rooms').doc(code), r = await ref.get();
+    if (!r.exists) { duoStatus('Không có phòng ' + code + '. Kiểm tra lại mã.', 'warn'); return null; }
+    const d = r.data(), me = ACC.user.uid;
+    if (!d.members.includes(me)) { if (d.members.length >= 2) { duoStatus('Phòng ' + code + ' đã đủ 2 người.', 'warn'); return null; } await ref.update({ members: firebase.firestore.FieldValue.arrayUnion(me), guestName: S.name || accName(ACC.user) }); }
+    await ACC.db.collection('users').doc(me).set({ room: code, name: accName(ACC.user) }, { merge: true }); ACC.prof = Object.assign(ACC.prof || {}, { room: code });
+    return { host: d.host === me };
+  } catch (e) { duoStatus('Không vào được phòng: ' + (e.code || e.message), 'warn'); return null; }
+}
+async function accLeaveRoom() {
+  if (!ACC.user || !ACC.prof || !ACC.prof.room) return; const code = ACC.prof.room;
+  try { await ACC.db.collection('users').doc(ACC.user.uid).set({ room: null }, { merge: true }); await ACC.db.collection('rooms').doc(code).update({ members: firebase.firestore.FieldValue.arrayRemove(ACC.user.uid) }); } catch (e) { }
+  ACC.prof.room = null;
+}
+// ----- giao diện đăng nhập -----
+const accEl = id => document.getElementById(id);
+function accShow() { accEl('accModal').hidden = false; promptEl.hidden = true; accUI(); setTimeout(() => { const i = accEl('accUser'); if (i && !i.value) i.focus(); }, 50); }
+function accHide() { accEl('accModal').hidden = true; }
+function accErr(t) { const e = accEl('accErr'); e.textContent = t || ''; e.className = 'acc-err'; ACC.loading = false; accUI(); }
+function accMsg(t) { const e = accEl('accErr'); e.textContent = t || ''; e.className = 'acc-err ok'; }
+function accUI() {
+  const reg = ACC.tab === 'reg';
+  document.querySelectorAll('[data-acct]').forEach(b => b.setAttribute('aria-pressed', b.dataset.acct === ACC.tab));
+  accEl('accPass2Row').hidden = !reg; accEl('accBringRow').hidden = !reg || !S.started || !!localStorage.getItem('pr-acc');
+  accEl('accPass').autocomplete = reg ? 'new-password' : 'current-password';
+  const go = accEl('accGo'); go.textContent = !ACC.ready ? 'Đang kết nối…' : ACC.loading ? 'Đang xử lý…' : reg ? 'Tạo tài khoản' : 'Đăng nhập'; go.disabled = !ACC.ready || ACC.loading;
+}
+const ACC_ERR = { 'auth/invalid-credential': 'Sai tên đăng nhập hoặc mật khẩu', 'auth/wrong-password': 'Sai mật khẩu', 'auth/user-not-found': 'Chưa có tài khoản này, bấm Đăng ký', 'auth/email-already-in-use': 'Tên đăng nhập này đã có người dùng', 'auth/weak-password': 'Mật khẩu cần ít nhất 6 ký tự', 'auth/network-request-failed': 'Mất mạng, thử lại', 'auth/too-many-requests': 'Thử sai quá nhiều lần, đợi vài phút', 'auth/invalid-email': 'Tên đăng nhập không hợp lệ', 'auth/operation-not-allowed': 'Máy chủ chưa bật đăng nhập Email/Password', 'auth/unauthorized-domain': 'Trang này chưa được thêm vào Authorized domains của Firebase' };
+async function accSubmit() {
+  if (!ACC.ready || ACC.loading) return;
+  const u = accEl('accUser').value.trim().toLowerCase(), p = accEl('accPass').value, reg = ACC.tab === 'reg';
+  if (!/^[a-z0-9_.]{3,20}$/.test(u)) { accErr('Tên đăng nhập 3–20 ký tự: chữ không dấu, số, dấu chấm hoặc gạch dưới'); return; }
+  if (p.length < 6) { accErr('Mật khẩu cần ít nhất 6 ký tự'); return; }
+  if (reg && p !== accEl('accPass2').value) { accErr('Hai lần nhập mật khẩu chưa khớp'); return; }
+  ACC.loading = true; accUI(); accMsg(reg ? 'Đang tạo tài khoản…' : 'Đang đăng nhập…');
+  try { if (reg) await ACC.auth.createUserWithEmailAndPassword(accMail(u), p); else await ACC.auth.signInWithEmailAndPassword(accMail(u), p); }
+  catch (e) { accErr(ACC_ERR[e.code] || ('Lỗi: ' + (e.code || e.message))); }
+}
+async function accLogout() {
+  if (!ACC.auth) return; toast('Đang lưu lên mạng rồi đăng xuất…'); save(); ACC.dirty = true;
+  await Promise.race([accUpload(true), wait(5000)]);
+  if (duoOn() || NET.code) duoLeave(true);
+  try { await ACC.auth.signOut(); } catch (e) { }
+  localStorage.removeItem('pr-acc'); localStorage.removeItem('pr-play'); window.__noSave = true; location.reload();
+}
+function accBox() {
+  const B = document.getElementById('accBox'); if (!B) return;
+  const cfg = ACC.cfg || accCfg(); let h = '';
+  if (!cfg) h = `<div class="acc-line"><b>Tài khoản</b><span>Chưa kết nối máy chủ · tiến trình chỉ lưu trên trình duyệt này</span></div>`;
+  else if (TEST_MODE) h = `<div class="acc-line"><b>Tài khoản</b><span>Bản thử không lưu lên mạng</span></div>`;
+  else if (ACC.user && accBound()) h = `<div class="acc-line"><b>☁ ${escH(accName(ACC.user))}</b><span>${ACC.err ? 'Chưa lưu được: ' + escH(ACC.err) : ACC.upAt ? 'Đã lưu lên mạng lúc ' + new Date(ACC.upAt).toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit', second: '2-digit' }) : 'Đang đồng bộ…'} · tự lưu mỗi 20 giây</span><button class="sbtn buy" type="button" id="accUpNow">Lưu lên mạng ngay</button><button class="sbtn ghost" type="button" id="accOut">Đăng xuất</button></div>`;
+  else h = `<div class="acc-line"><b>Tài khoản</b><span>Đang chơi không đăng nhập · chỉ lưu trên máy này</span><button class="sbtn buy" type="button" id="accIn">Đăng nhập / Đăng ký</button></div>`;
+  h += `<details class="acc-adv"><summary>Cấu hình máy chủ Firebase</summary><textarea id="accCfgIn" class="duo-ta" placeholder="Dán đoạn const firebaseConfig = {...} vào đây"></textarea><div class="set-btns"><button class="sbtn" type="button" id="accCfgSave">Lưu cấu hình</button><button class="sbtn ghost" type="button" id="accCfgClr">Dùng cấu hình mặc định</button></div></details>`;
+  B.innerHTML = h;
+  const on = (id, f) => { const e = document.getElementById(id); if (e) e.addEventListener('click', f); };
+  on('accUpNow', async () => { save(); ACC.dirty = true; const ok = await accUpload(true); toast(ok ? 'Đã lưu lên mạng' : 'Chưa lưu được, thử lại sau'); });
+  on('accOut', accLogout); on('accIn', () => { localStorage.removeItem('pr-offline'); if (document.getElementById('helpModal') && !document.getElementById('helpModal').hidden) toggleHelp(); if (!ACC.ready) accInit(); accShow(); });
+  on('accCfgSave', () => { const t = document.getElementById('accCfgIn').value, o = {}; const re = /(\w+)\s*:\s*["']([^"']+)["']/g; let m; while ((m = re.exec(t))) o[m[1]] = m[2]; if (!o.apiKey || !o.projectId) { toast('Chưa thấy apiKey và projectId trong đoạn đã dán'); return; } localStorage.setItem('pr-fbcfg', JSON.stringify(o)); toast('Đã lưu cấu hình · đang tải lại'); setTimeout(() => { save(); window.__noSave = true; location.reload(); }, 700); });
+  on('accCfgClr', () => { localStorage.removeItem('pr-fbcfg'); toast('Đã xoá cấu hình riêng'); setTimeout(() => { save(); window.__noSave = true; location.reload(); }, 700); });
+  B.querySelectorAll('textarea').forEach(i => i.addEventListener('keydown', e => e.stopPropagation()));
+}
+document.querySelectorAll('[data-acct]').forEach(b => b.addEventListener('click', () => { ACC.tab = b.dataset.acct; accErr(''); }));
+accEl('accGo').addEventListener('click', accSubmit);
+['accUser', 'accPass', 'accPass2'].forEach(id => accEl(id).addEventListener('keydown', e => { e.stopPropagation(); if (e.key === 'Enter') accSubmit(); }));
+accEl('accSkip').addEventListener('click', () => { if (localStorage.getItem('pr-acc')) { localStorage.removeItem('pr-acc'); localStorage.setItem('pr-offline', '1'); window.__noSave = true; location.reload(); return; } localStorage.setItem('pr-offline', '1'); accHide(); });
+setInterval(() => { if (accBound() && document.visibilityState === 'visible') accPoll(); }, 20000);
+document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'hidden' && accBound()) { save(); accUpload(false); } });
+window.addEventListener('pagehide', () => { if (accBound() && !window.__noSave) accUpload(false); });
+try { navigator.storage && navigator.storage.persist && navigator.storage.persist(); } catch (e) { }
+try { const m = sessionStorage.getItem('pr-acc-msg'); if (m) { sessionStorage.removeItem('pr-acc-msg'); setTimeout(() => toast(m), 1500); } } catch (e) { }
+setTimeout(() => { accInit(); }, 300);
 
 // ---------- boot ----------
 resize(); refreshHUD(); refreshClock();
