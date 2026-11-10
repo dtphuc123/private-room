@@ -1657,7 +1657,7 @@ canvas#world { position: absolute; inset: 0; width: 100%; height: 100%; display:
       <canvas id="starCv" width="760" height="480" aria-label="Bầu trời đêm"></canvas>
       <p class="note star-msg" id="starMsg"></p>
       <div class="star-bar" id="starConsBar"><div class="star-done" id="starDone"></div><button class="sbtn ghost" id="starHint" type="button">Gợi ý hình</button><button class="sbtn ghost" id="starClear" type="button">Xoá đường</button><button class="sbtn buy" id="starNew" type="button">Bầu trời khác</button></div>
-      <div class="star-bar" id="starSkyBar" hidden><button class="sbtn ghost" id="skyOut" type="button">− Thu nhỏ</button><button class="sbtn ghost" id="skyIn" type="button">+ Phóng to</button><button class="fchip" id="skyLines" type="button" aria-pressed="true">Đường chòm sao</button><button class="fchip" id="skyNames" type="button" aria-pressed="true">Tên sao</button><label class="sky-time">Tua giờ <input type="range" id="skyTime" min="-12" max="12" step="0.25" value="0"></label><button class="fchip" id="skyFF" type="button" aria-pressed="false">Tua nhanh ▶▶</button><button class="sbtn buy" id="skyNow" type="button">Bây giờ</button></div>
+      <div class="star-bar" id="starSkyBar" hidden><button class="sbtn ghost" id="skyOut" type="button">− Thu nhỏ</button><button class="sbtn ghost" id="skyIn" type="button">+ Phóng to</button><button class="fchip" id="skyLines" type="button" aria-pressed="true">Đường chòm sao</button><button class="fchip" id="skyNames" type="button" aria-pressed="true">Tên sao</button><label class="sky-time">Tua giờ <input type="range" id="skyTime" min="-12" max="12" step="0.25" value="0"></label><button class="fchip" id="skyFF" type="button" aria-pressed="false">Tua nhanh ▶▶</button><button class="sbtn buy" id="skyNow" type="button">Bây giờ</button><select class="ev-sel" id="skyPlace" aria-label="Nơi ngắm sao"></select></div>
       <div class="star-bar" id="starFwBar" hidden><div class="fw-types" id="fwTypes"></div><div class="fw-cols" id="fwCols"></div><button class="sbtn ghost" id="fwClear" type="button">Xoá</button><button class="sbtn ghost" id="fwSave" type="button">Lưu ảnh</button><button class="sbtn buy" id="fwPlay" type="button">Bắn ▶</button></div>
     </div>
   </div>
@@ -10159,11 +10159,31 @@ function csVoices() {
   const any = sort(vs);
   return { f: fem[0] || any[0] || null, m: male[0] || any[0] || null, any: any[0] || null, natural: vs.some(v => nat(v) === 0) };
 }
+// giọng đọc trực tuyến (Google) cho trình duyệt không có giọng tiếng Việt: Chrome, Cốc Cốc, Firefox…
+function csChunks(text) {
+  const out = []; let cur = '';
+  text.replace(/["“”]/g, '').split(/(?<=[.!?…,;:])\s+/).forEach(part => { if ((cur + ' ' + part).trim().length > 180 && cur) { out.push(cur.trim()); cur = part; } else cur = (cur + ' ' + part).trim(); });
+  if (cur) out.push(cur.trim());
+  return out.flatMap(c => c.length <= 190 ? [c] : c.match(/.{1,180}(\s|$)/g).map(x => x.trim()));
+}
+function csStopVoice() { try { speechSynthesis.cancel(); } catch (e) { } if (CS.aud) { try { CS.aud.pause(); } catch (e) { } CS.aud = null; } CS.speaking = false; CS.vtok = (CS.vtok || 0) + 1; }
+function csSpeakOnline(text, who) {
+  const W = CS_WHO[who] || CS_WHO['Ông Lâm'], parts = csChunks(text), tok = CS.vtok = (CS.vtok || 0) + 1; let i = 0;
+  const next = () => {
+    if (tok !== CS.vtok || i >= parts.length) { if (tok === CS.vtok) CS.speaking = false; return; }
+    const a = new Audio('https://translate.google.com/translate_tts?ie=UTF-8&tl=vi&client=tw-ob&ttsspeed=1&q=' + encodeURIComponent(parts[i++]));
+    a.volume = SET.mute ? 0 : SET.master / 100; try { a.preservesPitch = false; a.mozPreservesPitch = false; a.webkitPreservesPitch = false; } catch (e) { }
+    a.playbackRate = W.g === 'f' ? 1.04 : W.p < 0.9 ? 0.86 : 0.92; // hạ giọng cho nhân vật nam
+    a.onended = next; a.onerror = () => { CS.online = 'fail'; CS.speaking = false; csVoiceUI(); };
+    CS.aud = a; a.play().then(() => { CS.online = 'ok'; csVoiceUI(); }).catch(() => { CS.speaking = false; });
+  };
+  CS.speaking = true; CS.speakAt = performance.now(); next();
+}
 function csSpeakAs(text, who) {
-  CS.speaking = false;
-  if (!CS.voice || !('speechSynthesis' in window)) return;
+  csStopVoice();
+  if (!CS.voice) return;
   try {
-    const V = csVoices(); if (!V.any) return;
+    const V = csVoices(); if (!V.any) { if (CS.online !== 'fail' && navigator.onLine !== false) csSpeakOnline(text, who); return; }
     const W = CS_WHO[who] || CS_WHO['Ông Lâm'], v = W.g === 'f' ? V.f : V.m, same = V.f === V.m;
     const u = new SpeechSynthesisUtterance(text.replace(/["“”]/g, '')); u.voice = v; u.lang = v.lang;
     u.rate = 0.95; u.pitch = same ? (W.g === 'f' ? 1.25 : W.p) : W.p; u.volume = SET.mute ? 0 : SET.master / 100;
@@ -10198,10 +10218,11 @@ function playCine(chs, epi, after) {
   document.getElementById('csProg').innerHTML = CS.list.map(() => '<i></i>').join(''); csMusic(true); cancelAnimationFrame(CS.raf);
   const cv2 = document.getElementById('csCv'), c = cv2.getContext('2d'); const loop = now => { if (!CS.on) return; csFrame(c, now); CS.raf = requestAnimationFrame(loop); }; CS.raf = requestAnimationFrame(loop);
 }
-function csNext() { if (!CS.on) return; CS.idx++; CS.t0 = performance.now(); try { speechSynthesis.cancel(); } catch (e) { } if (CS.idx >= CS.list.length) csClose(); }
-function csClose() { if (!CS.on) return; CS.on = false; cancelAnimationFrame(CS.raf); try { speechSynthesis.cancel(); } catch (e) { } csMusic(false); hideAnim(document.getElementById('cineStory')); const a = CS.after; CS.after = null; if (a) setTimeout(a, 350); }
+function csNext() { if (!CS.on) return; CS.idx++; CS.t0 = performance.now(); csStopVoice(); if (CS.idx >= CS.list.length) csClose(); }
+function csClose() { if (!CS.on) return; CS.on = false; cancelAnimationFrame(CS.raf); csStopVoice(); csMusic(false); hideAnim(document.getElementById('cineStory')); const a = CS.after; CS.after = null; if (a) setTimeout(a, 350); }
 function csSpeak(text) { if (!CS.voice || !('speechSynthesis' in window)) return; try { const vs = speechSynthesis.getVoices(), v = vs.find(x => /^vi/i.test(x.lang)); if (!v) return; const u = new SpeechSynthesisUtterance(text.replace(/["“”]/g, '')); u.voice = v; u.lang = v.lang; u.rate = 0.95; u.pitch = 0.95; u.volume = SET.mute ? 0 : SET.master / 100; speechSynthesis.cancel(); speechSynthesis.speak(u); } catch (e) { } }
 function csHasVoice() { try { return speechSynthesis.getVoices().some(x => /^vi/i.test(x.lang)); } catch (e) { return false; } }
+let csVoiceUI = () => { };
 function csMusic(on) {
   if (CS.mus) { clearInterval(CS.mus.iv); try { CS.mus.g.gain.linearRampToValueAtTime(0, CS.mus.ctx.currentTime + 0.6); } catch (e) { } CS.mus = null; } if (!on || !CS.music) return;
   try { const ctx = actx(), g = ctx.createGain(), dl = ctx.createDelay(), fb = ctx.createGain(); g._music = true; dl._music = true; g.gain.value = 0.0001; g.gain.linearRampToValueAtTime(0.5, ctx.currentTime + 1.5); dl.delayTime.value = 0.33; fb.gain.value = 0.35; dl.connect(fb); fb.connect(dl); g.connect(ctx.destination); dl.connect(ctx.destination); g.connect(dl);
@@ -10235,8 +10256,8 @@ function storyStill(i) { cancelAnimationFrame(STILL_RAF); const cv2 = document.g
 (() => {
   document.getElementById('csSkip').addEventListener('click', csNext); document.getElementById('csX').addEventListener('click', csClose); document.getElementById('csCv').addEventListener('click', csNext);
   const vb = document.getElementById('csVoice'), mb = document.getElementById('csMus');
-  const vUI = () => { const has = csHasVoice(); vb.textContent = has ? (CS.voice ? 'Giọng đọc: bật' : 'Giọng đọc: tắt') : 'Chưa có giọng Việt · mở bằng Edge để nghe'; vb.title = has ? (csVoices().natural ? 'Đang dùng giọng đọc tự nhiên' : 'Mở bằng Microsoft Edge để có giọng đọc tự nhiên hơn') : 'Trình duyệt này chưa có giọng đọc tiếng Việt. Microsoft Edge có sẵn giọng HoaiMy và NamMinh'; vb.disabled = !has; vb.setAttribute('aria-pressed', CS.voice && has); };
-  vb.addEventListener('click', () => { CS.voice = !CS.voice; if (!CS.voice) try { speechSynthesis.cancel(); } catch (e) { } vUI(); }); try { speechSynthesis.onvoiceschanged = vUI; } catch (e) { } setTimeout(vUI, 500);
+  const vUI = () => { const sys = csHasVoice(), on = CS.online !== 'fail'; vb.disabled = !sys && !on; vb.textContent = !sys && !on ? 'Không tải được giọng đọc · kiểm tra mạng' : (CS.voice ? 'Giọng đọc: bật' : 'Giọng đọc: tắt') + (sys ? '' : ' · trực tuyến'); vb.title = sys ? (csVoices().natural ? 'Đang dùng giọng đọc tự nhiên của trình duyệt' : 'Đang dùng giọng tiếng Việt của máy') : 'Trình duyệt này không có giọng tiếng Việt nên dùng giọng đọc trực tuyến (cần mạng)'; vb.setAttribute('aria-pressed', CS.voice && (sys || on)); }; csVoiceUI = vUI;
+  vb.addEventListener('click', () => { CS.voice = !CS.voice; if (!CS.voice) csStopVoice(); else if (CS.on && CS.list[CS.idx] && !CS.list[CS.idx].title) { const it = CS.list[CS.idx]; csSpeakAs(it.text, it.who === 'Lời kể' || it.kind === 'd' ? 'Ông Lâm' : it.who); } vUI(); }); try { speechSynthesis.onvoiceschanged = vUI; } catch (e) { } setTimeout(vUI, 500);
   mb.addEventListener('click', () => { CS.music = !CS.music; mb.textContent = CS.music ? 'Nhạc: bật' : 'Nhạc: tắt'; mb.setAttribute('aria-pressed', CS.music); csMusic(CS.on); });
   window.addEventListener('keydown', e => { if (!CS.on) return; if (e.key === 'Escape') { csClose(); e.preventDefault(); e.stopPropagation(); } else if (e.key === ' ' || e.key === 'ArrowRight' || e.key === 'Enter') { csNext(); e.preventDefault(); e.stopPropagation(); } }, true);
 })();
@@ -10927,7 +10948,7 @@ function starTabs() {
   document.querySelectorAll('[data-stab]').forEach(b => b.setAttribute('aria-selected', b.dataset.stab === ST.tab));
   document.getElementById('starConsBar').hidden = ST.tab !== 'cons'; document.getElementById('starFwBar').hidden = ST.tab !== 'fw'; document.getElementById('starSkyBar').hidden = ST.tab !== 'sky';
   document.getElementById('starCv').style.cursor = ST.tab === 'sky' ? 'grab' : 'crosshair';
-  if (ST.tab === 'sky') starMsg('Kéo để xoay nhìn khắp bầu trời, cuộn chuột (hoặc nút + −) để phóng to thu nhỏ. Trời sáng tối, mặt trời, mặt trăng và sao chạy đúng theo giờ thật ở Hà Nội. Bấm Tua nhanh để xem cả bầu trời quay.');
+  if (ST.tab === 'sky') starMsg('Kéo để xoay nhìn khắp bầu trời, cuộn chuột (hoặc nút + −) để phóng to thu nhỏ. Trời sáng tối, mặt trời, mặt trăng và sao chạy đúng theo giờ thật. Mây, mưa, sương mù lấy theo thời tiết thật ở nơi bạn chọn, có cả các hành tinh Kim, Mộc, Hỏa, Thổ, Thủy. Bấm Tua nhanh để xem cả bầu trời quay, tua giờ thì mây theo dự báo.');
   document.getElementById('starDone').innerHTML = CONS.map(c => `<span class="sdone${starsDone().includes(c.id) ? ' on' : ''}">${starsDone().includes(c.id) ? '★' : '☆'} ${c.name}</span>`).join('');
   if (ST.tab === 'fw') starMsg('Chọn kiểu pháo và màu, bấm lên bầu trời để đặt bao nhiêu điểm nổ tuỳ thích, rồi bấm Bắn.'); else if (ST.tab === 'cons' && ST.con && !ST.solved) starMsg(`Tìm và nối chòm ${ST.con.name}: bấm một ngôi sao rồi bấm ngôi sao kế tiếp để kẻ đường. Bấm lại đường đã kẻ để xoá.`);
 }
@@ -11437,13 +11458,105 @@ function skyGrad(sa) {
   for (let i = 1; i < K.length; i++) if (sa <= K[i][0]) { const k = (sa - K[i - 1][0]) / (K[i][0] - K[i - 1][0]); return [mixC(K[i - 1][1], K[i][1], k), mixC(K[i - 1][2], K[i][2], k)]; }
   return [K[K.length - 1][1], K[K.length - 1][2]];
 }
+// ---------- ĐÀI NGẮM SAO · dữ liệu thật: vị trí, thời tiết (Open-Meteo), hành tinh ----------
+const SKY_CITIES = [['Hà Nội', 21.03, 105.85], ['TP. Hồ Chí Minh', 10.78, 106.70], ['Đà Nẵng', 16.05, 108.22], ['Hải Phòng', 20.86, 106.68], ['Huế', 16.46, 107.59], ['Cần Thơ', 10.03, 105.78], ['Đà Lạt', 11.94, 108.44], ['Nha Trang', 12.24, 109.19], ['Vinh', 18.68, 105.68], ['Quy Nhơn', 13.78, 109.22]];
+SKY.place = 'Hà Nội';
+try { const L = JSON.parse(localStorage.getItem('pr-sky-loc') || 'null'); if (L && isFinite(L.lat) && isFinite(L.lon)) { SKY.lat = L.lat; SKY.lon = L.lon; SKY.place = L.n || 'Vị trí của bạn'; } } catch (e) { }
+function skySetPlace(n, lat, lon) { SKY.lat = lat; SKY.lon = lon; SKY.place = n; try { localStorage.setItem('pr-sky-loc', JSON.stringify({ n, lat, lon })); } catch (e) { } WX.data = null; WX.at = 0; wxFetch(); skyPlaceUI(); }
+function skyMyPlace() {
+  if (!navigator.geolocation) { toast('Trình duyệt không hỗ trợ lấy vị trí'); return; }
+  toast('Đang lấy vị trí của bạn…');
+  navigator.geolocation.getCurrentPosition(async pos => {
+    const lat = Math.round(pos.coords.latitude * 100) / 100, lon = Math.round(pos.coords.longitude * 100) / 100; let n = 'Vị trí của bạn';
+    try { const r = await fetch(`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lon}&localityLanguage=vi`); const j = await r.json(); n = j.city || j.locality || j.principalSubdivision || n; } catch (e) { }
+    skySetPlace(n, lat, lon); toast('Bầu trời đã chuyển về ' + n);
+  }, () => toast('Chưa được phép lấy vị trí · bạn có thể chọn thành phố trong danh sách'), { timeout: 12000, maximumAge: 3600000 });
+}
+function skyPlaceUI() { const s = document.getElementById('skyPlace'); if (!s) return; const i = SKY_CITIES.findIndex(c => Math.abs(c[1] - SKY.lat) < 0.02 && Math.abs(c[2] - SKY.lon) < 0.02); s.value = i >= 0 ? String(i) : 'me'; const o = s.querySelector('option[value="me"]'); if (o) o.textContent = i >= 0 ? '📍 Vị trí của tôi' : '📍 ' + SKY.place; }
+// ----- thời tiết thật -----
+const WX = { data: null, at: 0, loading: false, err: false };
+const WX_CODE = c => c === 0 ? ['Trời quang', 'clear'] : c <= 2 ? ['Ít mây', 'clear'] : c === 3 ? ['Nhiều mây', 'cloud'] : c === 45 || c === 48 ? ['Sương mù', 'fog'] : c >= 51 && c <= 57 ? ['Mưa phùn', 'drizzle'] : c >= 61 && c <= 67 ? ['Mưa', 'rain'] : c >= 71 && c <= 77 ? ['Tuyết', 'snow'] : c >= 80 && c <= 82 ? ['Mưa rào', 'rain'] : c >= 95 ? ['Dông', 'storm'] : ['Có mây', 'cloud'];
+async function wxFetch() {
+  if (WX.loading) return; WX.loading = true;
+  try {
+    const u = `https://api.open-meteo.com/v1/forecast?latitude=${SKY.lat}&longitude=${SKY.lon}&current=temperature_2m,relative_humidity_2m,cloud_cover,precipitation,weather_code,wind_speed_10m,wind_direction_10m,visibility&hourly=temperature_2m,cloud_cover,precipitation,weather_code,wind_speed_10m,wind_direction_10m,visibility&past_days=1&forecast_days=2&timezone=auto`;
+    const r = await fetch(u); if (!r.ok) throw new Error(r.status); WX.data = await r.json(); WX.at = Date.now(); WX.err = false;
+  } catch (e) { WX.err = true; }
+  WX.loading = false;
+}
+function wxAt(date) { // thời tiết ở thời điểm đang xem (có tua giờ thì lấy dự báo theo giờ)
+  const D = WX.data; if (!D) return null;
+  if (Math.abs(date - Date.now()) < 45 * 60000 && D.current) { const c = D.current; return { t: c.temperature_2m, cc: c.cloud_cover, p: c.precipitation, code: c.weather_code, ws: c.wind_speed_10m, wd: c.wind_direction_10m, vis: c.visibility, hum: c.relative_humidity_2m, fc: false }; }
+  const H = D.hourly; if (!H || !H.time) return null; const off = (D.utc_offset_seconds || 0) * 1000; let bi = -1, bd = Infinity;
+  H.time.forEach((s, i) => { const ms = Date.parse(s + ':00Z') - off, d = Math.abs(ms - date); if (d < bd) { bd = d; bi = i; } });
+  if (bi < 0 || bd > 2 * 3600000) return null;
+  return { t: H.temperature_2m[bi], cc: H.cloud_cover[bi], p: H.precipitation[bi], code: H.weather_code[bi], ws: H.wind_speed_10m[bi], wd: H.wind_direction_10m[bi], vis: H.visibility[bi], fc: true };
+}
+function wxSky(date) {
+  if (!WX.data && !WX.loading && (!WX.at || Date.now() - WX.at > 60000)) { WX.at = Date.now(); wxFetch(); }
+  if (WX.data && Date.now() - WX.at > 10 * 60000) wxFetch();
+  const w = wxAt(date); if (!w) return { w: null, cc: 30, clear: 0.85, kind: 'cloud', rain: 0, wind: 8, wd: 90 };
+  const [, kind] = WX_CODE(w.code), rain = kind === 'rain' || kind === 'storm' ? Math.min(1, 0.35 + (w.p || 0) / 4) : kind === 'drizzle' ? 0.25 : 0;
+  const fog = kind === 'fog' ? 0.6 : w.vis != null && w.vis < 4000 ? Math.min(0.5, (4000 - w.vis) / 6000) : 0;
+  return { w, cc: w.cc, clear: Math.max(0.03, (1 - w.cc / 100 * 0.92) * (1 - fog * 0.8) * (rain ? 0.4 : 1)), kind, rain, fog, wind: w.ws || 0, wd: w.wd || 0 };
+}
+const WX_DIR = d => ['Bắc', 'Đông Bắc', 'Đông', 'Đông Nam', 'Nam', 'Tây Nam', 'Tây', 'Tây Bắc'][Math.round(((d % 360) + 360) % 360 / 45) % 8];
+function wxLine(W) {
+  if (!W.w) return WX.err ? 'Thời tiết thật: chưa tải được (kiểm tra mạng)' : 'Đang tải thời tiết thật…';
+  const w = W.w; return `${w.fc ? 'Dự báo' : 'Thời tiết thật'}: ${WX_CODE(w.code)[0]} · ${Math.round(w.t)}°C · mây ${Math.round(w.cc)}% · gió ${Math.round(w.ws)} km/h từ hướng ${WX_DIR(w.wd)}`;
+}
+function wxDrawFx(c, W, H, t, K, dark, dt) {
+  if (K.fog) { c.fillStyle = `rgba(${dark > 0.5 ? '60,64,80' : '200,205,210'},${K.fog * 0.55})`; c.fillRect(0, 0, W, H); }
+  if (K.cc > 70) { c.fillStyle = `rgba(${dark > 0.5 ? '30,32,42' : '170,176,186'},${(K.cc - 70) / 30 * (dark > 0.5 ? 0.45 : 0.35)})`; c.fillRect(0, 0, W, H); }
+  if (K.rain) { SKY.rainP = SKY.rainP || Array.from({ length: 260 }, () => ({ x: Math.random(), y: Math.random(), s: 0.6 + Math.random() * 0.6 }));
+    const n = Math.round(260 * K.rain), slant = Math.sin((K.wd - SKY.az) * d2r) * Math.min(1, K.wind / 30) * 0.35;
+    c.strokeStyle = dark > 0.5 ? 'rgba(170,190,230,.35)' : 'rgba(255,255,255,.45)'; c.lineWidth = 1.1; c.beginPath();
+    for (let i = 0; i < n; i++) { const p = SKY.rainP[i]; p.y += dt * 1.6 * p.s; p.x += dt * slant * p.s; if (p.y > 1) { p.y -= 1; p.x = Math.random(); } const x = ((p.x % 1) + 1) % 1 * W, y = p.y * H, L = 14 * p.s; c.moveTo(x, y); c.lineTo(x + slant * L * 2.5, y + L); }
+    c.stroke(); }
+  if (K.kind === 'storm') { SKY.bolt = SKY.bolt || { next: t + 3, at: -9 }; if (t > SKY.bolt.next) { SKY.bolt.at = t; SKY.bolt.next = t + 4 + Math.random() * 9; } const k = t - SKY.bolt.at; if (k < 0.5) { c.fillStyle = `rgba(230,235,255,${(k < 0.08 || (k > 0.18 && k < 0.26) ? 0.55 : 0.1) * (1 - k * 2)})`; c.fillRect(0, 0, W, H); } }
+}
+// ----- hành tinh (quỹ đạo Kepler gần đúng, sai số vài phút góc) -----
+const PLANETS = [
+  ['Sao Thủy', [48.3313, 3.24587e-5], [7.0047, 5.0e-8], [29.1241, 1.01444e-5], 0.387098, [0.205635, 5.59e-10], [168.6562, 4.0923344368], -0.2, '#d8cfc0'],
+  ['Sao Kim', [76.6799, 2.4659e-5], [3.3946, 2.75e-8], [54.891, 1.38374e-5], 0.72333, [0.006773, -1.302e-9], [48.0052, 1.6021302244], -4.2, '#fff6dc'],
+  ['Sao Hỏa', [49.5574, 2.11081e-5], [1.8497, -1.78e-8], [286.5016, 2.92961e-5], 1.523688, [0.093405, 2.516e-9], [18.6021, 0.5240207766], 0.6, '#ff9a6a'],
+  ['Sao Mộc', [100.4542, 2.76854e-5], [1.303, -1.557e-7], [273.8777, 1.64505e-5], 5.20256, [0.048498, 4.469e-9], [19.895, 0.0830853001], -2.3, '#ffe8c8'],
+  ['Sao Thổ', [113.6634, 2.3898e-5], [2.4886, -1.081e-7], [339.3939, 2.97661e-5], 9.55475, [0.055546, -9.499e-9], [316.967, 0.0334442282], 0.6, '#f0dca0'],
+];
+function planetsAt(date) {
+  const d = date.getTime() / 86400000 + 2440587.5 - 2451543.5, rad = d2r, kep = (M, e) => { let E = M + e * Math.sin(M) * (1 + e * Math.cos(M)); for (let k = 0; k < 5; k++) E = E - (E - e * Math.sin(E) - M) / (1 - e * Math.cos(E)); return E; };
+  const ws = (282.9404 + 4.70935e-5 * d) * rad, es = 0.016709 - 1.151e-9 * d, Ms = ((356.047 + 0.9856002585 * d) % 360) * rad, Es = kep(Ms, es);
+  const xvs = Math.cos(Es) - es, yvs = Math.sqrt(1 - es * es) * Math.sin(Es), vs = Math.atan2(yvs, xvs), rs = Math.hypot(xvs, yvs), xs = rs * Math.cos(vs + ws), ys = rs * Math.sin(vs + ws), ecl = (23.4393 - 3.563e-7 * d) * rad;
+  return PLANETS.map(([n, N0, i0, w0, a, e0, M0, mag, col]) => {
+    const N = (N0[0] + N0[1] * d) * rad, i = (i0[0] + i0[1] * d) * rad, w = (w0[0] + w0[1] * d) * rad, e = e0[0] + e0[1] * d, M = (((M0[0] + M0[1] * d) % 360) + 360) % 360 * rad, E = kep(M, e);
+    const xv = a * (Math.cos(E) - e), yv = a * Math.sqrt(1 - e * e) * Math.sin(E), v = Math.atan2(yv, xv), r = Math.hypot(xv, yv);
+    const xh = r * (Math.cos(N) * Math.cos(v + w) - Math.sin(N) * Math.sin(v + w) * Math.cos(i)), yh = r * (Math.sin(N) * Math.cos(v + w) + Math.cos(N) * Math.sin(v + w) * Math.cos(i)), zh = r * Math.sin(v + w) * Math.sin(i);
+    const xg = xh + xs, yg = yh + ys, zg = zh, xe = xg, ye = yg * Math.cos(ecl) - zg * Math.sin(ecl), ze = yg * Math.sin(ecl) + zg * Math.cos(ecl);
+    return { n, ra: ((Math.atan2(ye, xe) / rad / 15) + 24) % 24, dec: Math.atan2(ze, Math.hypot(xe, ye)) / rad, mag, col, dist: Math.hypot(xg, yg, zg) };
+  });
+}
+function drawPlanets(c, W, H, t, lst, sa, K) {
+  const zoom = 90 / SKY.fov;
+  planetsAt(new Date(Date.now() + SKY.hourOfs * 3600000)).forEach(p => {
+    const [alt, az] = eqToHor(p.ra, p.dec, lst); if (alt < -0.01) return; const q = skyProj(alt, az, W, H); if (!q || q[0] < -20 || q[0] > W + 20 || q[1] < -20 || q[1] > H + 20) return;
+    const vis = Math.max(0, Math.min(1, (-sa - 1 + (2 - p.mag) * 2.5) / 6)) * K.clear * Math.min(1, alt / d2r / 3); if (vis < 0.03) return;
+    const r = Math.max(2, (3 - p.mag) * 1.25) * Math.sqrt(zoom);
+    const gg = c.createRadialGradient(q[0], q[1], 0, q[0], q[1], r * 5); gg.addColorStop(0, p.col); gg.addColorStop(1, 'rgba(0,0,0,0)'); c.globalAlpha = 0.55 * vis; c.fillStyle = gg; c.beginPath(); c.arc(q[0], q[1], r * 5, 0, 7); c.fill();
+    c.globalAlpha = vis; c.fillStyle = p.col; c.beginPath(); c.arc(q[0], q[1], r, 0, 7); c.fill();
+    if (p.n === 'Sao Thổ' && SKY.fov < 40) { c.strokeStyle = p.col; c.lineWidth = 1; c.beginPath(); c.ellipse(q[0], q[1], r * 2.2, r * 0.7, -0.3, 0, 7); c.stroke(); }
+    if (SKY.names && vis > 0.3) { c.fillStyle = `rgba(255,226,170,${vis})`; c.font = '700 11.5px "Be Vietnam Pro", sans-serif'; c.textAlign = 'left'; c.fillText(p.n, q[0] + r + 5, q[1] + 4); }
+    c.globalAlpha = 1;
+    if (SKY.hover && Math.hypot(SKY.hover[0] - q[0], SKY.hover[1] - q[1]) < 16) SKY.hov = { n: p.n, m: p.mag, x: q[0], y: q[1], alt, d: 0, planet: p };
+  });
+}
+
 function drawSky(c, W, H, t) {
   skyInit(); const nowP = performance.now(), dt = SKY.lt ? Math.min(0.1, (nowP - SKY.lt) / 1000) : 0; SKY.lt = nowP;
   if (SKY.ff) { SKY.hourOfs += dt * SKY.ff / 3600; const sl = document.getElementById('skyTime'); if (sl) sl.value = Math.max(-12, Math.min(12, SKY.hourOfs)); }
   const date = new Date(Date.now() + SKY.hourOfs * 3600000), lst = skyLST(date), SM = sunMoon(date);
-  const [sAlt, sAz] = eqToHor(SM.sun.ra, SM.sun.dec, lst), [mAlt, mAz] = eqToHor(SM.moon.ra, SM.moon.dec, lst), sa = sAlt / d2r;
+  const [sAlt, sAz] = eqToHor(SM.sun.ra, SM.sun.dec, lst), [mAlt, mAz] = eqToHor(SM.moon.ra, SM.moon.dec, lst), sa = sAlt / d2r, K = wxSky(date);
   // độ tối: 0 ban ngày → 1 đêm hẳn; trăng sáng làm mờ sao mờ
-  const dark = Math.max(0, Math.min(1, (-sa - 3) / 13)), moonGlare = mAlt > 0 ? SM.moon.illum * 0.45 : 0, starVis = dark * (1 - moonGlare * 0.6);
+  const dark = Math.max(0, Math.min(1, (-sa - 3) / 13)), moonGlare = mAlt > 0 ? SM.moon.illum * 0.45 : 0, starVis = dark * (1 - moonGlare * 0.6) * K.clear;
   // nền trời: gradient từ đỉnh trời (zenith) xuống chân trời
   const [cTop, cHor] = skyGrad(sa), zq = skyProjRaw(Math.PI / 2, 0, W, H), hq = skyProjRaw(0, SKY.az * d2r, W, H);
   const g = c.createLinearGradient(zq[0], Math.max(-4000, zq[1]), hq[0], hq[1]); g.addColorStop(0, cTop); g.addColorStop(1, cHor); c.fillStyle = g; c.fillRect(0, 0, W, H);
@@ -11457,13 +11570,14 @@ function drawSky(c, W, H, t) {
   if (starVis > 0.05) SKY.bg.forEach(s => { const [alt, az] = eqToHor(s.ra, s.dec, lst); if (alt < 0) return; const q = skyProj(alt, az, W, H); if (!q || q[0] < -5 || q[0] > W + 5 || q[1] < -5 || q[1] > H + 5) return; const tw1 = Math.sin(t * (1.8 + (s.tw % 2.5)) + s.tw), tw2 = Math.sin(t * (6 + (s.tw % 4)) + s.tw * 3), flash = Math.max(0, Math.sin(t * 0.9 + s.tw * 5)) ** 24; const a = Math.max(0.1, (6.4 - s.m) / 3.2) * Math.max(0.12, 0.55 + tw1 * 0.35 + tw2 * 0.18 + flash * 0.8) * Math.min(1, alt * 4) * starVis; c.fillStyle = `rgba(230,236,255,${Math.min(1, a * 1.3)})`; const r = Math.max(0.7, (6.6 - s.m) * 0.42 * Math.sqrt(zoom)) * (1 + flash * 0.9); c.fillRect(q[0] - r / 2, q[1] - r / 2, r, r); if (flash > 0.3) { c.fillStyle = `rgba(255,255,255,${flash * 0.6 * starVis})`; c.fillRect(q[0] - r * 2.5, q[1] - 0.5, r * 5, 1); c.fillRect(q[0] - 0.5, q[1] - r * 2.5, 1, r * 5); } });
   const pos = {}; SKY.hov = null;
   SKY_STARS.forEach(([n, ra, dec, m, col]) => { const [alt, az] = eqToHor(ra, dec, lst); const q = alt > -0.02 ? skyProj(alt, az, W, H) : null; pos[n] = q ? [q[0], q[1], alt] : null; });
-  const brightVis = m => Math.max(0, Math.min(1, (-sa - 1 + (2 - m) * 2.5) / 6)) * (1 - moonGlare * Math.max(0, m - 1) * 0.25);
+  const brightVis = m => Math.max(0, Math.min(1, (-sa - 1 + (2 - m) * 2.5) / 6)) * (1 - moonGlare * Math.max(0, m - 1) * 0.25) * K.clear;
   if (SKY.lines && dark > 0.15) { c.lineWidth = 1.2; SKY_LINES.forEach(([cn, segs]) => { let sx = 0, sy = 0, n = 0; c.strokeStyle = `rgba(120,170,255,${0.38 * dark})`; segs.forEach(([a, b]) => { const p = pos[a], q = pos[b]; if (!p || !q) return; if (Math.hypot(p[0] - q[0], p[1] - q[1]) > W) return; c.beginPath(); c.moveTo(p[0], p[1]); c.lineTo(q[0], q[1]); c.stroke(); sx += p[0] + q[0]; sy += p[1] + q[1]; n += 2; }); if (SKY.cons && n) { c.fillStyle = `rgba(150,190,255,${0.75 * dark})`; c.font = '700 12px "Be Vietnam Pro", sans-serif'; c.textAlign = 'center'; c.fillText(cn, sx / n, sy / n - 14); } }); }
   SKY_STARS.forEach(([n, ra, dec, m, col]) => { const p = pos[n]; if (!p || p[0] < -20 || p[0] > W + 20 || p[1] < -20 || p[1] > H + 20) return; const vis = brightVis(m); if (vis < 0.03) return; const r = Math.max(1.3, (4.4 - m) * 1.35) * Math.sqrt(zoom), ext = Math.min(1, p[2] * 6) * vis; const gg = c.createRadialGradient(p[0], p[1], 0, p[0], p[1], r * 4); gg.addColorStop(0, col); gg.addColorStop(1, 'rgba(0,0,0,0)'); c.globalAlpha = 0.5 * ext; c.fillStyle = gg; c.beginPath(); c.arc(p[0], p[1], r * 4, 0, 7); c.fill(); const low = 1 - Math.min(1, p[2] * 2.5), tw = Math.max(0.35, 0.68 + Math.sin(t * 2.6 + ra * 7) * 0.22 + Math.sin(t * (8 + low * 6) + dec) * (0.12 + low * 0.2)); c.globalAlpha = ext * tw; c.fillStyle = col; c.beginPath(); c.arc(p[0], p[1], r * 0.75 * (0.85 + tw * 0.3), 0, 7); c.fill();
     if (low > 0.2 && m < 2.5) { const ph = Math.floor(t * 9 + ra * 13) % 3; c.globalAlpha = ext * low * 0.5; c.fillStyle = ['#9ec8ff', '#ff9e9e', '#ffffff'][ph]; c.beginPath(); c.arc(p[0], p[1], r * 0.5, 0, 7); c.fill(); }
     if (m < 2.2) { const L = r * (5 + Math.sin(t * 2.3 + ra * 3) * 2.2) * (2.2 - m) * 0.75, rot = t * 0.15 + ra; c.globalAlpha = ext * 0.55 * tw; c.strokeStyle = col; c.lineWidth = 1; c.save(); c.translate(p[0], p[1]); c.rotate(rot * 0.2); for (let q = 0; q < 4; q++) { c.rotate(Math.PI / 2); const sg = c.createLinearGradient(0, 0, L, 0); sg.addColorStop(0, col); sg.addColorStop(1, 'rgba(255,255,255,0)'); c.strokeStyle = sg; c.beginPath(); c.moveTo(0, 0); c.lineTo(L, 0); c.stroke(); } c.restore(); }
     c.globalAlpha = 1; if (SKY.hover && Math.hypot(SKY.hover[0] - p[0], SKY.hover[1] - p[1]) < 16 && (!SKY.hov || SKY.hov.d > Math.hypot(SKY.hover[0] - p[0], SKY.hover[1] - p[1]))) SKY.hov = { n, m, x: p[0], y: p[1], alt: p[2], d: Math.hypot(SKY.hover[0] - p[0], SKY.hover[1] - p[1]) };
     if (SKY.names && vis > 0.5 && m < (SKY.fov < 50 ? 3.2 : 1.7)) { c.fillStyle = `rgba(255,240,210,${0.85 * vis})`; c.font = '600 11px "Be Vietnam Pro", sans-serif'; c.textAlign = 'left'; c.fillText(n, p[0] + r + 4, p[1] - 3); } });
+  drawPlanets(c, W, H, t, lst, sa, K);
   // sao băng
   SKY.met = SKY.met || []; SKY.metT = (SKY.metT == null ? 2 : SKY.metT) - dt;
   const metEv = typeof evToday === 'function' && evToday() === 'meteor'; if (SKY.metT <= 0 && starVis > 0.4) { SKY.metT = metEv ? 0.6 + Math.random() * 1.2 : 2.5 + Math.random() * 5; const x = W * (0.15 + Math.random() * 0.7), y = H * (0.05 + Math.random() * 0.35), a = 0.35 + Math.random() * 0.6 + (Math.random() < 0.5 ? Math.PI - 1.3 : 0); SKY.met.push({ x, y, vx: Math.cos(a) * (420 + Math.random() * 260), vy: Math.sin(a) * (300 + Math.random() * 150), life: 0.9 + Math.random() * 0.5, age: 0, w: 1.4 + Math.random() * 1.4 }); if (Math.random() < (metEv ? 0.6 : 0.35)) { SKY.wish = performance.now(); try { const E = evData(); if (metEv && Math.floor(S.minutes / 60) >= 19 && E.meteorDay !== S.day) { E.meteorDay = S.day; S.chips += 500; refreshHUD(); save(); setTimeout(() => notePop('MƯA SAO BĂNG', 'Điều ước đã được gửi đi', '+500 chip từ sự kiện Mưa sao băng', '#a8c8ff'), 600); } } catch (e) { } } }
@@ -11471,6 +11585,7 @@ function drawSky(c, W, H, t) {
     const mg = c.createLinearGradient(x, y, tx, ty); mg.addColorStop(0, `rgba(255,255,255,${a})`); mg.addColorStop(0.3, `rgba(190,220,255,${a * 0.6})`); mg.addColorStop(1, 'rgba(150,190,255,0)'); c.strokeStyle = mg; c.lineWidth = m.w; c.lineCap = 'round'; c.beginPath(); c.moveTo(x, y); c.lineTo(tx, ty); c.stroke();
     const hg = c.createRadialGradient(x, y, 0, x, y, 7); hg.addColorStop(0, `rgba(255,255,255,${a})`); hg.addColorStop(1, 'rgba(255,255,255,0)'); c.fillStyle = hg; c.beginPath(); c.arc(x, y, 7, 0, 7); c.fill(); return true; });
   if (SKY.wish && starVis > 0.4 && performance.now() - SKY.wish < 2600) { const k = (performance.now() - SKY.wish) / 2600; c.globalAlpha = Math.sin(k * Math.PI); c.fillStyle = '#ffe9b0'; c.font = '700 15px "Be Vietnam Pro", sans-serif'; c.textAlign = 'center'; c.shadowColor = '#ffd36a'; c.shadowBlur = 12; c.fillText('✦ Sao băng! Ước một điều đi nào ✦', W / 2, H * 0.16 - k * 10); c.shadowBlur = 0; c.globalAlpha = 1; }
+  c.save(); c.globalAlpha = Math.max(0.1, Math.min(1, K.clear * 1.15));
   // mặt trăng có pha
   if (mAlt > -0.02) { const q = skyProj(mAlt, mAz, W, H); if (q && q[0] > -60 && q[0] < W + 60 && q[1] > -60 && q[1] < H + 60) { const R = Math.max(9, 0.27 * W / SKY.fov * 3.2), I = SM.moon.illum;
     const gl = c.createRadialGradient(q[0], q[1], R * 0.8, q[0], q[1], R * 5); gl.addColorStop(0, `rgba(220,230,255,${0.25 * I})`); gl.addColorStop(1, 'rgba(220,230,255,0)'); c.fillStyle = gl; c.beginPath(); c.arc(q[0], q[1], R * 5, 0, 7); c.fill();
@@ -11480,11 +11595,13 @@ function drawSky(c, W, H, t) {
     if (SKY.names) { c.fillStyle = 'rgba(255,250,230,.9)'; c.font = '700 11px "Be Vietnam Pro", sans-serif'; c.textAlign = 'left'; c.fillText(`Mặt Trăng · ${SM.moon.phase} (${Math.round(I * 100)}%)`, q[0] + R + 6, q[1] + 4); } } }
   // mặt trời
   if (sAlt > -0.03) { const q = skyProj(sAlt, sAz, W, H); if (q && q[0] > -200 && q[0] < W + 200 && q[1] > -200 && q[1] < H + 200) { const R = Math.max(11, 0.27 * W / SKY.fov * 3.6); const gl = c.createRadialGradient(q[0], q[1], 0, q[0], q[1], R * 7); gl.addColorStop(0, 'rgba(255,250,220,1)'); gl.addColorStop(0.15, 'rgba(255,230,160,.8)'); gl.addColorStop(1, 'rgba(255,200,120,0)'); c.fillStyle = gl; c.beginPath(); c.arc(q[0], q[1], R * 7, 0, 7); c.fill(); c.fillStyle = sa < 4 ? '#ffb070' : '#fffbe8'; c.beginPath(); c.arc(q[0], q[1], R, 0, 7); c.fill(); if (SKY.names) { c.fillStyle = '#3a2410'; c.font = '700 11px "Be Vietnam Pro", sans-serif'; c.textAlign = 'left'; c.fillText('Mặt Trời', q[0] + R + 6, q[1] + 4); } } }
+  c.restore();
   // mây trôi chậm theo gió (bám theo bầu trời, có trăng/mặt trời chiếu)
-  if (!SKY.clouds) { let sd = 11; const rnd = () => (sd = (sd * 16807) % 2147483647) / 2147483647; SKY.clouds = Array.from({ length: 14 }, () => ({ az: rnd() * 360, alt: 4 + rnd() * 26, w: 10 + rnd() * 16, sp: 0.4 + rnd() * 0.6, k: rnd() })); }
-  SKY.clouds.forEach(cl => { cl.az = (cl.az + dt * cl.sp * (SKY.ff ? 1 + SKY.ff / 300 : 1)) % 360; const q = skyProj(cl.alt * d2r, cl.az * d2r, W, H); if (!q || q[2] < 0.1) return; const R = cl.w * W / SKY.fov; if (q[0] < -R * 2 || q[0] > W + R * 2 || q[1] < -R || q[1] > H + R) return;
-    const day = 1 - dark, col = day > 0.5 ? '255,255,255' : sa > -8 ? '255,170,140' : '120,130,170', al = day > 0.5 ? 0.55 : sa > -8 ? 0.35 : 0.12 + (mAlt > 0 ? SM.moon.illum * 0.15 : 0);
+  if (!SKY.clouds) { let sd = 11; const rnd = () => (sd = (sd * 16807) % 2147483647) / 2147483647; SKY.clouds = Array.from({ length: 40 }, (_, ci) => ({ az: rnd() * 360, alt: 4 + rnd() * (ci < 14 ? 26 : 60), w: 10 + rnd() * 16, sp: 0.4 + rnd() * 0.6, k: rnd() })); }
+  const nCl = Math.round(K.cc / 100 * 40); SKY.clouds.forEach((cl, ci) => { if (ci >= nCl) return; cl.az = (cl.az + dt * cl.sp * (0.3 + K.wind / 12) * (SKY.ff ? 1 + SKY.ff / 300 : 1)) % 360; const q = skyProj(cl.alt * d2r, cl.az * d2r, W, H); if (!q || q[2] < 0.1) return; const R = cl.w * W / SKY.fov; if (q[0] < -R * 2 || q[0] > W + R * 2 || q[1] < -R || q[1] > H + R) return;
+    const day = 1 - dark, col = K.rain && day > 0.5 ? '160,166,176' : day > 0.5 ? '255,255,255' : sa > -8 ? '255,170,140' : '120,130,170', al = day > 0.5 ? 0.55 : sa > -8 ? 0.35 : 0.12 + (mAlt > 0 ? SM.moon.illum * 0.15 : 0);
     for (let j = 0; j < 5; j++) { const ox = (j - 2) * R * 0.38, oy = Math.sin(j * 1.7 + cl.k * 9) * R * 0.08, rr = R * (0.35 + ((j * 7 + cl.k * 10) % 3) * 0.08); const cg = c.createRadialGradient(q[0] + ox, q[1] + oy, 0, q[0] + ox, q[1] + oy, rr); cg.addColorStop(0, `rgba(${col},${al})`); cg.addColorStop(1, `rgba(${col},0)`); c.fillStyle = cg; c.beginPath(); c.ellipse(q[0] + ox, q[1] + oy, rr, rr * 0.45, 0, 0, 7); c.fill(); } });
+  wxDrawFx(c, W, H, t, K, dark, dt);
   // đom đóm lập loè dưới chân trời
   if (dark > 0.4) { SKY.ff2 = SKY.ff2 || Array.from({ length: 22 }, (_, i) => ({ az: i * 16.4 + Math.random() * 10, alt: -(0.6 + Math.random() * 4), ph: Math.random() * 9 })); SKY.ff2.forEach(f => { const q = skyProjRaw((f.alt + Math.sin(t * 0.7 + f.ph) * 0.4) * d2r, (f.az + Math.sin(t * 0.3 + f.ph) * 1.2) * d2r, W, H); if (q[2] < 0.2 || q[0] < 0 || q[0] > W || q[1] < 0 || q[1] > H) return; f.q = q; }); }
   // mặt đất: vòng chân trời chiếu lập thể là một đường tròn; nhìn lên thì đất nằm ngoài vòng, nhìn xuống thì nằm trong
@@ -11498,16 +11615,17 @@ function drawSky(c, W, H, t) {
   if (dark > 0.2) { c.fillStyle = `rgba(255,190,110,${0.55 * dark})`; for (let i = 0; i < 160; i++) { const az = ((i * 137.5) % 360) * d2r, al = -(0.4 + ((i * 53) % 30) / 10) * d2r, q = skyProjRaw(al, az, W, H); if (q[2] > -0.2 && q[0] > 0 && q[0] < W && q[1] > 0 && q[1] < H) c.fillRect(q[0], q[1], 2, 2); } }
   [['B', 0], ['ĐB', 45], ['Đ', 90], ['ĐN', 135], ['N', 180], ['TN', 225], ['T', 270], ['TB', 315]].forEach(([lb, a]) => { const q = skyProj(-0.03, a * d2r, W, H); if (!q || q[2] < 0) return; c.fillStyle = lb.length === 1 ? '#ffd36a' : 'rgba(255,211,106,.6)'; c.font = `800 ${lb.length === 1 ? 16 : 12}px "Be Vietnam Pro", sans-serif`; c.textAlign = 'center'; c.fillText(lb, q[0], q[1] + 8); });
   // bảng thông tin
-  c.fillStyle = 'rgba(0,0,0,.5)'; roundRect(c, 12, 12, 330, 98, 10); c.fill(); c.fillStyle = '#fff'; c.font = '700 12px "Be Vietnam Pro", sans-serif'; c.textAlign = 'left';
+  c.fillStyle = 'rgba(0,0,0,.5)'; roundRect(c, 12, 12, 440, 116, 10); c.fill(); c.fillStyle = '#fff'; c.font = '700 12px "Be Vietnam Pro", sans-serif'; c.textAlign = 'left';
   const dirN = ['Bắc', 'Đông Bắc', 'Đông', 'Đông Nam', 'Nam', 'Tây Nam', 'Tây', 'Tây Bắc'][Math.round(((SKY.az % 360) + 360) % 360 / 45) % 8];
   c.fillText(`Hướng ${dirN} · cao ${Math.round(SKY.alt)}° · góc nhìn ${Math.round(SKY.fov)}°`, 22, 31); c.fillStyle = '#c8d0ff'; c.font = '500 11px "Be Vietnam Pro", sans-serif';
-  const hh = Math.round(SKY.hourOfs * 10) / 10; c.fillText(`Hà Nội · ${date.toLocaleString('vi-VN', { hour: '2-digit', minute: '2-digit', day: '2-digit', month: '2-digit' })}${SKY.ff ? ' · đang tua ×' + SKY.ff : hh ? ' (tua ' + (hh > 0 ? '+' : '') + hh + 'h)' : ' · bây giờ'}`, 22, 48);
+  const hh = Math.round(SKY.hourOfs * 10) / 10; c.fillText(`${SKY.place} · ${date.toLocaleString('vi-VN', { hour: '2-digit', minute: '2-digit', day: '2-digit', month: '2-digit' })}${SKY.ff ? ' · đang tua ×' + SKY.ff : hh ? ' (tua ' + (hh > 0 ? '+' : '') + hh + 'h)' : ' · bây giờ'}`, 22, 48);
   const phaseTxt = sa > 0 ? 'Ban ngày' : sa > -6 ? (sAz < Math.PI ? 'Bình minh' : 'Hoàng hôn') : sa > -12 ? 'Chạng vạng' : sa > -18 ? 'Trời gần tối hẳn' : 'Đêm';
   c.fillStyle = '#ffd9a0'; c.fillText(`${phaseTxt} · mặt trời ${Math.round(sa)}° · ${SM.moon.phase}`, 22, 65);
   { const ev = skyEvents(date); c.fillStyle = '#a8e0ff'; c.fillText(`☀ mọc ${hm(ev.sunrise)} · lặn ${hm(ev.sunset)}   ☾ mọc ${hm(ev.moonrise)} · lặn ${hm(ev.moonset)}`, 22, 82);
     let nx = null, lb = ''; const cand = [[ev.dawn, 'trời hửng sáng'], [ev.sunrise, 'mặt trời mọc'], [ev.sunset, 'mặt trời lặn'], [ev.dusk, 'trời tối hẳn']].filter(x => x[0] && x[0] > date).sort((a, b) => a[0] - b[0]);
     if (cand.length) [nx, lb] = cand[0]; else { const tm = new Date(date.getTime() + 86400000), e2 = skyEvents(tm); nx = e2.dawn; lb = 'trời hửng sáng'; SKY.ev = ev; }
     if (nx) { const mins = Math.round((nx - date) / 60000); c.fillStyle = '#fff'; c.fillText(`Còn ${Math.floor(mins / 60)} giờ ${mins % 60} phút nữa ${lb} (${hm(nx)})`, 22, 99); } }
+  c.fillStyle = K.w ? '#b8f0c8' : '#c9b893'; c.fillText(wxLine(K), 22, 116);
   if (SKY.hov && !SKY.drag) { const h = SKY.hov, cn = (SKY_LINES.find(([, sg]) => sg.some(([a, b]) => a === h.n || b === h.n)) || [])[0], txt = [h.n, `Cấp sao ${h.m.toFixed(1)} · cao ${Math.round(h.alt / d2r)}°${cn ? ' · chòm ' + cn : ''}`];
     c.strokeStyle = '#ffd36a'; c.lineWidth = 1.5; c.beginPath(); c.arc(h.x, h.y, 11 + Math.sin(t * 5) * 2, 0, 7); c.stroke(); c.font = '700 12px "Be Vietnam Pro", sans-serif'; const bw = Math.max(c.measureText(txt[0]).width, c.measureText(txt[1]).width * 0.92) + 20, bx = Math.min(W - bw - 8, h.x + 16), by = Math.max(8, h.y - 50);
     c.fillStyle = 'rgba(10,12,34,.9)'; roundRect(c, bx, by, bw, 40, 8); c.fill(); c.fillStyle = '#ffe9b0'; c.textAlign = 'left'; c.fillText(txt[0], bx + 10, by + 17); c.fillStyle = '#c8d0ff'; c.font = '500 11px "Be Vietnam Pro", sans-serif'; c.fillText(txt[1], bx + 10, by + 32); }
@@ -11525,6 +11643,7 @@ document.querySelectorAll('[data-stab]').forEach(b => b.addEventListener('click'
   sc.addEventListener('wheel', e => { if (ST.tab !== 'sky') return; e.preventDefault(); SKY.fov = Math.max(15, Math.min(140, SKY.fov * (e.deltaY > 0 ? 1.1 : 0.9))); }, { passive: false });
   document.getElementById('skyIn').addEventListener('click', () => { SKY.fov = Math.max(15, SKY.fov * 0.8); });
   document.getElementById('skyOut').addEventListener('click', () => { SKY.fov = Math.min(140, SKY.fov * 1.25); });
+  { const sp = document.getElementById('skyPlace'); sp.innerHTML = SKY_CITIES.map((c2, i) => `<option value="${i}">${c2[0]}</option>`).join('') + '<option value="me">📍 Vị trí của tôi</option>'; skyPlaceUI(); sp.addEventListener('change', () => { if (sp.value === 'me') { skyMyPlace(); skyPlaceUI(); } else { const c2 = SKY_CITIES[+sp.value]; skySetPlace(c2[0], c2[1], c2[2]); } }); sp.addEventListener('keydown', e => e.stopPropagation()); }
   document.getElementById('skyLines').addEventListener('click', e => { SKY.lines = !SKY.lines; e.currentTarget.setAttribute('aria-pressed', SKY.lines); });
   document.getElementById('skyNames').addEventListener('click', e => { SKY.names = !SKY.names; e.currentTarget.setAttribute('aria-pressed', SKY.names); });
   document.getElementById('skyTime').addEventListener('input', e => { SKY.ff = 0; skyFFbtn(); SKY.hourOfs = +e.target.value; });
