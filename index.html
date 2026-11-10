@@ -10167,14 +10167,23 @@ function csChunks(text) {
   return out.flatMap(c => c.length <= 190 ? [c] : c.match(/.{1,180}(\s|$)/g).map(x => x.trim()));
 }
 function csStopVoice() { try { speechSynthesis.cancel(); } catch (e) { } if (CS.aud) { try { CS.aud.pause(); } catch (e) { } CS.aud = null; } CS.speaking = false; CS.vtok = (CS.vtok || 0) + 1; }
+// Google chặn yêu cầu có Referer của trang khác, nên phát âm thanh trong một khung ẩn không gửi Referer
+const TTS_EP = [q => 'https://translate.google.com/translate_tts?ie=UTF-8&tl=vi&client=tw-ob&ttsspeed=1&q=' + q, q => 'https://translate.googleapis.com/translate_tts?ie=UTF-8&tl=vi&client=gtx&q=' + q, q => 'https://translate.google.com.vn/translate_tts?ie=UTF-8&tl=vi&client=tw-ob&q=' + q];
+function csTtsWin() {
+  if (CS.ttsWin && CS.ttsWin.Audio) return CS.ttsWin;
+  try { let f = document.getElementById('ttsFrame'); if (!f) { f = document.createElement('iframe'); f.id = 'ttsFrame'; f.style.cssText = 'position:fixed;width:0;height:0;border:0;opacity:0;pointer-events:none'; f.setAttribute('aria-hidden', 'true'); f.srcdoc = '<!doctype html><meta name="referrer" content="no-referrer"><title>tts</title>'; document.body.appendChild(f); } CS.ttsWin = f.contentWindow; } catch (e) { CS.ttsWin = window; }
+  return CS.ttsWin || window;
+}
+setTimeout(() => { try { csTtsWin(); } catch (e) { } }, 1500);
 function csSpeakOnline(text, who) {
   const W = CS_WHO[who] || CS_WHO['Ông Lâm'], parts = csChunks(text), tok = CS.vtok = (CS.vtok || 0) + 1; let i = 0;
   const next = () => {
     if (tok !== CS.vtok || i >= parts.length) { if (tok === CS.vtok) CS.speaking = false; return; }
-    const a = new Audio('https://translate.google.com/translate_tts?ie=UTF-8&tl=vi&client=tw-ob&ttsspeed=1&q=' + encodeURIComponent(parts[i++]));
+    const q = encodeURIComponent(parts[i++]), ep = CS.ttsEp || 0, A = csTtsWin().Audio || Audio;
+    const a = new A(TTS_EP[ep](q));
     a.volume = SET.mute ? 0 : SET.master / 100; try { a.preservesPitch = false; a.mozPreservesPitch = false; a.webkitPreservesPitch = false; } catch (e) { }
     a.playbackRate = W.g === 'f' ? 1.04 : W.p < 0.9 ? 0.86 : 0.92; // hạ giọng cho nhân vật nam
-    a.onended = next; a.onerror = () => { CS.online = 'fail'; CS.speaking = false; csVoiceUI(); };
+    a.onended = next; a.onerror = () => { if ((CS.ttsEp || 0) < TTS_EP.length - 1) { CS.ttsEp = (CS.ttsEp || 0) + 1; i--; next(); return; } CS.online = 'fail'; CS.speaking = false; csVoiceUI(); };
     CS.aud = a; a.play().then(() => { CS.online = 'ok'; csVoiceUI(); }).catch(() => { CS.speaking = false; });
   };
   CS.speaking = true; CS.speakAt = performance.now(); next();
@@ -10256,8 +10265,8 @@ function storyStill(i) { cancelAnimationFrame(STILL_RAF); const cv2 = document.g
 (() => {
   document.getElementById('csSkip').addEventListener('click', csNext); document.getElementById('csX').addEventListener('click', csClose); document.getElementById('csCv').addEventListener('click', csNext);
   const vb = document.getElementById('csVoice'), mb = document.getElementById('csMus');
-  const vUI = () => { const sys = csHasVoice(), on = CS.online !== 'fail'; vb.disabled = !sys && !on; vb.textContent = !sys && !on ? 'Không tải được giọng đọc · kiểm tra mạng' : (CS.voice ? 'Giọng đọc: bật' : 'Giọng đọc: tắt') + (sys ? '' : ' · trực tuyến'); vb.title = sys ? (csVoices().natural ? 'Đang dùng giọng đọc tự nhiên của trình duyệt' : 'Đang dùng giọng tiếng Việt của máy') : 'Trình duyệt này không có giọng tiếng Việt nên dùng giọng đọc trực tuyến (cần mạng)'; vb.setAttribute('aria-pressed', CS.voice && (sys || on)); }; csVoiceUI = vUI;
-  vb.addEventListener('click', () => { CS.voice = !CS.voice; if (!CS.voice) csStopVoice(); else if (CS.on && CS.list[CS.idx] && !CS.list[CS.idx].title) { const it = CS.list[CS.idx]; csSpeakAs(it.text, it.who === 'Lời kể' || it.kind === 'd' ? 'Ông Lâm' : it.who); } vUI(); }); try { speechSynthesis.onvoiceschanged = vUI; } catch (e) { } setTimeout(vUI, 500);
+  const vUI = () => { const sys = csHasVoice(), on = CS.online !== 'fail'; vb.disabled = false; vb.textContent = !sys && !on ? 'Không tải được giọng đọc · bấm để thử lại' : (CS.voice ? 'Giọng đọc: bật' : 'Giọng đọc: tắt') + (sys ? '' : ' · trực tuyến'); vb.title = sys ? (csVoices().natural ? 'Đang dùng giọng đọc tự nhiên của trình duyệt' : 'Đang dùng giọng tiếng Việt của máy') : 'Trình duyệt này không có giọng tiếng Việt nên dùng giọng đọc trực tuyến (cần mạng)'; vb.setAttribute('aria-pressed', CS.voice && (sys || on)); }; csVoiceUI = vUI;
+  vb.addEventListener('click', () => { if (CS.online === 'fail') { CS.online = null; CS.ttsEp = 0; CS.voice = false; } CS.voice = !CS.voice; if (!CS.voice) csStopVoice(); else if (CS.on && CS.list[CS.idx] && !CS.list[CS.idx].title) { const it = CS.list[CS.idx]; csSpeakAs(it.text, it.who === 'Lời kể' || it.kind === 'd' ? 'Ông Lâm' : it.who); } vUI(); }); try { speechSynthesis.onvoiceschanged = vUI; } catch (e) { } setTimeout(vUI, 500);
   mb.addEventListener('click', () => { CS.music = !CS.music; mb.textContent = CS.music ? 'Nhạc: bật' : 'Nhạc: tắt'; mb.setAttribute('aria-pressed', CS.music); csMusic(CS.on); });
   window.addEventListener('keydown', e => { if (!CS.on) return; if (e.key === 'Escape') { csClose(); e.preventDefault(); e.stopPropagation(); } else if (e.key === ' ' || e.key === 'ArrowRight' || e.key === 'Enter') { csNext(); e.preventDefault(); e.stopPropagation(); } }, true);
 })();
@@ -11461,8 +11470,13 @@ function skyGrad(sa) {
 // ---------- ĐÀI NGẮM SAO · dữ liệu thật: vị trí, thời tiết (Open-Meteo), hành tinh ----------
 const SKY_CITIES = [['Hà Nội', 21.03, 105.85], ['TP. Hồ Chí Minh', 10.78, 106.70], ['Đà Nẵng', 16.05, 108.22], ['Hải Phòng', 20.86, 106.68], ['Huế', 16.46, 107.59], ['Cần Thơ', 10.03, 105.78], ['Đà Lạt', 11.94, 108.44], ['Nha Trang', 12.24, 109.19], ['Vinh', 18.68, 105.68], ['Quy Nhơn', 13.78, 109.22]];
 SKY.place = 'Hà Nội';
-try { const L = JSON.parse(localStorage.getItem('pr-sky-loc') || 'null'); if (L && isFinite(L.lat) && isFinite(L.lon)) { SKY.lat = L.lat; SKY.lon = L.lon; SKY.place = L.n || 'Vị trí của bạn'; } } catch (e) { }
-function skySetPlace(n, lat, lon) { SKY.lat = lat; SKY.lon = lon; SKY.place = n; try { localStorage.setItem('pr-sky-loc', JSON.stringify({ n, lat, lon })); } catch (e) { } WX.data = null; WX.at = 0; wxFetch(); skyPlaceUI(); }
+try { const L = JSON.parse(localStorage.getItem('pr-sky-loc') || 'null'); if (L && isFinite(L.lat) && isFinite(L.lon)) { SKY.lat = L.lat; SKY.lon = L.lon; SKY.place = L.n || 'Vị trí của bạn'; SKY.placeSet = true; } } catch (e) { }
+async function skyAutoPlace() { // đoán vị trí theo mạng của máy, không cần xin quyền
+  if (SKY.placeSet || SKY.autoTried) return; SKY.autoTried = true;
+  const srcs = [async () => { const j = await (await fetch('https://get.geojs.io/v1/ip/geo.json')).json(); return [+j.latitude, +j.longitude, j.city || j.region]; }, async () => { const j = await (await fetch('https://ipapi.co/json/')).json(); return [+j.latitude, +j.longitude, j.city || j.region]; }];
+  for (const f of srcs) { try { const [lat, lon, n] = await f(); if (isFinite(lat) && isFinite(lon) && (lat || lon)) { SKY.lat = Math.round(lat * 100) / 100; SKY.lon = Math.round(lon * 100) / 100; SKY.place = (n ? n + ' (theo mạng)' : 'Vị trí của bạn'); SKY.auto = true; WX.data = null; WX.at = 0; wxFetch(); skyPlaceUI(); return; } } catch (e) { } }
+}
+function skySetPlace(n, lat, lon) { SKY.lat = lat; SKY.lon = lon; SKY.place = n; SKY.placeSet = true; SKY.auto = false; try { localStorage.setItem('pr-sky-loc', JSON.stringify({ n, lat, lon })); } catch (e) { } WX.data = null; WX.at = 0; wxFetch(); skyPlaceUI(); }
 function skyMyPlace() {
   if (!navigator.geolocation) { toast('Trình duyệt không hỗ trợ lấy vị trí'); return; }
   toast('Đang lấy vị trí của bạn…');
@@ -11472,7 +11486,7 @@ function skyMyPlace() {
     skySetPlace(n, lat, lon); toast('Bầu trời đã chuyển về ' + n);
   }, () => toast('Chưa được phép lấy vị trí · bạn có thể chọn thành phố trong danh sách'), { timeout: 12000, maximumAge: 3600000 });
 }
-function skyPlaceUI() { const s = document.getElementById('skyPlace'); if (!s) return; const i = SKY_CITIES.findIndex(c => Math.abs(c[1] - SKY.lat) < 0.02 && Math.abs(c[2] - SKY.lon) < 0.02); s.value = i >= 0 ? String(i) : 'me'; const o = s.querySelector('option[value="me"]'); if (o) o.textContent = i >= 0 ? '📍 Vị trí của tôi' : '📍 ' + SKY.place; }
+function skyPlaceUI() { const s = document.getElementById('skyPlace'); if (!s) return; const ao = s.querySelector('option[value="auto"]'); if (ao) ao.textContent = SKY.auto ? '🌐 ' + SKY.place : '🌐 Tự động theo mạng của máy'; if (SKY.auto) { s.value = 'auto'; return; } const i = SKY_CITIES.findIndex(c => Math.abs(c[1] - SKY.lat) < 0.02 && Math.abs(c[2] - SKY.lon) < 0.02); s.value = i >= 0 ? String(i) : 'me'; const o = s.querySelector('option[value="me"]'); if (o) o.textContent = i >= 0 ? '📍 Vị trí chính xác (GPS)' : '📍 ' + SKY.place; }
 // ----- thời tiết thật -----
 const WX = { data: null, at: 0, loading: false, err: false };
 const WX_CODE = c => c === 0 ? ['Trời quang', 'clear'] : c <= 2 ? ['Ít mây', 'clear'] : c === 3 ? ['Nhiều mây', 'cloud'] : c === 45 || c === 48 ? ['Sương mù', 'fog'] : c >= 51 && c <= 57 ? ['Mưa phùn', 'drizzle'] : c >= 61 && c <= 67 ? ['Mưa', 'rain'] : c >= 71 && c <= 77 ? ['Tuyết', 'snow'] : c >= 80 && c <= 82 ? ['Mưa rào', 'rain'] : c >= 95 ? ['Dông', 'storm'] : ['Có mây', 'cloud'];
@@ -11643,7 +11657,7 @@ document.querySelectorAll('[data-stab]').forEach(b => b.addEventListener('click'
   sc.addEventListener('wheel', e => { if (ST.tab !== 'sky') return; e.preventDefault(); SKY.fov = Math.max(15, Math.min(140, SKY.fov * (e.deltaY > 0 ? 1.1 : 0.9))); }, { passive: false });
   document.getElementById('skyIn').addEventListener('click', () => { SKY.fov = Math.max(15, SKY.fov * 0.8); });
   document.getElementById('skyOut').addEventListener('click', () => { SKY.fov = Math.min(140, SKY.fov * 1.25); });
-  { const sp = document.getElementById('skyPlace'); sp.innerHTML = SKY_CITIES.map((c2, i) => `<option value="${i}">${c2[0]}</option>`).join('') + '<option value="me">📍 Vị trí của tôi</option>'; skyPlaceUI(); sp.addEventListener('change', () => { if (sp.value === 'me') { skyMyPlace(); skyPlaceUI(); } else { const c2 = SKY_CITIES[+sp.value]; skySetPlace(c2[0], c2[1], c2[2]); } }); sp.addEventListener('keydown', e => e.stopPropagation()); }
+  { const sp = document.getElementById('skyPlace'); sp.innerHTML = '<option value="auto">🌐 Tự động theo mạng của máy</option>' + SKY_CITIES.map((c2, i) => `<option value="${i}">${c2[0]}</option>`).join('') + '<option value="me">📍 Vị trí chính xác (GPS)</option>'; skyPlaceUI(); skyAutoPlace(); sp.addEventListener('change', () => { if (sp.value === 'auto') { try { localStorage.removeItem('pr-sky-loc'); } catch (e) { } SKY.placeSet = false; SKY.autoTried = false; skyAutoPlace(); } else if (sp.value === 'me') { skyMyPlace(); skyPlaceUI(); } else { const c2 = SKY_CITIES[+sp.value]; skySetPlace(c2[0], c2[1], c2[2]); } }); sp.addEventListener('keydown', e => e.stopPropagation()); }
   document.getElementById('skyLines').addEventListener('click', e => { SKY.lines = !SKY.lines; e.currentTarget.setAttribute('aria-pressed', SKY.lines); });
   document.getElementById('skyNames').addEventListener('click', e => { SKY.names = !SKY.names; e.currentTarget.setAttribute('aria-pressed', SKY.names); });
   document.getElementById('skyTime').addEventListener('input', e => { SKY.ff = 0; skyFFbtn(); SKY.hourOfs = +e.target.value; });
