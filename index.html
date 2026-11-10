@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta http-equiv="Cache-Control" content="no-cache"><title>Private Room · bản 74</title><style>html,body{margin:0;padding:0;height:100%}</style></head><body>
+<html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta http-equiv="Cache-Control" content="no-cache"><title>Private Room · bản 76</title><style>html,body{margin:0;padding:0;height:100%}</style></head><body>
 <title>Private Room Casino</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -1850,7 +1850,7 @@ canvas#world { position: absolute; inset: 0; width: 100%; height: 100%; display:
   <!-- Help modal -->
   <div class="modal-wrap" id="helpModal" hidden>
     <div class="modal loan-modal set-modal" role="dialog" aria-label="Cài đặt">
-      <div class="shop-head"><h2 class="panel-title" style="margin:0">Cài đặt</h2><span class="note" id="gameVer" style="margin:0 10px 0 auto;font-weight:700;color:#ffd36a">Phiên bản 74</span><button class="xbtn" id="setX" type="button" aria-label="Đóng" style="margin-left:auto">✕</button></div>
+      <div class="shop-head"><h2 class="panel-title" style="margin:0">Cài đặt</h2><span class="note" id="gameVer" style="margin:0 10px 0 auto;font-weight:700;color:#ffd36a">Phiên bản 76</span><button class="xbtn" id="setX" type="button" aria-label="Đóng" style="margin-left:auto">✕</button></div>
       <div class="set-tabs" role="tablist"><button class="fchip" type="button" data-stab2="sound" aria-pressed="true">Âm thanh</button><button class="fchip" type="button" data-stab2="view" aria-pressed="false">Hiển thị</button><button class="fchip" type="button" data-stab2="save" aria-pressed="false">Lưu game</button><button class="fchip" type="button" data-stab2="keys" aria-pressed="false">Phím điều khiển</button></div>
       <section class="set-pane" data-pane="sound">
         <label class="set-row"><span>Âm lượng tổng <b id="vMasterV"></b></span><input type="range" id="vMaster" min="0" max="100" step="1"></label>
@@ -9618,9 +9618,11 @@ function openHeist() {
 // sự kiện chuột / phím cho modal hầm
 (() => {
   const cvv = document.getElementById('vmCv');
-  cvv.addEventListener('pointerdown', e => { if (!VM.down) return; try { cvv.setPointerCapture(e.pointerId); } catch (x) { } VM.down(...vmPos(e)); });
-  cvv.addEventListener('pointermove', e => { if (VM.move) VM.move(...vmPos(e)); });
-  ['pointerup', 'pointercancel'].forEach(ev => cvv.addEventListener(ev, e => { if (VM.up) VM.up(...vmPos(e)); }));
+  cvv.addEventListener('pointerdown', e => { if (!VM.down) return; e.preventDefault(); VM.pressed = true; try { cvv.setPointerCapture(e.pointerId); } catch (x) { } VM.down(...vmPos(e)); });
+  cvv.style.touchAction = 'none'; cvv.addEventListener('contextmenu', e => e.preventDefault());
+  cvv.addEventListener('pointermove', e => { if (VM.pressed && e.buttons === 0 && e.pointerType === 'mouse') { VM.pressed = false; if (VM.up) VM.up(...vmPos(e)); return; } if (VM.move) VM.move(...vmPos(e)); });
+  const upH = e => { if (!VM.pressed) return; VM.pressed = false; if (VM.up) VM.up(...vmPos(e)); };
+  ['pointerup', 'pointercancel', 'lostpointercapture'].forEach(ev => cvv.addEventListener(ev, upH)); window.addEventListener('pointerup', upH); window.addEventListener('blur', () => { if (VM.pressed) { VM.pressed = false; if (VM.up) VM.up(0, 0); } });
   cvv.addEventListener('wheel', e => { if (VM.wheel) { e.preventDefault(); VM.wheel(e.deltaY); } }, { passive: false });
   const kh = (e, down) => { if (VM_EL().hidden) return; const k = e.key.toLowerCase(); if (k === 'escape') { if (down) vmClose(); e.preventDefault(); e.stopPropagation(); return; } if (down) VM.keys.add(k); else VM.keys.delete(k); if (VM.key && VM.key(k, down)) { e.preventDefault(); e.stopPropagation(); } };
   window.addEventListener('keydown', e => kh(e, true), true); window.addEventListener('keyup', e => kh(e, false), true);
@@ -10577,22 +10579,22 @@ function garnIcon(c, id, x, y, s) {
   else if (id === 'straw') { c.save(); c.rotate(0.25); for (let i = 0; i < 6; i++) { c.fillStyle = i % 2 ? '#fff' : '#ff4a6a'; c.fillRect(-2.5, -16 + i * 5.4, 5, 5.4); } c.restore(); }
   c.restore();
 }
-const MIX_RATE = 40, GLASS_ML = 260;
+const MIX_RATE = 15, MIX_FAST = 45, GLASS_ML = 260, MIX_TAP_MS = 220, MIX_TAP_ML = 5;
 let BX = null;
 function barData() { if (!S.bar3) S.bar3 = { made: 0, perfect: 0, book: {} }; return S.bar3; }
 function openMix(ci) {
   vmOpen('mix', 'Quầy bar · Pha chế cocktail'); const ck = COCKTAILS[ci != null ? ci : Math.floor(Math.random() * COCKTAILS.length)];
   BX = { ck, pour: null, amt: {}, order: [], ice: false, tech: null, mint: false, gar: new Set(), served: false, t: 0 };
-  vmMsg(`Khách gọi <b>${ck.n}</b>. Bấm giữ chai để rót (40 ml mỗi giây, bảng bên trái đếm từng ml), thả tay là dừng. Rót đủ, chọn cách pha, bấm vào khay <b>đồ trang trí</b> bên trái ly để gắn lên ly, rồi bấm <b>Phục vụ</b>.`);
+  vmMsg(`Khách gọi <b>${ck.n}</b>. Bấm nhanh vào chai để rót đúng 5 ml. Giữ chuột để rót chậm 15 ml mỗi giây, cần nhanh thì giữ thêm phím Shift (45 ml mỗi giây), thả chuột là dừng ngay. Rót đủ, chọn cách pha, bấm vào khay <b>đồ trang trí</b> bên trái ly để gắn lên ly, rồi bấm <b>Phục vụ</b>.`);
   document.getElementById('vmFoot').innerHTML = `<button class="sbtn ghost" id="bxIce" type="button">🧊 Thêm đá</button>${ck.extra === 'mint' ? '<button class="sbtn ghost" id="bxMint" type="button">🌿 Dầm bạc hà</button>' : ''}<button class="sbtn ghost" data-tech="lắc" type="button">Lắc</button><button class="sbtn ghost" data-tech="khuấy" type="button">Khuấy</button><button class="sbtn ghost" data-tech="giữ tầng" type="button">Giữ tầng (không khuấy)</button><button class="sbtn" id="bxDump" type="button">Đổ đi</button><button class="sbtn buy" id="bxServe" type="button">Phục vụ</button>`;
   const flag = (id, k) => { const b = document.getElementById(id); if (b) b.addEventListener('click', () => { BX[k] = true; b.setAttribute('aria-pressed', 'true'); vmBeep(1400, 0.05, 0.05, 'triangle'); }); };
   flag('bxIce', 'ice'); flag('bxMint', 'mint');
   document.querySelectorAll('[data-tech]').forEach(b => b.addEventListener('click', () => { BX.tech = b.dataset.tech; document.querySelectorAll('[data-tech]').forEach(x => x.setAttribute('aria-pressed', x === b)); if (BX.tech === 'lắc') { BX.shakeT = 1.2; for (let i = 0; i < 6; i++) setTimeout(() => vmBeep(300 + Math.random() * 200, 0.05, 0.05, 'square'), i * 120); } if (BX.tech === 'khuấy') BX.stirT = 1.2; }));
   document.getElementById('bxDump').addEventListener('click', () => openMix(COCKTAILS.indexOf(BX.ck)));
   document.getElementById('bxServe').addEventListener('click', mixServe);
-  VM.down = (x, y) => { if (BX.served) return; for (let k = 0; k < GARN.length; k++) { const [gx2, gy2] = garnPos(k); if (Math.abs(x - gx2 - 30) < 40 && Math.abs(y - gy2) < 19) { const id = GARN[k][0]; if (BX.gar.has(id)) BX.gar.delete(id); else BX.gar.add(id); vmBeep(BX.gar.has(id) ? 1200 : 700, 0.05, 0.05, 'triangle'); return; } } const i = mixBottleAt(x, y); if (i >= 0) { BX.pour = i; BX.pourAt = performance.now(); } };
-  VM.up = () => { if (BX.pour != null && !BX.served) { const nowP = performance.now(), pdt = Math.min(0.25, (nowP - (BX.pourAt || nowP)) / 1000); BX.amt[BX.pour] = (BX.amt[BX.pour] || 0) + pdt * MIX_RATE; } BX.pour = null; };
-  VM.tick = dt => { BX.t += dt; if (BX.pour != null && !BX.served) { const nowP = performance.now(), pdt = Math.min(0.25, (nowP - (BX.pourAt || nowP)) / 1000); BX.pourAt = nowP; const sum = Object.values(BX.amt).reduce((a, b) => a + b, 0); if (sum < GLASS_ML) { BX.amt[BX.pour] = (BX.amt[BX.pour] || 0) + pdt * MIX_RATE; if (BX.order[BX.order.length - 1] !== BX.pour) BX.order.push(BX.pour); } } BX.shakeT = Math.max(0, (BX.shakeT || 0) - dt); BX.stirT = Math.max(0, (BX.stirT || 0) - dt); };
+  VM.down = (x, y) => { if (BX.served) return; for (let k = 0; k < GARN.length; k++) { const [gx2, gy2] = garnPos(k); if (Math.abs(x - gx2 - 30) < 40 && Math.abs(y - gy2) < 19) { const id = GARN[k][0]; if (BX.gar.has(id)) BX.gar.delete(id); else BX.gar.add(id); vmBeep(BX.gar.has(id) ? 1200 : 700, 0.05, 0.05, 'triangle'); return; } } const i = mixBottleAt(x, y); if (i >= 0) { BX.pour = i; BX.pourAt = BX.downAt = performance.now(); } };
+  VM.up = () => { if (BX.pour != null && !BX.served) { const nowP = performance.now(), sum = Object.values(BX.amt).reduce((a, b) => a + b, 0); if (nowP - BX.downAt < MIX_TAP_MS) { if (sum < GLASS_ML) { BX.amt[BX.pour] = (BX.amt[BX.pour] || 0) + Math.min(MIX_TAP_ML, GLASS_ML - sum); if (BX.order[BX.order.length - 1] !== BX.pour) BX.order.push(BX.pour); } vmBeep(900, 0.03, 0.03, 'triangle'); } } BX.pour = null; };
+  VM.tick = dt => { BX.t += dt; if (BX.pour != null && !BX.served) { const nowP = performance.now(), pdt = Math.min(0.1, (nowP - (BX.pourAt || nowP)) / 1000); BX.pourAt = nowP; if (nowP - BX.downAt < MIX_TAP_MS) return; const sum = Object.values(BX.amt).reduce((a, b) => a + b, 0), rate = VM.keys.has('shift') ? MIX_FAST : MIX_RATE; if (sum < GLASS_ML) { BX.amt[BX.pour] = (BX.amt[BX.pour] || 0) + Math.min(pdt * rate, GLASS_ML - sum); if (BX.order[BX.order.length - 1] !== BX.pour) BX.order.push(BX.pour); } } BX.shakeT = Math.max(0, (BX.shakeT || 0) - dt); BX.stirT = Math.max(0, (BX.stirT || 0) - dt); };
   VM.draw = mixDraw;
 }
 const mixBottlePos = i => [272 + (i % 7) * 70, i < 7 ? 330 : 430];
