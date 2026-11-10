@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta http-equiv="Cache-Control" content="no-cache"><title>Private Room · bản 88</title><style>html,body{margin:0;padding:0;height:100%}</style></head><body>
+<html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta http-equiv="Cache-Control" content="no-cache"><title>Private Room · bản 89</title><style>html,body{margin:0;padding:0;height:100%}</style></head><body>
 <title>Private Room Casino</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -776,6 +776,15 @@ canvas#world { position: absolute; inset: 0; width: 100%; height: 100%; display:
 .lux-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; } .lux-it { border: 1px solid rgba(217,164,65,.3); border-radius: 12px; padding: 10px; display: flex; flex-direction: column; gap: 4px; background: rgba(0,0,0,.2); } .lux-it.own { border-color: rgba(255,211,106,.8); background: rgba(255,211,106,.08); } .lux-it em { font-style: normal; font-size: 28px; } .lux-it b { color: #f6ead2; font-size: 13.5px; } .lux-it span { color: #c9b893; font-size: 12px; } .lux-it small { color: #7fd69a; font-size: 12px; align-self: center; } .lux-it > div { display: flex; gap: 6px; flex-wrap: wrap; margin-top: auto; }
 .tbl-bar { position: fixed; top: 10px; left: 50%; transform: translateX(-50%); z-index: 60; display: flex; flex-wrap: wrap; gap: 6px 12px; align-items: center; justify-content: center; max-width: min(92vw, 820px); padding: 8px 14px; border-radius: 14px; background: rgba(20,8,14,.92); border: 1px solid rgba(217,164,65,.55); box-shadow: 0 6px 24px rgba(0,0,0,.5); font-size: 13px; color: #f6ead2; pointer-events: none; }
 .tbl-bar b { color: #ffd36a; letter-spacing: .04em; text-transform: uppercase; font-size: 12px; } .tbl-bar span { color: #e8dcc0; } .tbl-bar span.me { color: #7fd69a; } .tbl-bar em { font-style: normal; color: #ff8fc8; font-weight: 700; width: 100%; text-align: center; } .tbl-bar em.res { color: #ffd36a; } .tbl-bar em.hint { color: #c9b893; font-weight: 500; }
+.lobby-wrap { position: fixed; inset: 0; z-index: 290; display: grid; place-items: center; overflow-y: auto; padding: 16px; background: radial-gradient(ellipse at 50% 30%, rgb(90 20 40 / .94), rgb(10 3 8 / .98)); backdrop-filter: blur(6px); } .lobby-wrap[hidden] { display: none; }
+.lobby-card { width: min(780px, 100%); display: flex; flex-direction: column; gap: 10px; padding: 26px 26px 18px; border-radius: 22px; background: linear-gradient(180deg, #2a1420, #160a12); border: 2px solid var(--brass, #d9a441); box-shadow: 0 0 60px rgb(217 164 65 / .25), 0 20px 50px rgb(0 0 0 / .6); }
+.lobby-card .acc-sub { margin: 0; } .lb-cols { display: grid; grid-template-columns: 1.1fr 1fr; gap: 18px; } @media (max-width: 640px) { .lb-cols { grid-template-columns: 1fr; } }
+.lb-cols h3 { margin: 6px 0 8px; color: #ffd36a; font-size: 13px; letter-spacing: .08em; text-transform: uppercase; } .lb-cols section { display: flex; flex-direction: column; gap: 8px; }
+.lb-list { display: flex; flex-direction: column; gap: 8px; max-height: 340px; overflow-y: auto; padding-right: 2px; }
+.lb-room { position: relative; text-align: left; display: flex; flex-direction: column; gap: 3px; padding: 11px 14px; border-radius: 12px; border: 1px solid rgba(217,164,65,.35); background: rgba(0,0,0,.25); color: #f6ead2; cursor: pointer; font: inherit; } .lb-room:hover { border-color: #ffd36a; background: rgba(255,211,106,.08); }
+.lb-room b { font-size: 15px; } .lb-room span { font-size: 12.5px; color: #c9b893; } .lb-room i { position: absolute; top: 10px; right: 12px; font-style: normal; font-size: 11px; font-weight: 700; color: #7fd69a; } .lb-room.last { border-color: rgba(127,214,154,.7); }
+.lb-join input { background: #120a10; border: 1px solid #ffd36a66; border-radius: 10px; color: #fff; padding: 10px 12px; font: 15px var(--font-body); outline: none; text-transform: uppercase; letter-spacing: .15em; } .lb-join input:focus { border-color: #ffd36a; }
+.lb-size { display: flex; gap: 6px; } .lb-join { display: flex; gap: 8px; } .lb-join input, .lobby-card .acc-f input { flex: 1; min-width: 0; }
 .w-room.cur { border-color: rgba(127,214,154,.6); background: rgba(127,214,154,.06); }
 .duo-pick { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin: 0 0 10px; } .duo-pick > span { font-size: 12.5px; color: #c9b893; margin-right: 4px; } .duo-pk i { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #6a5a4a; margin-right: 6px; vertical-align: 1px; } .duo-pk.on i { background: #7fd69a; box-shadow: 0 0 6px #7fd69a; }
 .duo-mem { border: 1px solid rgba(217,164,65,.25); border-radius: 10px; padding: 8px 10px; margin: 0 0 8px; display: flex; flex-direction: column; gap: 6px; } .duo-mem > div:first-child { display: flex; gap: 10px; align-items: baseline; } .duo-mem > div:first-child span, .duo-mem small { color: #c9b893; font-size: 12px; } .duo-mem .duo-acts { margin: 0; }
@@ -1860,7 +1869,7 @@ canvas#world { position: absolute; inset: 0; width: 100%; height: 100%; display:
   <!-- Help modal -->
   <div class="modal-wrap" id="helpModal" hidden>
     <div class="modal loan-modal set-modal" role="dialog" aria-label="Cài đặt">
-      <div class="shop-head"><h2 class="panel-title" style="margin:0">Cài đặt</h2><span class="note" id="gameVer" style="margin:0 10px 0 auto;font-weight:700;color:#ffd36a">Phiên bản 88</span><button class="xbtn" id="setX" type="button" aria-label="Đóng" style="margin-left:auto">✕</button></div>
+      <div class="shop-head"><h2 class="panel-title" style="margin:0">Cài đặt</h2><span class="note" id="gameVer" style="margin:0 10px 0 auto;font-weight:700;color:#ffd36a">Phiên bản 89</span><button class="xbtn" id="setX" type="button" aria-label="Đóng" style="margin-left:auto">✕</button></div>
       <div class="set-tabs" role="tablist"><button class="fchip" type="button" data-stab2="sound" aria-pressed="true">Âm thanh</button><button class="fchip" type="button" data-stab2="view" aria-pressed="false">Hiển thị</button><button class="fchip" type="button" data-stab2="save" aria-pressed="false">Lưu game</button><button class="fchip" type="button" data-stab2="keys" aria-pressed="false">Phím điều khiển</button></div>
       <section class="set-pane" data-pane="sound">
         <label class="set-row"><span>Âm lượng tổng <b id="vMasterV"></b></span><input type="range" id="vMaster" min="0" max="100" step="1"></label>
@@ -13770,6 +13779,7 @@ function roomMeta() {
 async function worldGo(w, opt) {
   opt = opt || {};
   if (w === WORLD && !opt.force) { toast('Bạn đang ở ' + worldName(w)); return; }
+  try { sessionStorage.setItem('pr-lobby-ok', '1'); } catch (e) { }
   toast('Đang chuyển sang ' + (w === 'solo' ? 'chế độ chơi một mình' : worldName(w)) + '…');
   if (!opt.nosave) { save(); if (accBound()) { ACC.checked = true; await Promise.race([accUpload(true), wait(5000)]); } }
   try { localStorage.setItem(wKey('pr-world-prev'), WORLD || 'solo'); } catch (e) { }
@@ -13815,6 +13825,7 @@ async function worldWipe(c) {
   try { accLeaveRoom(c); } catch (e) { } worldDrop(c); toast('Đã xoá dữ liệu của bạn ở phòng ' + c); renderDuo(true);
 }
 function worldBootConnect() {
+  if (lobbyNeeded()) return;
   if (NET.code || !WORLD || WORLD === 'solo' || NET.locked) return;
   const e = worldEntry(WORLD); duoStart(!!(e && e.host), WORLD, true);
 }
@@ -13827,9 +13838,9 @@ function worldAccInit() {
     try { localStorage.setItem(wKey('pr-world-leg'), leg); localStorage.setItem(wKey('pr-world'), leg); } catch (e) { }
     WORLD = leg; if (leg !== 'solo' && !worldEntry(leg)) worldPut({ c: leg, n: 'Phòng 2 người', max: 2, host: false });
     if (leg !== 'solo') ACC.db.collection('rooms').doc(leg).get().then(r => { if (r.exists) { worldPut({ c: leg, host: r.data().host === ACC.user.uid }); if (!NET.code) worldBootConnect(); } }).catch(() => { });
-    return;
+    try { lobbyRender(); } catch (e) { } return;
   }
-  worldBootConnect();
+  worldBootConnect(); try { lobbyRender(); } catch (e) { }
 }
 function worldRoomsHtml() {
   const L = worldList().sort((a, b) => (b.at || 0) - (a.at || 0)), cur = WORLD || 'solo', M = S.roomMeta;
@@ -13969,6 +13980,60 @@ setInterval(() => {
     luxWasTop = top;
   } catch (e) { }
 }, 5000);
+
+// =============== SẢNH CHỌN PHÒNG (hiện mỗi lần mở game) ===============
+const LOBBY = { open: false };
+function lobbyNeeded() { try { if (TEST_MODE || localStorage.getItem('pr-test') === '1') return false; if (sessionStorage.getItem('pr-lobby-ok')) return false; if (localStorage.getItem('pr-lobby-skip')) return false; return true; } catch (e) { return false; } }
+const lobbyOk = () => { try { sessionStorage.setItem('pr-lobby-ok', '1'); } catch (e) { } };
+const lobbyAccWait = () => { try { return !!localStorage.getItem('pr-acc') && !(ACC.db && ACC.user && ACC.checked); } catch (e) { return false; } };
+function lobbyShow() {
+  if (!lobbyNeeded()) return;
+  let el = document.getElementById('lobby');
+  if (!el) { el = document.createElement('div'); el.id = 'lobby'; el.className = 'lobby-wrap'; document.body.appendChild(el); }
+  LOBBY.open = true; el.hidden = false; try { keys.clear(); } catch (e) { } lobbyRender();
+}
+function lobbyClose() { LOBBY.open = false; const el = document.getElementById('lobby'); if (el) el.hidden = true; try { cv.focus(); } catch (e) { } }
+function lobbyRender() {
+  const el = document.getElementById('lobby'); if (!el || !LOBBY.open) return;
+  const ae = document.activeElement; if (ae && el.contains(ae) && ae.tagName === 'INPUT' && ae.value) return;
+  const L = worldList().sort((a, b) => (b.at || 0) - (a.at || 0)), last = WORLD || 'solo', wait = lobbyAccWait();
+  const card = (w, title, sub) => `<button type="button" class="lb-room ${w === last ? 'last' : ''}" data-lbgo="${w}"><b>${escH(title)}</b><span>${sub}</span>${w === last ? '<i>Lần trước</i>' : ''}</button>`;
+  el.innerHTML = `<div class="lobby-card" role="dialog" aria-label="Chọn phòng">
+    <div class="acc-logo">PRIVATE ROOM</div><p class="acc-sub">${S.name && S.started ? 'Chào ' + escH(S.name) + ' · ' : ''}Chọn phòng để vào chơi</p>
+    <div class="lb-cols">
+      <section><h3>Phòng của bạn</h3><div class="lb-list">
+        ${card('solo', 'Chơi một mình', 'Tiến trình riêng, không ai vào được')}
+        ${L.map(r => card(r.c, r.n || 'Phòng ' + r.c, 'Mã ' + r.c + ' · ' + (r.max || '?') + ' người' + (r.host ? ' · bạn tạo' : ''))).join('')}
+      </div></section>
+      <section><h3>Mở phòng mới</h3>
+        <label class="acc-f">Tên phòng<input id="lbName" maxlength="30" placeholder="Ví dụ: Nhà hai đứa" autocomplete="off"></label>
+        <div class="lb-size">${[2, 3, 4].map(n => `<button type="button" class="fchip" data-lbsize="${n}" aria-pressed="${n === (LOBBY.size || 2)}">${n} người</button>`).join('')}</div>
+        <button class="sbtn buy acc-go" type="button" id="lbCreate" ${wait ? 'disabled' : ''}>Mở phòng</button>
+        <h3>Tham gia bằng mã</h3>
+        <div class="lb-join"><input id="lbCode" maxlength="6" placeholder="Mã 6 ký tự" autocomplete="off" spellcheck="false"><button class="sbtn buy" type="button" id="lbJoin" ${wait ? 'disabled' : ''}>Vào phòng</button></div>
+        <p class="note" style="margin:6px 0 0">${wait ? 'Đang kết nối tài khoản…' : 'Phòng mới và lần đầu vào một phòng sẽ bắt đầu từ đầu. Tiến trình các phòng khác vẫn giữ nguyên.'}</p>
+      </section>
+    </div>
+    ${localStorage.getItem('pr-acc') ? '<button class="acc-skip" type="button" id="lbOut">Đăng xuất</button>' : ''}
+  </div>`;
+  el.querySelectorAll('[data-lbgo]').forEach(b => b.addEventListener('click', () => lobbyGo(b.dataset.lbgo)));
+  el.querySelectorAll('[data-lbsize]').forEach(b => b.addEventListener('click', () => { LOBBY.size = +b.dataset.lbsize; el.querySelectorAll('[data-lbsize]').forEach(x => x.setAttribute('aria-pressed', x === b)); }));
+  const $ = id => document.getElementById(id);
+  $('lbCreate').addEventListener('click', () => { if (lobbyAccWait()) return; worldCreate(LOBBY.size || 2, $('lbName').value); });
+  const join = () => { if (lobbyAccWait()) return; const c = $('lbCode').value.trim().toUpperCase().replace(/[^A-Z0-9]/g, ''); if (c.length !== 6) { toast('Mã phòng gồm 6 ký tự'); return; } worldJoin(c); };
+  $('lbJoin').addEventListener('click', join);
+  el.querySelectorAll('input').forEach(i => i.addEventListener('keydown', e => { e.stopPropagation(); if (e.key === 'Enter' && i.id === 'lbCode') join(); }));
+  if ($('lbOut')) $('lbOut').addEventListener('click', () => { try { accLogout(); } catch (e) { } });
+}
+function lobbyGo(w) {
+  lobbyOk();
+  if (w === (WORLD || 'solo') || (!WORLD && w === 'solo')) { lobbyClose(); worldBootConnect(); if (w !== 'solo') toast('Đang vào ' + worldName(w) + '…'); return; }
+  worldGo(w, { force: true });
+}
+// chặn phím điều khiển nhân vật khi sảnh đang mở
+window.addEventListener('keydown', e => { if (LOBBY.open && !(e.target && e.target.closest && e.target.closest('#lobby'))) { e.stopImmediatePropagation(); } }, true);
+setInterval(() => { if (LOBBY.open) { const b = document.getElementById('lbCreate'); if (b && b.disabled !== lobbyAccWait()) lobbyRender(); } }, 700);
+setTimeout(lobbyShow, 0);
 
 // =============== TÀI KHOẢN + LƯU LÊN MẠNG (Firebase) ===============
 const FB_CONFIG_BUILTIN = { apiKey: "AIzaSyDmeM_UfS4_LV7cKdLx0fTaqcW6wCK1lzU", authDomain: "private-room-6ee09.firebaseapp.com", projectId: "private-room-6ee09", storageBucket: "private-room-6ee09.firebasestorage.app", messagingSenderId: "61547343912", appId: "1:61547343912:web:6b2d9c461d4c2e91e1c51d" };
