@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta http-equiv="Cache-Control" content="no-cache"><title>Private Room · bản 72</title><style>html,body{margin:0;padding:0;height:100%}</style></head><body>
+<html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta http-equiv="Cache-Control" content="no-cache"><title>Private Room · bản 73</title><style>html,body{margin:0;padding:0;height:100%}</style></head><body>
 <title>Private Room Casino</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -1661,7 +1661,7 @@ canvas#world { position: absolute; inset: 0; width: 100%; height: 100%; display:
       <canvas id="starCv" width="760" height="480" aria-label="Bầu trời đêm"></canvas>
       <p class="note star-msg" id="starMsg"></p>
       <div class="star-bar" id="starConsBar"><div class="star-done" id="starDone"></div><button class="sbtn ghost" id="starHint" type="button">Gợi ý hình</button><button class="sbtn ghost" id="starClear" type="button">Xoá đường</button><button class="sbtn buy" id="starNew" type="button">Bầu trời khác</button></div>
-      <div class="star-bar" id="starSkyBar" hidden><button class="sbtn ghost" id="skyOut" type="button">− Thu nhỏ</button><button class="sbtn ghost" id="skyIn" type="button">+ Phóng to</button><button class="fchip" id="skyLines" type="button" aria-pressed="true">Đường chòm sao</button><button class="fchip" id="skyNames" type="button" aria-pressed="true">Tên sao</button><label class="sky-time">Tua giờ <input type="range" id="skyTime" min="-12" max="12" step="0.25" value="0"></label><button class="fchip" id="skyFF" type="button" aria-pressed="false">Tua nhanh ▶▶</button><button class="sbtn buy" id="skyNow" type="button">Bây giờ</button><select class="ev-sel" id="skyPlace" aria-label="Nơi ngắm sao"></select><button class="sbtn buy" id="skyBig" type="button">⛶ Toàn màn hình</button></div>
+      <div class="star-bar" id="starSkyBar" hidden><button class="sbtn ghost" id="skyOut" type="button">− Thu nhỏ</button><button class="sbtn ghost" id="skyIn" type="button">+ Phóng to</button><button class="fchip" id="skyLines" type="button" aria-pressed="true">Đường chòm sao</button><button class="fchip" id="skyNames" type="button" aria-pressed="true">Tên sao</button><label class="sky-time">Tua giờ <input type="range" id="skyTime" min="-12" max="12" step="0.25" value="0"></label><button class="fchip" id="skyFF" type="button" aria-pressed="false">Tua nhanh ▶▶</button><button class="sbtn buy" id="skyNow" type="button">Bây giờ</button><select class="ev-sel" id="skyPlace" aria-label="Nơi ngắm sao"></select><button class="sbtn ghost" id="skyWx" type="button" title="Lấy thời tiết mới nhất">↻ Thời tiết</button><button class="sbtn buy" id="skyBig" type="button">⛶ Toàn màn hình</button></div>
       <div class="star-bar" id="starFwBar" hidden><div class="fw-types" id="fwTypes"></div><div class="fw-cols" id="fwCols"></div><button class="sbtn ghost" id="fwClear" type="button">Xoá</button><button class="sbtn ghost" id="fwSave" type="button">Lưu ảnh</button><button class="sbtn buy" id="fwPlay" type="button">Bắn ▶</button></div>
     </div>
   </div>
@@ -1850,7 +1850,7 @@ canvas#world { position: absolute; inset: 0; width: 100%; height: 100%; display:
   <!-- Help modal -->
   <div class="modal-wrap" id="helpModal" hidden>
     <div class="modal loan-modal set-modal" role="dialog" aria-label="Cài đặt">
-      <div class="shop-head"><h2 class="panel-title" style="margin:0">Cài đặt</h2><span class="note" id="gameVer" style="margin:0 10px 0 auto;font-weight:700;color:#ffd36a">Phiên bản 72</span><button class="xbtn" id="setX" type="button" aria-label="Đóng" style="margin-left:auto">✕</button></div>
+      <div class="shop-head"><h2 class="panel-title" style="margin:0">Cài đặt</h2><span class="note" id="gameVer" style="margin:0 10px 0 auto;font-weight:700;color:#ffd36a">Phiên bản 73</span><button class="xbtn" id="setX" type="button" aria-label="Đóng" style="margin-left:auto">✕</button></div>
       <div class="set-tabs" role="tablist"><button class="fchip" type="button" data-stab2="sound" aria-pressed="true">Âm thanh</button><button class="fchip" type="button" data-stab2="view" aria-pressed="false">Hiển thị</button><button class="fchip" type="button" data-stab2="save" aria-pressed="false">Lưu game</button><button class="fchip" type="button" data-stab2="keys" aria-pressed="false">Phím điều khiển</button></div>
       <section class="set-pane" data-pane="sound">
         <label class="set-row"><span>Âm lượng tổng <b id="vMasterV"></b></span><input type="range" id="vMaster" min="0" max="100" step="1"></label>
@@ -11497,31 +11497,36 @@ const WX_CODE = c => c === 0 ? ['Trời quang', 'clear'] : c <= 2 ? ['Ít mây',
 async function wxFetch() {
   if (WX.loading) return; WX.loading = true;
   try {
-    const u = `https://api.open-meteo.com/v1/forecast?latitude=${SKY.lat}&longitude=${SKY.lon}&current=temperature_2m,relative_humidity_2m,cloud_cover,precipitation,weather_code,wind_speed_10m,wind_direction_10m,visibility&hourly=temperature_2m,cloud_cover,precipitation,weather_code,wind_speed_10m,wind_direction_10m,visibility&past_days=1&forecast_days=2&timezone=auto`;
-    const r = await fetch(u); if (!r.ok) throw new Error(r.status); WX.data = await r.json(); WX.at = Date.now(); WX.err = false;
+    const u = `https://api.open-meteo.com/v1/forecast?latitude=${SKY.lat}&longitude=${SKY.lon}&current=temperature_2m,relative_humidity_2m,cloud_cover,cloud_cover_low,cloud_cover_mid,cloud_cover_high,direct_radiation,is_day,precipitation,weather_code,wind_speed_10m,wind_direction_10m,visibility&hourly=temperature_2m,cloud_cover,cloud_cover_low,cloud_cover_mid,cloud_cover_high,direct_radiation,precipitation,weather_code,wind_speed_10m,wind_direction_10m,visibility&past_days=1&forecast_days=2&timezone=auto`;
+    const r = await fetch(u); if (!r.ok) throw new Error(r.status); WX.data = await r.json(); WX.at = Date.now(); WX.got = Date.now(); WX.err = false;
   } catch (e) { WX.err = true; }
   WX.loading = false;
 }
 function wxAt(date) { // thời tiết ở thời điểm đang xem (có tua giờ thì lấy dự báo theo giờ)
   const D = WX.data; if (!D) return null;
-  if (Math.abs(date - Date.now()) < 45 * 60000 && D.current) { const c = D.current; return { t: c.temperature_2m, cc: c.cloud_cover, p: c.precipitation, code: c.weather_code, ws: c.wind_speed_10m, wd: c.wind_direction_10m, vis: c.visibility, hum: c.relative_humidity_2m, fc: false }; }
+  if (Math.abs(date - Date.now()) < 45 * 60000 && D.current) { const c = D.current; return { t: c.temperature_2m, cc: c.cloud_cover, lo: c.cloud_cover_low, mid: c.cloud_cover_mid, hi: c.cloud_cover_high, dr: c.direct_radiation, p: c.precipitation, code: c.weather_code, ws: c.wind_speed_10m, wd: c.wind_direction_10m, vis: c.visibility, hum: c.relative_humidity_2m, fc: false }; }
   const H = D.hourly; if (!H || !H.time) return null; const off = (D.utc_offset_seconds || 0) * 1000; let bi = -1, bd = Infinity;
   H.time.forEach((s, i) => { const ms = Date.parse(s + ':00Z') - off, d = Math.abs(ms - date); if (d < bd) { bd = d; bi = i; } });
   if (bi < 0 || bd > 2 * 3600000) return null;
-  return { t: H.temperature_2m[bi], cc: H.cloud_cover[bi], p: H.precipitation[bi], code: H.weather_code[bi], ws: H.wind_speed_10m[bi], wd: H.wind_direction_10m[bi], vis: H.visibility[bi], fc: true };
+  const g = k => H[k] ? H[k][bi] : undefined; return { t: H.temperature_2m[bi], cc: H.cloud_cover[bi], lo: g('cloud_cover_low'), mid: g('cloud_cover_mid'), hi: g('cloud_cover_high'), dr: g('direct_radiation'), p: H.precipitation[bi], code: H.weather_code[bi], ws: H.wind_speed_10m[bi], wd: H.wind_direction_10m[bi], vis: H.visibility[bi], fc: true };
 }
-function wxSky(date) {
+function wxSky(date, sa) {
   if (!WX.data && !WX.loading && (!WX.at || Date.now() - WX.at > 60000)) { WX.at = Date.now(); wxFetch(); }
-  if (WX.data && Date.now() - WX.at > 10 * 60000) wxFetch();
+  if (WX.data && Date.now() - WX.at > 5 * 60000) { WX.at = Date.now(); wxFetch(); }
   const w = wxAt(date); if (!w) return { w: null, cc: 30, clear: 0.85, kind: 'cloud', rain: 0, wind: 8, wd: 90 };
+  // mây cao (ti, mỏng) che ít hơn mây thấp; có bức xạ trực tiếp mạnh nghĩa là đang có nắng
+  let eff = w.lo != null ? Math.min(100, w.lo + (w.mid || 0) * 0.75 + (w.hi || 0) * 0.22) : w.cc, sun = null;
+  if (w.dr != null && sa != null && sa > 3) { const exp = 880 * Math.sin(sa * d2r) * Math.min(1, 0.6 + sa / 60); sun = Math.max(0, Math.min(1, w.dr / Math.max(60, exp))); if (sun > 0.3) eff = Math.min(eff, Math.round((1 - sun) * 90 + 8)); }
+  w.eff = eff; w.sun = sun;
   const [, kind] = WX_CODE(w.code), rain = kind === 'rain' || kind === 'storm' ? Math.min(1, 0.35 + (w.p || 0) / 4) : kind === 'drizzle' ? 0.25 : 0;
   const fog = kind === 'fog' ? 0.6 : w.vis != null && w.vis < 4000 ? Math.min(0.5, (4000 - w.vis) / 6000) : 0;
-  return { w, cc: w.cc, clear: Math.max(0.03, (1 - w.cc / 100 * 0.92) * (1 - fog * 0.8) * (rain ? 0.4 : 1)), kind, rain, fog, wind: w.ws || 0, wd: w.wd || 0 };
+  return { w, cc: eff, sun, clear: Math.max(0.03, (1 - eff / 100 * 0.92) * (1 - fog * 0.8) * (rain ? 0.4 : 1)), kind, rain, fog, wind: w.ws || 0, wd: w.wd || 0 };
 }
 const WX_DIR = d => ['Bắc', 'Đông Bắc', 'Đông', 'Đông Nam', 'Nam', 'Tây Nam', 'Tây', 'Tây Bắc'][Math.round(((d % 360) + 360) % 360 / 45) % 8];
 function wxLine(W) {
   if (!W.w) return WX.err ? 'Thời tiết thật: chưa tải được (kiểm tra mạng)' : 'Đang tải thời tiết thật…';
-  const w = W.w; return `${w.fc ? 'Dự báo' : 'Thời tiết thật'}: ${WX_CODE(w.code)[0]} · ${Math.round(w.t)}°C · mây ${Math.round(w.cc)}% · gió ${Math.round(w.ws)} km/h từ hướng ${WX_DIR(w.wd)}`;
+  const w = W.w, sunTxt = w.sun != null ? (w.sun > 0.6 ? ' · đang nắng' : w.sun > 0.25 ? ' · nắng nhẹ' : ' · không nắng') : '', cl = w.lo != null ? `mây thấp ${Math.round(w.lo)}%, cao ${Math.round(w.hi || 0)}%` : `mây ${Math.round(w.cc)}%`;
+  return `${w.fc ? 'Dự báo' : 'Thời tiết thật'}: ${WX_CODE(w.code)[0]}${sunTxt} · ${Math.round(w.t)}°C · ${cl} · gió ${Math.round(w.ws)} km/h${!w.fc && WX.got ? ' · cập nhật ' + new Date(WX.got).toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' }) : ''}`;
 }
 function wxDrawFx(c, W, H, t, K, dark, dt) {
   if (K.fog) { c.fillStyle = `rgba(${dark > 0.5 ? '60,64,80' : '200,205,210'},${K.fog * 0.55})`; c.fillRect(0, 0, W, H); }
@@ -11656,7 +11661,8 @@ function sgClouds(c, W, H, t, K, dark, sa, dt) {
     if (K.rain && wDay > 0.2) draw('night', 0.45 * base * wDay);
   });
   c.globalAlpha = 1;
-  if (K.cc > 60) { const a = (K.cc - 60) / 40 * 0.85, S2 = 420 * (W / 760), off = ((t * (2 + K.wind / 3)) % S2); c.save(); c.globalAlpha = a * (dark > 0.5 ? 0.35 : 1); c.filter = dark > 0.5 ? 'brightness(0.25)' : sa < 2 ? 'brightness(0.7) sepia(0.4)' : 'none'; for (let x = -S2 + off; x < W; x += S2) for (let y = 0; y < H * 0.85; y += S2) c.drawImage(SG.strat, x, y, S2, S2); c.restore(); }
+  if (K.w && K.w.hi > 25 && K.cc < 70) { const S3 = 700 * (W / 760), off3 = (t * (1 + K.wind / 6)) % S3; c.save(); c.globalAlpha = (K.w.hi / 100) * (dark > 0.5 ? 0.06 : 0.22); c.filter = sa < 3 && sa > -8 ? 'sepia(0.6) saturate(1.6)' : 'none'; if (!SG.pat) SG.pat = c.createPattern(SG.strat, 'repeat'); c.translate(off3, 0); c.scale(S3 / 256, S3 / 256 * 0.35); c.fillStyle = SG.pat; c.fillRect(-off3 * 256 / S3 - 2, -2, W * 256 / S3 + 4, H * 256 / S3 / 0.35 + 4); c.restore(); }
+  if (K.cc > 60) { const a = (K.cc - 60) / 40 * 0.85, S2 = 420 * (W / 760), off = ((t * (2 + K.wind / 3)) % S2); c.save(); c.globalAlpha = a * (dark > 0.5 ? 0.35 : 1); c.filter = dark > 0.5 ? 'brightness(0.25)' : sa < 2 ? 'brightness(0.7) sepia(0.4)' : 'none'; if (!SG.pat) SG.pat = c.createPattern(SG.strat, 'repeat'); c.translate(off, 0); c.scale(S2 / 256, S2 / 256); c.fillStyle = SG.pat; c.fillRect(-off * 256 / S2 - 2, -2, W * 256 / S2 + 4, H * 256 / S2 + 4); c.restore(); }
 }
 function sgCity(c, W, H, t, dark, sa) {
   sgInit(); const day = 1 - dark, col = dark > 0.5 ? '#05060a' : mixC('#232a33', '#05060a', dark * 2);
@@ -11695,7 +11701,7 @@ function drawSky(c, W, H, t) {
   skyInit(); const nowP = performance.now(), dt = SKY.lt ? Math.min(0.1, (nowP - SKY.lt) / 1000) : 0; SKY.lt = nowP;
   if (SKY.ff) { SKY.hourOfs += dt * SKY.ff / 3600; const sl = document.getElementById('skyTime'); if (sl) sl.value = Math.max(-12, Math.min(12, SKY.hourOfs)); }
   const date = new Date(Date.now() + SKY.hourOfs * 3600000), lst = skyLST(date), SM = sunMoon(date);
-  const [sAlt, sAz] = eqToHor(SM.sun.ra, SM.sun.dec, lst), [mAlt, mAz] = eqToHor(SM.moon.ra, SM.moon.dec, lst), sa = sAlt / d2r, K = wxSky(date);
+  const [sAlt, sAz] = eqToHor(SM.sun.ra, SM.sun.dec, lst), [mAlt, mAz] = eqToHor(SM.moon.ra, SM.moon.dec, lst), sa = sAlt / d2r, K = wxSky(date, sa);
   // độ tối: 0 ban ngày → 1 đêm hẳn; trăng sáng làm mờ sao mờ
   const dark = Math.max(0, Math.min(1, (-sa - 3) / 13)), moonGlare = mAlt > 0 ? SM.moon.illum * 0.45 : 0, starVis = dark * (1 - moonGlare * 0.6) * K.clear;
   // nền trời: gradient từ đỉnh trời (zenith) xuống chân trời
@@ -11751,7 +11757,7 @@ function drawSky(c, W, H, t) {
   if (dark > 0.2) { c.fillStyle = `rgba(255,190,110,${0.55 * dark})`; for (let i = 0; i < 160; i++) { const az = ((i * 137.5) % 360) * d2r, al = -(0.4 + ((i * 53) % 30) / 10) * d2r, q = skyProjRaw(al, az, W, H); if (q[2] > -0.2 && q[0] > 0 && q[0] < W && q[1] > 0 && q[1] < H) c.fillRect(q[0], q[1], 2, 2); } }
   [['B', 0], ['ĐB', 45], ['Đ', 90], ['ĐN', 135], ['N', 180], ['TN', 225], ['T', 270], ['TB', 315]].forEach(([lb, a]) => { const q = skyProj(-0.03, a * d2r, W, H); if (!q || q[2] < 0) return; c.fillStyle = lb.length === 1 ? '#ffd36a' : 'rgba(255,211,106,.6)'; c.font = `800 ${lb.length === 1 ? 16 : 12}px "Be Vietnam Pro", sans-serif`; c.textAlign = 'center'; c.fillText(lb, q[0], q[1] + 8); });
   // bảng thông tin
-  c.fillStyle = 'rgba(0,0,0,.5)'; roundRect(c, 12, 12, 440, 116, 10); c.fill(); c.fillStyle = '#fff'; c.font = '700 12px "Be Vietnam Pro", sans-serif'; c.textAlign = 'left';
+  c.fillStyle = 'rgba(0,0,0,.5)'; c.font = '500 11px "Be Vietnam Pro", sans-serif'; roundRect(c, 12, 12, Math.min(W - 24, Math.max(440, c.measureText(wxLine(K)).width + 26)), 116, 10); c.fill(); c.fillStyle = '#fff'; c.font = '700 12px "Be Vietnam Pro", sans-serif'; c.textAlign = 'left';
   const dirN = ['Bắc', 'Đông Bắc', 'Đông', 'Đông Nam', 'Nam', 'Tây Nam', 'Tây', 'Tây Bắc'][Math.round(((SKY.az % 360) + 360) % 360 / 45) % 8];
   c.fillText(`Hướng ${dirN} · cao ${Math.round(SKY.alt)}° · góc nhìn ${Math.round(SKY.fov)}°`, 22, 31); c.fillStyle = '#c8d0ff'; c.font = '500 11px "Be Vietnam Pro", sans-serif';
   const hh = Math.round(SKY.hourOfs * 10) / 10; c.fillText(`${SKY.place} · ${date.toLocaleString('vi-VN', { hour: '2-digit', minute: '2-digit', day: '2-digit', month: '2-digit' })}${SKY.ff ? ' · đang tua ×' + SKY.ff : hh ? ' (tua ' + (hh > 0 ? '+' : '') + hh + 'h)' : ' · bây giờ'}`, 22, 48);
@@ -11781,6 +11787,7 @@ document.querySelectorAll('[data-stab]').forEach(b => b.addEventListener('click'
   document.getElementById('skyOut').addEventListener('click', () => { SKY.fov = Math.min(170, SKY.fov * 1.25); });
   { const sp = document.getElementById('skyPlace'); sp.innerHTML = '<option value="auto">🌐 Tự động theo mạng của máy</option>' + SKY_CITIES.map((c2, i) => `<option value="${i}">${c2[0]}</option>`).join('') + '<option value="me">📍 Vị trí chính xác (GPS)</option>'; skyPlaceUI(); skyAutoPlace(); sp.addEventListener('change', () => { if (sp.value === 'auto') { try { localStorage.removeItem('pr-sky-loc'); } catch (e) { } SKY.placeSet = false; SKY.autoTried = false; skyAutoPlace(); } else if (sp.value === 'me') { skyMyPlace(); skyPlaceUI(); } else { const c2 = SKY_CITIES[+sp.value]; skySetPlace(c2[0], c2[1], c2[2]); } }); sp.addEventListener('keydown', e => e.stopPropagation()); }
   document.getElementById('skyBig').addEventListener('click', () => skyBig());
+  document.getElementById('skyWx').addEventListener('click', () => { WX.at = Date.now(); wxFetch().then(() => toast(WX.err ? 'Chưa tải được thời tiết, thử lại sau' : 'Đã cập nhật thời tiết mới nhất')); });
   window.addEventListener('keydown', e => { if (e.key && e.key.toLowerCase() === 'f' && ST.tab === 'sky' && !document.getElementById('starModal').hidden && e.target.tagName !== 'INPUT' && e.target.tagName !== 'SELECT') { skyBig(); e.preventDefault(); } });
   document.getElementById('skyLines').addEventListener('click', e => { SKY.lines = !SKY.lines; e.currentTarget.setAttribute('aria-pressed', SKY.lines); });
   document.getElementById('skyNames').addEventListener('click', e => { SKY.names = !SKY.names; e.currentTarget.setAttribute('aria-pressed', SKY.names); });
