@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Private Room</title><style>html,body{margin:0;padding:0;height:100%}</style></head><body>
+<html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta http-equiv="Cache-Control" content="no-cache"><title>Private Room · bản 72</title><style>html,body{margin:0;padding:0;height:100%}</style></head><body>
 <title>Private Room Casino</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -624,6 +624,10 @@ canvas#world { position: absolute; inset: 0; width: 100%; height: 100%; display:
 .tag-own { font: 700 11px var(--font-body); padding: 5px 10px; border-radius: 999px; background: rgb(127 214 154 / .18); color: #9ff0b8; border: 1px solid rgb(127 214 154 / .4); white-space: nowrap; }
 .decor-panel { max-height: 56% !important; }
 .modal.star-modal, .modal.golf-modal { width: min(820px, 96vw) !important; max-width: none !important; }
+#starModal.sky-big { padding: 0 !important; overflow: hidden; }
+#starModal.sky-big .star-modal { width: 100vw !important; height: 100vh; max-height: 100vh !important; border-radius: 0; display: flex; flex-direction: column; gap: 8px; padding: 10px 14px; box-sizing: border-box; overflow: hidden; }
+#starModal.sky-big #starCv { flex: 1 1 0; height: 0; min-height: 200px; border-radius: 10px; }
+#starModal.sky-big .star-msg { display: none; }
 .modal.golf-modal { padding: 14px 18px; gap: 8px; max-height: 98vh; }
 
 .golf-wrap { display: flex; justify-content: center; }
@@ -1657,7 +1661,7 @@ canvas#world { position: absolute; inset: 0; width: 100%; height: 100%; display:
       <canvas id="starCv" width="760" height="480" aria-label="Bầu trời đêm"></canvas>
       <p class="note star-msg" id="starMsg"></p>
       <div class="star-bar" id="starConsBar"><div class="star-done" id="starDone"></div><button class="sbtn ghost" id="starHint" type="button">Gợi ý hình</button><button class="sbtn ghost" id="starClear" type="button">Xoá đường</button><button class="sbtn buy" id="starNew" type="button">Bầu trời khác</button></div>
-      <div class="star-bar" id="starSkyBar" hidden><button class="sbtn ghost" id="skyOut" type="button">− Thu nhỏ</button><button class="sbtn ghost" id="skyIn" type="button">+ Phóng to</button><button class="fchip" id="skyLines" type="button" aria-pressed="true">Đường chòm sao</button><button class="fchip" id="skyNames" type="button" aria-pressed="true">Tên sao</button><label class="sky-time">Tua giờ <input type="range" id="skyTime" min="-12" max="12" step="0.25" value="0"></label><button class="fchip" id="skyFF" type="button" aria-pressed="false">Tua nhanh ▶▶</button><button class="sbtn buy" id="skyNow" type="button">Bây giờ</button><select class="ev-sel" id="skyPlace" aria-label="Nơi ngắm sao"></select></div>
+      <div class="star-bar" id="starSkyBar" hidden><button class="sbtn ghost" id="skyOut" type="button">− Thu nhỏ</button><button class="sbtn ghost" id="skyIn" type="button">+ Phóng to</button><button class="fchip" id="skyLines" type="button" aria-pressed="true">Đường chòm sao</button><button class="fchip" id="skyNames" type="button" aria-pressed="true">Tên sao</button><label class="sky-time">Tua giờ <input type="range" id="skyTime" min="-12" max="12" step="0.25" value="0"></label><button class="fchip" id="skyFF" type="button" aria-pressed="false">Tua nhanh ▶▶</button><button class="sbtn buy" id="skyNow" type="button">Bây giờ</button><select class="ev-sel" id="skyPlace" aria-label="Nơi ngắm sao"></select><button class="sbtn buy" id="skyBig" type="button">⛶ Toàn màn hình</button></div>
       <div class="star-bar" id="starFwBar" hidden><div class="fw-types" id="fwTypes"></div><div class="fw-cols" id="fwCols"></div><button class="sbtn ghost" id="fwClear" type="button">Xoá</button><button class="sbtn ghost" id="fwSave" type="button">Lưu ảnh</button><button class="sbtn buy" id="fwPlay" type="button">Bắn ▶</button></div>
     </div>
   </div>
@@ -1846,7 +1850,7 @@ canvas#world { position: absolute; inset: 0; width: 100%; height: 100%; display:
   <!-- Help modal -->
   <div class="modal-wrap" id="helpModal" hidden>
     <div class="modal loan-modal set-modal" role="dialog" aria-label="Cài đặt">
-      <div class="shop-head"><h2 class="panel-title" style="margin:0">Cài đặt</h2><button class="xbtn" id="setX" type="button" aria-label="Đóng" style="margin-left:auto">✕</button></div>
+      <div class="shop-head"><h2 class="panel-title" style="margin:0">Cài đặt</h2><span class="note" id="gameVer" style="margin:0 10px 0 auto;font-weight:700;color:#ffd36a">Phiên bản 72</span><button class="xbtn" id="setX" type="button" aria-label="Đóng" style="margin-left:auto">✕</button></div>
       <div class="set-tabs" role="tablist"><button class="fchip" type="button" data-stab2="sound" aria-pressed="true">Âm thanh</button><button class="fchip" type="button" data-stab2="view" aria-pressed="false">Hiển thị</button><button class="fchip" type="button" data-stab2="save" aria-pressed="false">Lưu game</button><button class="fchip" type="button" data-stab2="keys" aria-pressed="false">Phím điều khiển</button></div>
       <section class="set-pane" data-pane="sound">
         <label class="set-row"><span>Âm lượng tổng <b id="vMasterV"></b></span><input type="range" id="vMaster" min="0" max="100" step="1"></label>
@@ -10953,7 +10957,7 @@ function newSky() {
 function starMsg(t) { document.getElementById('starMsg').textContent = t; }
 function openStars() { const m = document.getElementById('starModal'); m.hidden = false; promptEl.hidden = true; if (!ST.con) newSky(); starTabs(); cancelAnimationFrame(ST.raf); const lp = () => { if (m.hidden) return; drawStars(); ST.raf = requestAnimationFrame(lp); }; ST.raf = requestAnimationFrame(lp); }
 function closeStars() { hideAnim(document.getElementById('starModal')); cancelAnimationFrame(ST.raf); }
-function starTabs() {
+function starTabs() { if (ST.tab !== 'sky' && document.getElementById('starModal').classList.contains('sky-big')) skyBig(false);
   document.querySelectorAll('[data-stab]').forEach(b => b.setAttribute('aria-selected', b.dataset.stab === ST.tab));
   document.getElementById('starConsBar').hidden = ST.tab !== 'cons'; document.getElementById('starFwBar').hidden = ST.tab !== 'fw'; document.getElementById('starSkyBar').hidden = ST.tab !== 'sky';
   document.getElementById('starCv').style.cursor = ST.tab === 'sky' ? 'grab' : 'crosshair';
@@ -11015,13 +11019,13 @@ function fwSave() {
   S.album = [{ img, day: S.day, time: `${String(hh).padStart(2, '0')}:${String(mm).padStart(2, '0')}`, place: 'Đài ngắm sao · pháo hoa' }, ...(S.album || [])].slice(0, 8); save(); toast('Đã lưu ảnh pháo hoa vào Album');
 }
 function drawStars() {
-  const cv3 = document.getElementById('starCv'); if (!cv3) return; const c = cv3.getContext('2d'), t = performance.now() / 1000;
+  const cv3 = document.getElementById('starCv'); if (!cv3) return; if (ST.tab !== 'sky' && (cv3.width !== SW || cv3.height !== SH)) { cv3.width = SW; cv3.height = SH; } const c = cv3.getContext('2d'), t = performance.now() / 1000;
   const g = c.createLinearGradient(0, 0, 0, SH); g.addColorStop(0, '#05061a'); g.addColorStop(0.6, '#0e1640'); g.addColorStop(1, '#2a2050'); c.fillStyle = g; c.fillRect(0, 0, SW, SH);
   c.save(); c.globalAlpha = 0.18; const mw = c.createLinearGradient(0, SH, SW, 0); mw.addColorStop(0.3, 'rgba(160,140,255,0)'); mw.addColorStop(0.5, 'rgba(200,180,255,.9)'); mw.addColorStop(0.7, 'rgba(160,140,255,0)'); c.fillStyle = mw; c.fillRect(0, 0, SW, SH); c.restore();
   (ST.bg || []).forEach(s => { c.fillStyle = `rgba(255,255,255,${0.35 + Math.sin(t * 2 + s.tw) * 0.25})`; c.fillRect(s.x, s.y, s.r, s.r); });
   // thành phố
   c.fillStyle = '#0a0a18'; for (let x = 0, i = 0; x < SW; i++) { const w = 26 + (i * 37) % 40, h = 30 + (i * 53) % 70; c.fillRect(x, SH - h, w, h); for (let k = 0; k < 6; k++) { c.fillStyle = `rgba(255,${200 + (k * 9) % 50},120,${(i + k) % 3 ? 0.7 : 0.2})`; c.fillRect(x + 4 + (k % 3) * 7, SH - h + 6 + Math.floor(k / 3) * 10, 3, 4); } c.fillStyle = '#0a0a18'; x += w + 2; }
-  if (ST.tab === 'sky') { drawSky(c, SW, SH, t); return; }
+  if (ST.tab === 'sky') { const D = skyCanvasFit(cv3); c.setTransform(cv3.width / D.W, 0, 0, cv3.height / D.H, 0, 0); drawSky(c, D.W, D.H, t); c.setTransform(1, 0, 0, 1, 0, 0); return; }
   if (ST.tab === 'cons' && ST.con) {
     const C = ST.con;
     { const bx = SW - 186, by = 12, bw = 174, bh = 150; c.fillStyle = 'rgba(8,10,30,.82)'; roundRect(c, bx, by, bw, bh, 12); c.fill(); c.strokeStyle = 'rgba(255,211,106,.5)'; c.lineWidth = 1; c.stroke(); c.fillStyle = '#ffd36a'; c.font = '800 11px "Be Vietnam Pro", sans-serif'; c.textAlign = 'center'; c.fillText('HÌNH MẪU · ' + C.name.toUpperCase(), bx + bw / 2, by + 17); const P = C.pts.map(([u, v]) => [bx + 14 + u * (bw - 28), by + 26 + v * (bh - 40)]); c.lineWidth = 1.6; C.e.forEach(([a, b]) => { c.strokeStyle = ST.edges.includes(ekey(a, b)) ? '#7fe0a0' : 'rgba(255,220,140,.85)'; c.beginPath(); c.moveTo(P[a][0], P[a][1]); c.lineTo(P[b][0], P[b][1]); c.stroke(); }); P.forEach(([x, y], k) => { c.fillStyle = '#fff'; c.beginPath(); c.arc(x, y, 3, 0, 7); c.fill(); }); }
@@ -11417,7 +11421,7 @@ const SKY_LINES = [
   ['Mục Phu (Boötes)', [['Đại Giác (Arcturus)', 'Izar'], ['Đại Giác (Arcturus)', 'Muphrid']]],
   ['Ô Nha (Corvus)', [['Gienah Crv', 'Algorab'], ['Algorab', 'Kraz'], ['Kraz', 'Minkar'], ['Minkar', 'Gienah Crv']]],
 ];
-const SKY = { az: 95, alt: 32, fov: 95, drag: null, lines: true, names: true, cons: true, hourOfs: 0, lat: 21.03, lon: 105.85, bg: null, mw: null, tweenTo: null };
+const SKY = { az: 95, alt: 32, fov: 115, drag: null, lines: true, names: true, cons: true, hourOfs: 0, lat: 21.03, lon: 105.85, bg: null, mw: null, tweenTo: null };
 const d2r = Math.PI / 180;
 function skyLST(date) { const jd = date.getTime() / 86400000 + 2440587.5, d = jd - 2451545; let g = (280.46061837 + 360.98564736629 * d) % 360; return ((g + SKY.lon) % 360 + 360) % 360; }
 function eqToHor(raH, decD, lst) { const ha = (lst - raH * 15) * d2r, dec = decD * d2r, lat = SKY.lat * d2r; const sa = Math.sin(dec) * Math.sin(lat) + Math.cos(dec) * Math.cos(lat) * Math.cos(ha), alt = Math.asin(sa); const az = Math.atan2(-Math.sin(ha) * Math.cos(dec), Math.cos(lat) * Math.sin(dec) - Math.sin(lat) * Math.cos(dec) * Math.cos(ha)); return [alt, (az + 2 * Math.PI) % (2 * Math.PI)]; }
@@ -11521,7 +11525,7 @@ function wxLine(W) {
 }
 function wxDrawFx(c, W, H, t, K, dark, dt) {
   if (K.fog) { c.fillStyle = `rgba(${dark > 0.5 ? '60,64,80' : '200,205,210'},${K.fog * 0.55})`; c.fillRect(0, 0, W, H); }
-  if (K.cc > 70) { c.fillStyle = `rgba(${dark > 0.5 ? '30,32,42' : '170,176,186'},${(K.cc - 70) / 30 * (dark > 0.5 ? 0.45 : 0.35)})`; c.fillRect(0, 0, W, H); }
+  if (K.cc > 70) { c.fillStyle = `rgba(${dark > 0.5 ? '30,32,42' : '170,176,186'},${(K.cc - 70) / 30 * (dark > 0.5 ? 0.25 : 0.15)})`; c.fillRect(0, 0, W, H); }
   if (K.rain) { SKY.rainP = SKY.rainP || Array.from({ length: 260 }, () => ({ x: Math.random(), y: Math.random(), s: 0.6 + Math.random() * 0.6 }));
     const n = Math.round(260 * K.rain), slant = Math.sin((K.wd - SKY.az) * d2r) * Math.min(1, K.wind / 30) * 0.35;
     c.strokeStyle = dark > 0.5 ? 'rgba(170,190,230,.35)' : 'rgba(255,255,255,.45)'; c.lineWidth = 1.1; c.beginPath();
@@ -11564,6 +11568,129 @@ function drawPlanets(c, W, H, t, lst, sa, K) {
   });
 }
 
+// ---------- ĐỒ HOẠ BẦU TRỜI CHÂN THỰC: nền trời tính theo từng điểm, mây thể tích, đường chân trời thành phố ----------
+const SG = { buf: null, img: null, sprites: null, strat: null, moonTex: null, city: null };
+function sgNoise() { // value noise 2D có thể lặp
+  const P = new Uint8Array(512), G = new Float32Array(256); let sd = 1337; const rnd = () => (sd = (sd * 16807) % 2147483647) / 2147483647;
+  for (let i = 0; i < 256; i++) { P[i] = i; G[i] = rnd(); } for (let i = 255; i > 0; i--) { const j = Math.floor(rnd() * (i + 1)); [P[i], P[j]] = [P[j], P[i]]; } for (let i = 0; i < 256; i++) P[i + 256] = P[i];
+  const sm = t => t * t * (3 - 2 * t);
+  const n = (x, y, rp) => { const xi = Math.floor(x), yi = Math.floor(y), xf = x - xi, yf = y - yi, w = rp || 256; const a = (X, Y) => G[P[(((X % w) + w) % w & 255) + P[((((Y % w) + w) % w) & 255)]]]; const u = sm(xf), v = sm(yf); return (a(xi, yi) * (1 - u) + a(xi + 1, yi) * u) * (1 - v) + (a(xi, yi + 1) * (1 - u) + a(xi + 1, yi + 1) * u) * v; };
+  return (x, y, oct, rp) => { let s = 0, amp = 0.5, f = 1, tot = 0; for (let o = 0; o < oct; o++) { s += amp * n(x * f, y * f, rp ? rp * f : 0); tot += amp; amp *= 0.5; f *= 2; } return s / tot; };
+}
+function sgInit() {
+  if (SG.sprites) return; const fbm = sgNoise();
+  // 3 bộ mây (ngày · hoàng hôn · đêm) × 7 hình dạng
+  const sets = { day: [[255, 255, 255], [150, 160, 178]], gold: [[255, 196, 150], [120, 86, 120]], night: [[120, 130, 160], [36, 40, 58]] };
+  SG.sprites = { day: [], gold: [], night: [] };
+  for (let k = 0; k < 7; k++) {
+    const w = 256, h = 128, dens = new Float32Array(w * h), ox = k * 37.1, oy = k * 11.3;
+    for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
+      const nx = (x / w - 0.5) * 2, ny = (y / h - 0.62) * 2, fall = Math.max(0, 1 - (nx * nx) * 1.05 - Math.max(0, ny) * ny * 2.6 - Math.max(0, -ny) * (-ny) * 0.9);
+      const v = fbm(x / 34 + ox, y / 34 + oy, 5) * 1.25 + fbm(x / 12 + ox * 2, y / 12, 3) * 0.25;
+      dens[y * w + x] = Math.max(0, Math.min(1, (v * fall - 0.32) * 2.6));
+    }
+    Object.entries(sets).forEach(([nm, [hi, lo]]) => {
+      const cv = document.createElement('canvas'); cv.width = w; cv.height = h; const cx = cv.getContext('2d'), im = cx.createImageData(w, h), d = im.data;
+      for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
+        const i = y * w + x, a = dens[i]; if (a <= 0) continue;
+        const up = y > 6 ? dens[i - 6 * w] : 0, shade = Math.max(0, Math.min(1, 0.85 - (y / h) * 0.55 + (a - up) * 0.6)); // sáng ở đỉnh, tối ở đáy
+        for (let ch = 0; ch < 3; ch++) d[i * 4 + ch] = lo[ch] + (hi[ch] - lo[ch]) * shade;
+        d[i * 4 + 3] = Math.min(255, a * 255 * 1.1);
+      }
+      cx.putImageData(im, 0, 0); SG.sprites[nm].push(cv);
+    });
+  }
+  // lớp mây tầng (trời u ám)
+  { const s = 256, cv = document.createElement('canvas'); cv.width = s; cv.height = s; const cx = cv.getContext('2d'), im = cx.createImageData(s, s), d = im.data;
+    for (let y = 0; y < s; y++) for (let x = 0; x < s; x++) { const v = fbm(x / 32, y / 32, 5, 8), i = (y * s + x) * 4, g = 150 + v * 90; d[i] = g; d[i + 1] = g + 4; d[i + 2] = g + 12; d[i + 3] = Math.min(255, 120 + v * 160); }
+    cx.putImageData(im, 0, 0); SG.strat = cv; }
+  // bề mặt mặt trăng
+  { const s = 128, cv = document.createElement('canvas'); cv.width = s; cv.height = s; const cx = cv.getContext('2d'), im = cx.createImageData(s, s), d = im.data;
+    for (let y = 0; y < s; y++) for (let x = 0; x < s; x++) { const nx = x / s * 2 - 1, ny = y / s * 2 - 1, r = Math.hypot(nx, ny), i = (y * s + x) * 4; if (r > 1) continue; const mare = fbm(x / 22 + 5, y / 22 + 9, 4) > 0.55 ? 0.72 : 1, cr = 0.9 + fbm(x / 5, y / 5, 3) * 0.2, limb = 0.78 + 0.22 * Math.sqrt(1 - r * r), g = 236 * mare * cr * limb; d[i] = g; d[i + 1] = g * 0.98; d[i + 2] = g * 0.9; d[i + 3] = 255; }
+    cx.putImageData(im, 0, 0); SG.moonTex = cv; }
+  // đường chân trời thành phố: toà nhà + cây, quanh 360°
+  { let sd = 99; const rnd = () => (sd = (sd * 16807) % 2147483647) / 2147483647; const B = []; let az = 0;
+    while (az < 360) { const tree = rnd() < 0.28, w = tree ? 1.2 + rnd() * 2.2 : 1.4 + rnd() * 4.5, h = tree ? 0.8 + rnd() * 1.4 : 0.6 + Math.pow(rnd(), 2) * 5.5; B.push({ a0: az, a1: az + w, h, tree, win: tree ? [] : Array.from({ length: Math.floor(w * h * 1.6) }, () => [az + 0.25 + rnd() * (w - 0.5), 0.3 + rnd() * (h - 0.6), rnd()]), ant: !tree && h > 3.5 && rnd() < 0.5 }); az += w + (rnd() < 0.2 ? rnd() * 2 : 0); }
+    SG.city = B; }
+}
+function sgSkyRGB(str) { const m = str.match(/\d+/g); return m ? m.slice(0, 3).map(Number) : [0, 0, 0]; }
+// nền trời: tính màu cho từng điểm trên lưới nhỏ rồi phóng to mượt
+function sgSky(c, W, H, sAlt, sAz, sa, dark, K) {
+  const bw = Math.max(96, Math.min(200, Math.round(W / 6))), bh = Math.max(60, Math.round(bw * H / W));
+  if (!SG.buf || SG.buf.width !== bw || SG.buf.height !== bh) { SG.buf = document.createElement('canvas'); SG.buf.width = bw; SG.buf.height = bh; SG.img = SG.buf.getContext('2d').createImageData(bw, bh); }
+  const d = SG.img.data, [cT, cH] = skyGrad(sa), top = sgSkyRGB(cT), hor = sgSkyRGB(cH);
+  const a0 = SKY.az * d2r, h0 = SKY.alt * d2r, fv = [Math.sin(a0) * Math.cos(h0), Math.cos(a0) * Math.cos(h0), Math.sin(h0)], rv = [Math.cos(a0), -Math.sin(a0), 0], uv = [-Math.sin(a0) * Math.sin(h0), -Math.cos(a0) * Math.sin(h0), Math.cos(h0)];
+  const sc = (W / 2) / (2 * Math.tan(SKY.fov * d2r / 4)), sv = [Math.cos(sAlt) * Math.sin(sAz), Math.cos(sAlt) * Math.cos(sAz), Math.sin(sAlt)];
+  const sunCol = sa > 10 ? [255, 248, 232] : sa > 0 ? [255, 200 + sa * 4.8, 150 + sa * 8] : [255, 150 + Math.max(-8, sa) * 6, 90 + Math.max(-8, sa) * 4];
+  const glowK = sa > -10 ? Math.min(1, (sa + 10) / 10) : 0, twK = sa > -12 && sa < 10 ? (sa < 0 ? 1 + sa / 12 : 1 - sa / 10) : 0, beltK = sa > -5 && sa < 5 ? 1 - Math.abs(sa) / 5 : 0;
+  const cc = Math.pow(K.cc / 100, 1.4) * 0.88, grey = dark > 0.5 ? [24, 26, 34] : sa > -2 ? [178, 184, 192] : [90, 92, 108], lp = dark * 0.55;
+  const sAzX = Math.sin(sAz), sAzY = Math.cos(sAz);
+  for (let j = 0; j < bh; j++) for (let i = 0; i < bw; i++) {
+    const X = ((i + 0.5) / bw * W - W / 2) / sc, Y = -((j + 0.5) / bh * H - H / 2) / sc, r2 = X * X + Y * Y, z = (4 - r2) / (4 + r2), xc = X * (1 + z) / 2, yc = Y * (1 + z) / 2;
+    const vx = xc * rv[0] + yc * uv[0] + z * fv[0], vy = xc * rv[1] + yc * uv[1] + z * fv[1], vz = yc * uv[2] + z * fv[2];
+    const alt = Math.max(0, vz), hz = Math.pow(1 - alt, 3.2);
+    let R = top[0] + (hor[0] - top[0]) * hz, G = top[1] + (hor[1] - top[1]) * hz, Bc = top[2] + (hor[2] - top[2]) * hz;
+    const cg = Math.max(-1, Math.min(1, vx * sv[0] + vy * sv[1] + vz * sv[2])), gam = Math.acos(cg);
+    if (glowK) { const g = (Math.exp(-gam / 0.05) * 0.95 + Math.exp(-gam / 0.32) * 0.42 + Math.exp(-gam / 1.1) * 0.12) * glowK * (sa > 15 ? 0.55 : 1); R += (sunCol[0] - R) * Math.min(1, g); G += (sunCol[1] - G) * Math.min(1, g); Bc += (sunCol[2] - Bc) * Math.min(1, g); }
+    const hl = Math.hypot(vx, vy) || 1, ca = (vx * sAzX + vy * sAzY) / hl;
+    if (twK) { const b = Math.exp(-alt / 0.09) * Math.pow((1 + ca) / 2, 2.2) * twK * 0.75; R += (255 - R) * b; G += (128 - G) * b * 0.9; Bc += (80 - Bc) * b * 0.8; }
+    if (beltK) { const anti = Math.pow((1 - ca) / 2, 3), belt = anti * Math.exp(-Math.pow((alt - 0.09) / 0.06, 2)) * beltK * 0.45, shadow = anti * Math.exp(-alt / 0.05) * beltK * 0.35; R += (225 - R) * belt; G += (150 - G) * belt; Bc += (175 - Bc) * belt; R *= 1 - shadow; G *= 1 - shadow * 0.9; Bc *= 1 - shadow * 0.6; }
+    if (lp > 0.02) { const l = Math.exp(-alt / 0.12) * lp; R += 62 * l; G += 44 * l; Bc += 30 * l; }
+    if (cc > 0.01) { R += (grey[0] - R) * cc; G += (grey[1] - G) * cc; Bc += (grey[2] - Bc) * cc; }
+    const n = ((i * 7 + j * 13) % 5 - 2) * 0.6, o = (j * bw + i) * 4; d[o] = R + n; d[o + 1] = G + n; d[o + 2] = Bc + n; d[o + 3] = 255;
+  }
+  SG.buf.getContext('2d').putImageData(SG.img, 0, 0); c.save(); c.imageSmoothingEnabled = true; c.imageSmoothingQuality = 'high'; c.drawImage(SG.buf, 0, 0, W, H); c.restore();
+}
+function sgClouds(c, W, H, t, K, dark, sa, dt) {
+  sgInit(); const nCl = Math.round(K.cc / 100 * 40);
+  const wDay = Math.max(0, Math.min(1, (sa - 2) / 8)), wNight = Math.max(0, Math.min(1, (-sa - 3) / 7)), wGold = Math.max(0, 1 - wDay - wNight);
+  const order = SKY.clouds.slice(0, nCl).map((cl, i) => [cl, i]).sort((a, b) => a[0].alt - b[0].alt), moonLit = SKY.moonLit || 0;
+  order.forEach(([cl, ci]) => {
+    cl.az = (cl.az + dt * cl.sp * (0.3 + K.wind / 12) * (SKY.ff ? 1 + SKY.ff / 300 : 1)) % 360;
+    const q = skyProj(cl.alt * d2r, cl.az * d2r, W, H); if (!q || q[2] < 0.05) return;
+    const R = cl.w * 1.6 * W / SKY.fov, sq = 0.32 + 0.68 * Math.sin(cl.alt * d2r) ** 0.7; if (q[0] < -R * 2 || q[0] > W + R * 2 || q[1] < -R || q[1] > H + R) return;
+    const sp = ci % 7, x = q[0] - R, y = q[1] - R * sq * 0.6, w2 = R * 2, h2 = R * sq;
+    const draw = (set, a) => { if (a < 0.02) return; c.globalAlpha = a; c.drawImage(SG.sprites[set][sp], x, y, w2, h2); };
+    const base = 0.92 * Math.min(1, cl.alt / 4);
+    draw('day', wDay * base); draw('gold', wGold * base); draw('night', wNight * base * (0.55 + moonLit * 0.45));
+    if (K.rain && wDay > 0.2) draw('night', 0.45 * base * wDay);
+  });
+  c.globalAlpha = 1;
+  if (K.cc > 60) { const a = (K.cc - 60) / 40 * 0.85, S2 = 420 * (W / 760), off = ((t * (2 + K.wind / 3)) % S2); c.save(); c.globalAlpha = a * (dark > 0.5 ? 0.35 : 1); c.filter = dark > 0.5 ? 'brightness(0.25)' : sa < 2 ? 'brightness(0.7) sepia(0.4)' : 'none'; for (let x = -S2 + off; x < W; x += S2) for (let y = 0; y < H * 0.85; y += S2) c.drawImage(SG.strat, x, y, S2, S2); c.restore(); }
+}
+function sgCity(c, W, H, t, dark, sa) {
+  sgInit(); const day = 1 - dark, col = dark > 0.5 ? '#05060a' : mixC('#232a33', '#05060a', dark * 2);
+  c.save(); c.fillStyle = col;
+  SG.city.forEach(b => {
+    const segs = Math.max(2, Math.ceil((b.a1 - b.a0) / 1.2)), pts = [];
+    for (let s = 0; s <= segs; s++) { const az = b.a0 + (b.a1 - b.a0) * s / segs; let h = b.h; if (b.tree) { const u = s / segs; h = b.h * Math.sqrt(Math.max(0, 1 - (2 * u - 1) ** 2)) * (0.9 + 0.1 * Math.sin(u * 20 + b.a0)); } const q = skyProj(h * d2r, az * d2r, W, H); if (!q || q[2] < 0) return; pts.push(q); }
+    const q1 = skyProj(-1.5 * d2r, b.a1 * d2r, W, H), q0 = skyProj(-1.5 * d2r, b.a0 * d2r, W, H); if (!q0 || !q1 || q0[2] < 0 || q1[2] < 0 || pts.length < 2) return;
+    if (Math.max(...pts.map(p => p[0])) < -10 || Math.min(...pts.map(p => p[0])) > W + 10) return;
+    c.beginPath(); pts.forEach((p, i) => i ? c.lineTo(p[0], p[1]) : c.moveTo(p[0], p[1])); c.lineTo(q1[0], q1[1]); c.lineTo(q0[0], q0[1]); c.closePath(); c.fill();
+    if (b.ant) { const a = (b.a0 + b.a1) / 2, p0 = skyProj(b.h * d2r, a * d2r, W, H), p1 = skyProj((b.h + 1.2) * d2r, a * d2r, W, H); if (p0 && p1) { c.strokeStyle = col; c.lineWidth = 1.5; c.beginPath(); c.moveTo(p0[0], p0[1]); c.lineTo(p1[0], p1[1]); c.stroke(); if (Math.sin(t * 3 + b.a0) > 0.2) { c.fillStyle = '#ff3a3a'; c.beginPath(); c.arc(p1[0], p1[1], 2, 0, 7); c.fill(); c.fillStyle = col; } } }
+    if (dark > 0.25 && b.win.length) { const sz = Math.max(1.2, 0.22 * W / SKY.fov * 2); b.win.forEach(([az, h, k]) => { if (k > 0.55 + (1 - dark) * 0.3) return; const p = skyProj(h * d2r, az * d2r, W, H); if (!p || p[2] < 0) return; c.fillStyle = k < 0.15 ? `rgba(170,210,255,${0.8 * dark})` : `rgba(255,${200 + Math.floor(k * 50)},120,${0.85 * dark})`; c.fillRect(p[0] - sz / 2, p[1] - sz / 2, sz, sz * 1.3); }); c.fillStyle = col; }
+  });
+  c.restore();
+}
+function sgMoon(c, R, I, waxing, dark) {
+  sgInit(); const s = waxing ? 1 : -1, kx = Math.abs(1 - 2 * I);
+  c.save(); c.beginPath(); c.arc(0, 0, R, 0, 7); c.clip(); c.globalAlpha = dark > 0.3 ? 0.13 : 0.05; c.drawImage(SG.moonTex, -R, -R, R * 2, R * 2); c.globalAlpha = 1; // ánh đất trên phần tối
+  c.beginPath(); c.arc(0, 0, R, -Math.PI / 2, Math.PI / 2, s < 0); c.ellipse(0, 0, R * kx, R, 0, Math.PI / 2, -Math.PI / 2, (I < 0.5) === (s > 0)); c.clip(); c.drawImage(SG.moonTex, -R, -R, R * 2, R * 2); c.restore();
+}
+// kích thước khung bầu trời: theo kích thước thật trên màn hình, nét theo mật độ điểm ảnh
+function skyCanvasFit(cv) {
+  const dpr = Math.min(2, window.devicePixelRatio || 1), cw = cv.clientWidth || 760, chh = document.getElementById('starModal').classList.contains('sky-big') ? (cv.clientHeight || 480) : Math.round(cw * 480 / 760);
+  const pw = Math.round(cw * dpr), ph = Math.round(chh * dpr); if (cv.width !== pw || cv.height !== ph) { cv.width = pw; cv.height = ph; }
+  return { W: cw, H: chh, dpr };
+}
+function skyBig(on) {
+  const m = document.getElementById('starModal'); if (on == null) on = !m.classList.contains('sky-big');
+  m.classList.toggle('sky-big', on); const b = document.getElementById('skyBig'); if (b) b.textContent = on ? '⤡ Thu lại' : '⛶ Toàn màn hình';
+  try { if (on && !document.fullscreenElement && m.requestFullscreen) m.requestFullscreen().catch(() => { }); else if (!on && document.fullscreenElement) document.exitFullscreen().catch(() => { }); } catch (e) { }
+  if (on && SKY.fov < 110) SKY.fov = 120;
+}
+document.addEventListener('fullscreenchange', () => { const m = document.getElementById('starModal'); if (!document.fullscreenElement && m && m.classList.contains('sky-big')) skyBig(false); });
+
 function drawSky(c, W, H, t) {
   skyInit(); const nowP = performance.now(), dt = SKY.lt ? Math.min(0.1, (nowP - SKY.lt) / 1000) : 0; SKY.lt = nowP;
   if (SKY.ff) { SKY.hourOfs += dt * SKY.ff / 3600; const sl = document.getElementById('skyTime'); if (sl) sl.value = Math.max(-12, Math.min(12, SKY.hourOfs)); }
@@ -11573,9 +11700,7 @@ function drawSky(c, W, H, t) {
   const dark = Math.max(0, Math.min(1, (-sa - 3) / 13)), moonGlare = mAlt > 0 ? SM.moon.illum * 0.45 : 0, starVis = dark * (1 - moonGlare * 0.6) * K.clear;
   // nền trời: gradient từ đỉnh trời (zenith) xuống chân trời
   const [cTop, cHor] = skyGrad(sa), zq = skyProjRaw(Math.PI / 2, 0, W, H), hq = skyProjRaw(0, SKY.az * d2r, W, H);
-  const g = c.createLinearGradient(zq[0], Math.max(-4000, zq[1]), hq[0], hq[1]); g.addColorStop(0, cTop); g.addColorStop(1, cHor); c.fillStyle = g; c.fillRect(0, 0, W, H);
-  // quầng sáng phía mặt trời lúc bình minh / hoàng hôn / ban ngày
-  if (sa > -14) { const q = skyProjRaw(Math.max(sAlt, -0.02), sAz, W, H); if (q[2] > -0.6) { const R = W * (sa > 0 ? 0.9 : 1.2), gl = c.createRadialGradient(q[0], q[1], 0, q[0], q[1], R), a = sa > 0 ? 0.45 : Math.max(0, (sa + 14) / 14) * 0.55; gl.addColorStop(0, `rgba(255,190,120,${a})`); gl.addColorStop(0.35, `rgba(255,140,90,${a * 0.4})`); gl.addColorStop(1, 'rgba(255,140,90,0)'); c.fillStyle = gl; c.fillRect(0, 0, W, H); } }
+  sgSky(c, W, H, sAlt, sAz, sa, dark, K);
   // ngân hà (chỉ thấy khi trời tối hẳn)
   if (starVis > 0.3) { c.save(); c.globalCompositeOperation = 'lighter'; const mwA = (starVis - 0.3) / 0.7 * (1 - moonGlare);
     SKY.mw.forEach(p => { const [alt, az] = eqToHor(p.ra, p.dec, lst); if (alt < -0.05) return; const q = skyProj(alt, az, W, H); if (!q) return; const r = (W / SKY.fov) * 9 * p.w; if (q[0] < -r || q[0] > W + r || q[1] < -r || q[1] > H + r) return; const core = (p.l > 300 || p.l < 60) ? 1.4 : 1; const gg = c.createRadialGradient(q[0], q[1], 0, q[0], q[1], r); gg.addColorStop(0, `rgba(170,160,220,${0.05 * core * mwA})`); gg.addColorStop(1, 'rgba(170,160,220,0)'); c.fillStyle = gg; c.fillRect(q[0] - r, q[1] - r, r * 2, r * 2); });
@@ -11599,22 +11724,18 @@ function drawSky(c, W, H, t) {
     const mg = c.createLinearGradient(x, y, tx, ty); mg.addColorStop(0, `rgba(255,255,255,${a})`); mg.addColorStop(0.3, `rgba(190,220,255,${a * 0.6})`); mg.addColorStop(1, 'rgba(150,190,255,0)'); c.strokeStyle = mg; c.lineWidth = m.w; c.lineCap = 'round'; c.beginPath(); c.moveTo(x, y); c.lineTo(tx, ty); c.stroke();
     const hg = c.createRadialGradient(x, y, 0, x, y, 7); hg.addColorStop(0, `rgba(255,255,255,${a})`); hg.addColorStop(1, 'rgba(255,255,255,0)'); c.fillStyle = hg; c.beginPath(); c.arc(x, y, 7, 0, 7); c.fill(); return true; });
   if (SKY.wish && starVis > 0.4 && performance.now() - SKY.wish < 2600) { const k = (performance.now() - SKY.wish) / 2600; c.globalAlpha = Math.sin(k * Math.PI); c.fillStyle = '#ffe9b0'; c.font = '700 15px "Be Vietnam Pro", sans-serif'; c.textAlign = 'center'; c.shadowColor = '#ffd36a'; c.shadowBlur = 12; c.fillText('✦ Sao băng! Ước một điều đi nào ✦', W / 2, H * 0.16 - k * 10); c.shadowBlur = 0; c.globalAlpha = 1; }
-  c.save(); c.globalAlpha = Math.max(0.1, Math.min(1, K.clear * 1.15));
+  SKY.moonLit = mAlt > 0 ? SM.moon.illum : 0; c.save(); c.globalAlpha = Math.max(0.1, Math.min(1, K.clear * 1.15));
   // mặt trăng có pha
   if (mAlt > -0.02) { const q = skyProj(mAlt, mAz, W, H); if (q && q[0] > -60 && q[0] < W + 60 && q[1] > -60 && q[1] < H + 60) { const R = Math.max(9, 0.27 * W / SKY.fov * 3.2), I = SM.moon.illum;
     const gl = c.createRadialGradient(q[0], q[1], R * 0.8, q[0], q[1], R * 5); gl.addColorStop(0, `rgba(220,230,255,${0.25 * I})`); gl.addColorStop(1, 'rgba(220,230,255,0)'); c.fillStyle = gl; c.beginPath(); c.arc(q[0], q[1], R * 5, 0, 7); c.fill();
-    c.save(); c.translate(q[0], q[1]); c.fillStyle = dark > 0.3 ? 'rgba(30,34,52,.9)' : 'rgba(150,170,210,.25)'; c.beginPath(); c.arc(0, 0, R, 0, 7); c.fill();
-    const s = SM.moon.waxing ? 1 : -1, kx = Math.abs(1 - 2 * I); c.fillStyle = '#f2eedc'; c.beginPath(); c.arc(0, 0, R, -Math.PI / 2, Math.PI / 2, s < 0); c.ellipse(0, 0, R * kx, R, 0, Math.PI / 2, -Math.PI / 2, (I < 0.5) === (s > 0)); c.fill();
-    c.fillStyle = 'rgba(160,150,130,.25)'; [[-0.3, -0.2, 0.22], [0.25, 0.3, 0.16], [0.1, -0.4, 0.12]].forEach(([x, y, rr]) => { c.beginPath(); c.arc(x * R, y * R, rr * R, 0, 7); c.fill(); }); c.restore();
+    c.save(); c.translate(q[0], q[1]); sgMoon(c, R, I, SM.moon.waxing, dark); c.restore();
     if (SKY.names) { c.fillStyle = 'rgba(255,250,230,.9)'; c.font = '700 11px "Be Vietnam Pro", sans-serif'; c.textAlign = 'left'; c.fillText(`Mặt Trăng · ${SM.moon.phase} (${Math.round(I * 100)}%)`, q[0] + R + 6, q[1] + 4); } } }
   // mặt trời
   if (sAlt > -0.03) { const q = skyProj(sAlt, sAz, W, H); if (q && q[0] > -200 && q[0] < W + 200 && q[1] > -200 && q[1] < H + 200) { const R = Math.max(11, 0.27 * W / SKY.fov * 3.6); const gl = c.createRadialGradient(q[0], q[1], 0, q[0], q[1], R * 7); gl.addColorStop(0, 'rgba(255,250,220,1)'); gl.addColorStop(0.15, 'rgba(255,230,160,.8)'); gl.addColorStop(1, 'rgba(255,200,120,0)'); c.fillStyle = gl; c.beginPath(); c.arc(q[0], q[1], R * 7, 0, 7); c.fill(); c.fillStyle = sa < 4 ? '#ffb070' : '#fffbe8'; c.beginPath(); c.arc(q[0], q[1], R, 0, 7); c.fill(); if (SKY.names) { c.fillStyle = '#3a2410'; c.font = '700 11px "Be Vietnam Pro", sans-serif'; c.textAlign = 'left'; c.fillText('Mặt Trời', q[0] + R + 6, q[1] + 4); } } }
   c.restore();
   // mây trôi chậm theo gió (bám theo bầu trời, có trăng/mặt trời chiếu)
   if (!SKY.clouds) { let sd = 11; const rnd = () => (sd = (sd * 16807) % 2147483647) / 2147483647; SKY.clouds = Array.from({ length: 40 }, (_, ci) => ({ az: rnd() * 360, alt: 4 + rnd() * (ci < 14 ? 26 : 60), w: 10 + rnd() * 16, sp: 0.4 + rnd() * 0.6, k: rnd() })); }
-  const nCl = Math.round(K.cc / 100 * 40); SKY.clouds.forEach((cl, ci) => { if (ci >= nCl) return; cl.az = (cl.az + dt * cl.sp * (0.3 + K.wind / 12) * (SKY.ff ? 1 + SKY.ff / 300 : 1)) % 360; const q = skyProj(cl.alt * d2r, cl.az * d2r, W, H); if (!q || q[2] < 0.1) return; const R = cl.w * W / SKY.fov; if (q[0] < -R * 2 || q[0] > W + R * 2 || q[1] < -R || q[1] > H + R) return;
-    const day = 1 - dark, col = K.rain && day > 0.5 ? '160,166,176' : day > 0.5 ? '255,255,255' : sa > -8 ? '255,170,140' : '120,130,170', al = day > 0.5 ? 0.55 : sa > -8 ? 0.35 : 0.12 + (mAlt > 0 ? SM.moon.illum * 0.15 : 0);
-    for (let j = 0; j < 5; j++) { const ox = (j - 2) * R * 0.38, oy = Math.sin(j * 1.7 + cl.k * 9) * R * 0.08, rr = R * (0.35 + ((j * 7 + cl.k * 10) % 3) * 0.08); const cg = c.createRadialGradient(q[0] + ox, q[1] + oy, 0, q[0] + ox, q[1] + oy, rr); cg.addColorStop(0, `rgba(${col},${al})`); cg.addColorStop(1, `rgba(${col},0)`); c.fillStyle = cg; c.beginPath(); c.ellipse(q[0] + ox, q[1] + oy, rr, rr * 0.45, 0, 0, 7); c.fill(); } });
+  sgClouds(c, W, H, t, K, dark, sa, dt);
   wxDrawFx(c, W, H, t, K, dark, dt);
   // đom đóm lập loè dưới chân trời
   if (dark > 0.4) { SKY.ff2 = SKY.ff2 || Array.from({ length: 22 }, (_, i) => ({ az: i * 16.4 + Math.random() * 10, alt: -(0.6 + Math.random() * 4), ph: Math.random() * 9 })); SKY.ff2.forEach(f => { const q = skyProjRaw((f.alt + Math.sin(t * 0.7 + f.ph) * 0.4) * d2r, (f.az + Math.sin(t * 0.3 + f.ph) * 1.2) * d2r, W, H); if (q[2] < 0.2 || q[0] < 0 || q[0] > W || q[1] < 0 || q[1] > H) return; f.q = q; }); }
@@ -11623,7 +11744,8 @@ function drawSky(c, W, H, t) {
   const ground = dark > 0.5 ? ['#0c0a18', '#05040a'] : [mixC('#2a3a2a', '#0c0a18', dark * 2), mixC('#141c14', '#05040a', dark * 2)];
   c.save(); c.beginPath(); if (SKY.alt > 0 || Math.abs(SKY.alt) < 0.4) c.rect(-50, -50, W + 100, H + 100); hz.forEach((q, i) => i ? c.lineTo(q[0], q[1]) : c.moveTo(q[0], q[1])); c.closePath();
   const gg = c.createLinearGradient(0, hq[1], 0, hq[1] + H * 0.6); gg.addColorStop(0, ground[0]); gg.addColorStop(1, ground[1]); c.fillStyle = gg; c.fill('evenodd');
-  c.beginPath(); hz.forEach((q, i) => i ? c.lineTo(q[0], q[1]) : c.moveTo(q[0], q[1])); c.closePath(); c.strokeStyle = 'rgba(255,200,140,.45)'; c.lineWidth = 1.5; c.stroke(); c.restore();
+  c.beginPath(); hz.forEach((q, i) => i ? c.lineTo(q[0], q[1]) : c.moveTo(q[0], q[1])); c.closePath(); c.strokeStyle = 'rgba(255,200,140,.25)'; c.lineWidth = 1; c.stroke(); c.restore();
+  sgCity(c, W, H, t, dark, sa);
   if (dark > 0.4 && SKY.ff2) { c.save(); c.globalCompositeOperation = 'lighter'; SKY.ff2.forEach(f => { if (!f.q) return; const q = f.q; f.q = null; const a = Math.max(0, Math.sin(t * 2.2 + f.ph)) * dark; const fg = c.createRadialGradient(q[0], q[1], 0, q[0], q[1], 9); fg.addColorStop(0, `rgba(200,255,140,${a})`); fg.addColorStop(1, 'rgba(200,255,140,0)'); c.fillStyle = fg; c.beginPath(); c.arc(q[0], q[1], 9, 0, 7); c.fill(); }); c.restore(); }
   // ánh đèn thành phố ngay dưới chân trời
   if (dark > 0.2) { c.fillStyle = `rgba(255,190,110,${0.55 * dark})`; for (let i = 0; i < 160; i++) { const az = ((i * 137.5) % 360) * d2r, al = -(0.4 + ((i * 53) % 30) / 10) * d2r, q = skyProjRaw(al, az, W, H); if (q[2] > -0.2 && q[0] > 0 && q[0] < W && q[1] > 0 && q[1] < H) c.fillRect(q[0], q[1], 2, 2); } }
@@ -11651,13 +11773,15 @@ document.getElementById('treeX').addEventListener('click', () => hideAnim(docume
 document.querySelectorAll('[data-stab]').forEach(b => b.addEventListener('click', () => { ST.tab = b.dataset.stab; starTabs(); }));
 (() => { const sc = document.getElementById('starCv');
   sc.addEventListener('pointerdown', e => { const r = sc.getBoundingClientRect(); if (ST.tab === 'sky') { SKY.drag = { x: e.clientX, y: e.clientY, az: SKY.az, alt: SKY.alt, w: r.width }; try { sc.setPointerCapture(e.pointerId); } catch (x) { } sc.style.cursor = 'grabbing'; return; } if (ST.tab === 'cons' && !ST.solved) { const px = (e.clientX - r.left) / r.width * SW, py = (e.clientY - r.top) / r.height * SH, i = starAt(px, py); if (i >= 0) { try { sc.setPointerCapture(e.pointerId); } catch (x) { } ST.drag = { from: i, x: px, y: py, moved: false, sx: px, sy: py }; return; } } starClick((e.clientX - r.left) / r.width * SW, (e.clientY - r.top) / r.height * SH); });
-  sc.addEventListener('pointermove', e => { if (ST.drag) { const r = sc.getBoundingClientRect(), D = ST.drag; D.x = (e.clientX - r.left) / r.width * SW; D.y = (e.clientY - r.top) / r.height * SH; if (Math.hypot(D.x - D.sx, D.y - D.sy) > 10) D.moved = true; return; } if (ST.tab === 'sky' && !SKY.drag) { const r = sc.getBoundingClientRect(); SKY.hover = [(e.clientX - r.left) / r.width * SW, (e.clientY - r.top) / r.height * SH]; } const d = SKY.drag; if (!d) return; const k = SKY.fov / d.w; SKY.az = (d.az - (e.clientX - d.x) * k + 360) % 360; SKY.alt = Math.max(-5, Math.min(90, d.alt + (e.clientY - d.y) * k)); });
+  sc.addEventListener('pointermove', e => { if (ST.drag) { const r = sc.getBoundingClientRect(), D = ST.drag; D.x = (e.clientX - r.left) / r.width * SW; D.y = (e.clientY - r.top) / r.height * SH; if (Math.hypot(D.x - D.sx, D.y - D.sy) > 10) D.moved = true; return; } if (ST.tab === 'sky' && !SKY.drag) { const r = sc.getBoundingClientRect(); SKY.hover = [e.clientX - r.left, e.clientY - r.top]; } const d = SKY.drag; if (!d) return; const k = SKY.fov / d.w; SKY.az = (d.az - (e.clientX - d.x) * k + 360) % 360; SKY.alt = Math.max(-5, Math.min(90, d.alt + (e.clientY - d.y) * k)); });
   ['pointerup', 'pointercancel'].forEach(ev => sc.addEventListener(ev, () => { if (ST.drag) { const D = ST.drag; ST.drag = null; if (!D.moved) starClick(D.sx, D.sy); else { const j = starAt(D.x, D.y); if (j >= 0 && j !== D.from) { starLink(D.from, j); ST.sel = -1; } } } SKY.drag = null; if (ST.tab === 'sky') sc.style.cursor = 'grab'; }));
   sc.addEventListener('pointerleave', () => { SKY.hover = null; });
-  sc.addEventListener('wheel', e => { if (ST.tab !== 'sky') return; e.preventDefault(); SKY.fov = Math.max(15, Math.min(140, SKY.fov * (e.deltaY > 0 ? 1.1 : 0.9))); }, { passive: false });
+  sc.addEventListener('wheel', e => { if (ST.tab !== 'sky') return; e.preventDefault(); SKY.fov = Math.max(15, Math.min(170, SKY.fov * (e.deltaY > 0 ? 1.1 : 0.9))); }, { passive: false });
   document.getElementById('skyIn').addEventListener('click', () => { SKY.fov = Math.max(15, SKY.fov * 0.8); });
-  document.getElementById('skyOut').addEventListener('click', () => { SKY.fov = Math.min(140, SKY.fov * 1.25); });
+  document.getElementById('skyOut').addEventListener('click', () => { SKY.fov = Math.min(170, SKY.fov * 1.25); });
   { const sp = document.getElementById('skyPlace'); sp.innerHTML = '<option value="auto">🌐 Tự động theo mạng của máy</option>' + SKY_CITIES.map((c2, i) => `<option value="${i}">${c2[0]}</option>`).join('') + '<option value="me">📍 Vị trí chính xác (GPS)</option>'; skyPlaceUI(); skyAutoPlace(); sp.addEventListener('change', () => { if (sp.value === 'auto') { try { localStorage.removeItem('pr-sky-loc'); } catch (e) { } SKY.placeSet = false; SKY.autoTried = false; skyAutoPlace(); } else if (sp.value === 'me') { skyMyPlace(); skyPlaceUI(); } else { const c2 = SKY_CITIES[+sp.value]; skySetPlace(c2[0], c2[1], c2[2]); } }); sp.addEventListener('keydown', e => e.stopPropagation()); }
+  document.getElementById('skyBig').addEventListener('click', () => skyBig());
+  window.addEventListener('keydown', e => { if (e.key && e.key.toLowerCase() === 'f' && ST.tab === 'sky' && !document.getElementById('starModal').hidden && e.target.tagName !== 'INPUT' && e.target.tagName !== 'SELECT') { skyBig(); e.preventDefault(); } });
   document.getElementById('skyLines').addEventListener('click', e => { SKY.lines = !SKY.lines; e.currentTarget.setAttribute('aria-pressed', SKY.lines); });
   document.getElementById('skyNames').addEventListener('click', e => { SKY.names = !SKY.names; e.currentTarget.setAttribute('aria-pressed', SKY.names); });
   document.getElementById('skyTime').addEventListener('input', e => { SKY.ff = 0; skyFFbtn(); SKY.hourOfs = +e.target.value; });
