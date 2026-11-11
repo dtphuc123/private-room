@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta http-equiv="Cache-Control" content="no-cache"><title>Private Room · bản 96</title><style>html,body{margin:0;padding:0;height:100%}</style></head><body>
+<html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta http-equiv="Cache-Control" content="no-cache"><title>Private Room · bản 97</title><style>html,body{margin:0;padding:0;height:100%}</style></head><body>
 <title>Private Room Casino</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -660,7 +660,23 @@ canvas#world { position: absolute; inset: 0; width: 100%; height: 100%; display:
 .gc-row em { font-weight: 800; color: #ffd36a; }
 .modal.tree-modal { width: min(980px, 96vw) !important; max-width: none !important; max-height: 94vh; }
 .tree-wrap { display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: 12px; min-height: 0; overflow-y: auto; }
-.tree-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; align-content: start; }
+.tree-grid { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 6px; align-content: start; }
+.modal.tree-modal { display: flex; flex-direction: column; gap: 10px; height: 94vh; }
+.pg-tabs { display: flex; gap: 6px; flex-wrap: wrap; }
+.pg-tabs button { padding: 7px 14px; border-radius: 999px; border: 1px solid rgb(154 224 176 / .3); background: rgb(255 255 255 / .04); color: var(--ink); font: 700 13px var(--font-body); cursor: pointer; }
+.pg-tabs button[aria-selected="true"] { background: #9ae0b0; color: #10301c; border-color: #9ae0b0; }
+.pg-body { flex: 1; min-height: 0; overflow-y: auto; }
+#treeGardenBox .tree-wrap { overflow: visible; }
+.tplot span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 100%; }
+.pg-pots { display: grid; grid-template-columns: minmax(0, 1fr) 320px; gap: 12px; }
+.pg-list { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; align-content: start; }
+.pg-side { display: flex; flex-direction: column; gap: 8px; } .pg-side canvas { width: 100%; height: auto; border-radius: 10px; }
+.pg-shop { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin-top: 12px; padding-top: 10px; border-top: 1px solid rgb(255 255 255 / .08); }
+.pg-seeds { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 8px; }
+.pg-seed { display: flex; flex-direction: column; gap: 3px; padding: 8px; border-radius: 12px; border: 1px solid rgb(255 255 255 / .08); background: rgb(255 255 255 / .03); font-size: 12px; color: var(--ink-dim); }
+.pg-seed canvas { width: 100%; height: auto; border-radius: 8px; } .pg-seed b { color: var(--ink); font-size: 14px; } .pg-seed .tree-btns { margin-top: 4px; }
+.pg-guide { max-width: 760px; font-size: 14px; line-height: 1.6; } .pg-guide p { margin: 0 0 10px; }
+@media (max-width: 760px) { .pg-pots { grid-template-columns: 1fr; } .pg-list { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
 .tplot { position: relative; display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 4px; border-radius: 12px; border: 1px solid rgb(255 255 255 / .08); background: rgb(255 255 255 / .03); color: var(--ink); font: 600 11px var(--font-body); cursor: pointer; }
 .tplot canvas { width: 100%; height: auto; border-radius: 8px; }
 .tplot.on { border-color: #9ae0b0; box-shadow: 0 0 0 1px #9ae0b0; }
@@ -1252,7 +1268,7 @@ canvas#world { position: absolute; inset: 0; width: 100%; height: 100%; display:
       <button class="icon-btn" id="dressBtn" type="button">Thay đồ</button>
       <button class="icon-btn" id="petBtn" type="button">Thú cưng <span class="mbadge" id="petBadge" hidden>!</span><span class="slow-tag" id="slowTag" hidden></span></button>
       <button class="icon-btn" id="missionBtn" type="button">Nhiệm vụ <span class="mbadge" id="missionBadge" hidden>0</span></button>
-      <button class="icon-btn garden-btn" id="gardenBtn" type="button" hidden>Vườn <span class="mbadge" id="gardenBadge" hidden>!</span></button>
+      <button class="icon-btn garden-btn" id="gardenBtn" type="button" hidden>Cây <span class="mbadge" id="gardenBadge" hidden>!</span></button>
       <button class="icon-btn duo-btn" id="duoBtn" type="button" title="Chơi chung với người yêu (phím H)"><span id="duoLbl">Chơi chung</span> <span class="mbadge" id="duoBadge" hidden>!</span></button>
       <button class="icon-btn" id="achBtn" type="button">Thành tích</button>
       <button class="icon-btn" id="eventBtn" type="button" title="Sự kiện, ngày lễ, khách đặc biệt">Sự kiện <span class="mbadge" id="evBadge" hidden>!</span></button>
@@ -1806,11 +1822,13 @@ canvas#world { position: absolute; inset: 0; width: 100%; height: 100%; display:
     </div>
   </div>
   <div class="modal-wrap" id="treeModal" hidden>
-    <div class="modal tree-modal" role="dialog" aria-label="Vườn trên mây">
-      <div class="shop-head"><h2 class="panel-title" style="margin:0">Vườn trên mây</h2><button class="xbtn" id="treeX" type="button" aria-label="Đóng">✕</button></div>
+    <div class="modal tree-modal" role="dialog" aria-label="Cây của tôi">
+      <div class="shop-head"><h2 class="panel-title" style="margin:0">Cây của tôi</h2><button class="xbtn" id="treeX" type="button" aria-label="Đóng">✕</button></div>
+      <div class="pg-tabs" id="treeTabs" role="tablist"><button type="button" role="tab" data-ptab="garden">Vườn trên mây</button><button type="button" role="tab" data-ptab="pot">Chậu trong phòng</button><button type="button" role="tab" data-ptab="seed">Hạt giống</button><button type="button" role="tab" data-ptab="guide">Cẩm nang</button></div>
       <p class="note" id="treeSum" style="margin:0"></p>
-      <div class="tree-wrap"><div class="tree-grid" id="treeGrid"></div><div class="tree-side"><canvas id="treeCv" width="320" height="260" aria-hidden="true"></canvas><div id="treeInfo" class="tree-info"></div></div></div>
-      <div class="tree-btns"><button class="sbtn buy" type="button" id="tWaterAll">Tưới cả vườn</button><button class="sbtn" type="button" id="tHarvestAll">Thu hoạch cả vườn</button><span class="note" style="margin:0">Tính theo ngày thật · mỗi cây tưới 1 lần mỗi ngày, ai tưới cũng được · chỉ chủ ô trồng cây và thu tiền · 3 ngày không ai tưới cây sẽ chết</span></div>
+      <div id="treeGardenBox" class="pg-body"><p class="note" id="treeGardenNote" style="margin:0 0 6px"></p><div class="tree-wrap"><div class="tree-grid" id="treeGrid"></div><div class="tree-side"><canvas id="treeCv" width="320" height="260" aria-hidden="true"></canvas><div id="treeInfo" class="tree-info"></div></div></div></div>
+      <div id="treeOther" class="pg-body" hidden></div>
+      <div class="tree-btns"><button class="sbtn buy" type="button" id="tWaterAll">Tưới tất cả cây</button><button class="sbtn" type="button" id="tHarvestAll">Thu hoạch tất cả</button><span class="note" style="margin:0">Tưới theo giờ trong game · cây của ai người đó chăm · khát lâu cây sẽ chết</span></div>
     </div>
   </div>
 
@@ -1869,7 +1887,7 @@ canvas#world { position: absolute; inset: 0; width: 100%; height: 100%; display:
   <!-- Help modal -->
   <div class="modal-wrap" id="helpModal" hidden>
     <div class="modal loan-modal set-modal" role="dialog" aria-label="Cài đặt">
-      <div class="shop-head"><h2 class="panel-title" style="margin:0">Cài đặt</h2><span class="note" id="gameVer" style="margin:0 10px 0 auto;font-weight:700;color:#ffd36a">Phiên bản 96</span><button class="xbtn" id="setX" type="button" aria-label="Đóng" style="margin-left:auto">✕</button></div>
+      <div class="shop-head"><h2 class="panel-title" style="margin:0">Cài đặt</h2><span class="note" id="gameVer" style="margin:0 10px 0 auto;font-weight:700;color:#ffd36a">Phiên bản 97</span><button class="xbtn" id="setX" type="button" aria-label="Đóng" style="margin-left:auto">✕</button></div>
       <div class="set-tabs" role="tablist"><button class="fchip" type="button" data-stab2="sound" aria-pressed="true">Âm thanh</button><button class="fchip" type="button" data-stab2="view" aria-pressed="false">Hiển thị</button><button class="fchip" type="button" data-stab2="save" aria-pressed="false">Lưu game</button><button class="fchip" type="button" data-stab2="keys" aria-pressed="false">Phím điều khiển</button></div>
       <section class="set-pane" data-pane="sound">
         <label class="set-row"><span>Âm lượng tổng <b id="vMasterV"></b></span><input type="range" id="vMaster" min="0" max="100" step="1"></label>
@@ -6164,6 +6182,10 @@ fadd('window_sea', { name: 'Cửa sổ biển đêm', price: 8000, cozy: 22, kin
 fadd('projector', { name: 'Máy chiếu bầu trời sao', price: 9000, cozy: 25, kind: 'projector', w: 1, d: 1 });
 fadd('winecab', { name: 'Tủ rượu vang', price: 6000, cozy: 20, kind: 'winecab', w: 1, d: 1 });
 fadd('garden_in', { name: 'Vườn hoa trong nhà', price: 7500, cozy: 24, kind: 'garden', w: 2, d: 2 });
+fadd('pot_clay', { name: 'Chậu đất nung trồng cây', price: 250, cozy: 2, kind: 'pot', w: 1, d: 1, color: '#b8673a' });
+fadd('pot_wood', { name: 'Bồn gỗ trồng cây', price: 500, cozy: 3, kind: 'pot', w: 1, d: 1, color: '#8a5a32', wood: true });
+fadd('pot_blue', { name: 'Chậu sứ men lam', price: 900, cozy: 4, kind: 'pot', w: 1, d: 1, color: '#2e6fa8', glaze: true });
+fadd('pot_gold', { name: 'Chậu sứ viền vàng', price: 2600, cozy: 8, kind: 'pot', w: 1, d: 1, color: '#f4f1ea', rim: '#d9a441', glaze: true });
 fadd('gold_bed', { name: 'Giường hoàng gia', price: 15000, cozy: 30, kind: 'bed', w: 3, d: 3, color: '#f3d08a', royal: true });
 // bộ chủ đề
 fadd('eu_sofa', { name: 'Sofa Louis', price: 2600, cozy: 9, kind: 'sofa', w: 3, d: 1, color: '#c9a96e', theme: 'eu' });
@@ -6378,6 +6400,7 @@ TH('snow', 'snow_globe', { name: 'Quả cầu tuyết thông', price: 1000, kind
 TH('sea', 'sea_aqua', { name: 'Bể cá san hô', price: 4000, kind: 'aquarium', w: 2, d: 1 });
 TH('sea', 'sea_win', { name: 'Cửa sổ biển đêm trăng', price: 6000, kind: 'window', wall: true, w: 2, view: 'sea' });
 // finalize: tiers, cozy, categories
+KIND_CAT.pot = 'plant';
 Object.values(FURN).forEach(f => { f.tier = tierOf(f.price); if (f.wall) f.d = 0; if (!f.cozy || f.cozy < 1) f.cozy = Math.max(1, Math.round(Math.sqrt(f.price) / 4.2)); f.cat = f.theme !== 'none' ? 'theme' : (KIND_CAT[f.kind] || 'decor'); });
 
 Object.values(FURN).forEach(f => { f.tier = tierOf(f.price); if (f.wall) f.d = 0; });
@@ -6405,6 +6428,10 @@ function drawFurnOld(c, f, x, y, w, d, ghost) {
     case 'lamp': c.strokeStyle = '#2a2228'; c.lineWidth = 3; c.beginPath(); c.moveTo(cx, y - 8); c.lineTo(cx, y - 70); c.stroke(); c.fillStyle = '#2a2228'; c.beginPath(); c.ellipse(cx, y - 8, 10, 3, 0, 0, 7); c.fill();
       c.fillStyle = f.color; c.beginPath(); c.moveTo(cx - 14, y - 66); c.lineTo(cx + 14, y - 66); c.lineTo(cx + 9, y - 86); c.lineTo(cx - 9, y - 86); c.closePath(); c.fill(); c.strokeStyle = ol; c.lineWidth = 1; c.stroke();
       c.save(); c.globalCompositeOperation = 'lighter'; const lg = c.createRadialGradient(cx, y - 70, 2, cx, y - 70, 60); lg.addColorStop(0, 'rgba(255,220,150,.35)'); lg.addColorStop(1, 'rgba(255,220,150,0)'); c.fillStyle = lg; c.fillRect(cx - 60, y - 130, 120, 120); c.restore(); break;
+    case 'pot': { const pc = f.color || '#b8673a'; c.fillStyle = pc; c.beginPath(); c.moveTo(cx - 15, y - 26); c.lineTo(cx + 15, y - 26); c.lineTo(cx + 10, y - 4); c.lineTo(cx - 10, y - 4); c.closePath(); c.fill(); c.strokeStyle = ol; c.lineWidth = 1; c.stroke();
+      if (f.wood) { c.strokeStyle = 'rgba(0,0,0,.25)'; for (let k = -1; k <= 1; k++) { c.beginPath(); c.moveTo(cx + k * 8, y - 26); c.lineTo(cx + k * 5.5, y - 4); c.stroke(); } }
+      if (f.glaze) { c.fillStyle = f.rim ? 'rgba(46,111,168,.75)' : 'rgba(255,255,255,.55)'; for (let k = 0; k < 4; k++) { c.beginPath(); c.arc(cx - 7 + k * 5, y - 15 + (k % 2) * 3, 2, 0, 7); c.fill(); } }
+      c.fillStyle = f.rim || shade(pc, -25); c.fillRect(cx - 17, y - 30, 34, 6); c.fillStyle = '#3a2414'; c.beginPath(); c.ellipse(cx, y - 29, 14, 2.5, 0, 0, 7); c.fill(); c.fillStyle = 'rgba(255,255,255,.18)'; c.fillRect(cx - 11, y - 22, 3, 14); break; }
     case 'plant': {
       c.fillStyle = f.variant === 'bonsai' ? '#3a4a5a' : '#b8673a'; c.beginPath(); c.moveTo(cx - 13, y - 26); c.lineTo(cx + 13, y - 26); c.lineTo(cx + 9, y - 6); c.lineTo(cx - 9, y - 6); c.closePath(); c.fill(); c.strokeStyle = ol; c.lineWidth = 1; c.stroke();
       if (f.variant === 'cactus') { c.fillStyle = '#3d8a5f'; roundRect(c, cx - 6, y - 64, 12, 40, 6); c.fill(); roundRect(c, cx - 16, y - 50, 8, 18, 4); c.fill(); roundRect(c, cx + 8, y - 56, 8, 18, 4); c.fill(); c.fillStyle = '#ff8fb1'; c.beginPath(); c.arc(cx, y - 66, 3, 0, 7); c.fill(); }
@@ -7274,6 +7301,7 @@ function buildRoom(no) {
     const prot = p.rot || 0; FD.drawables.push({ y: flat ? -1000 + yb : yb - 2, draw(c) { drawFurn(c, f, x, yb, fp.w, fp.d, false, prot); } });
     if (!flat) FD.solids.push({ x: x + 6, y: yb - fp.d * T + 10, w: fp.w * T - 12, h: fp.d * T - 14 });
     if (['lamp', 'lantern', 'fireplace', 'chandelierF'].includes(f.kind)) FD.lights.push([x + fp.w * T / 2, yb - 40, 200]);
+    if (f.kind === 'pot') { const px = x + fp.w * T / 2, uid = p.uid; FD.drawables.push({ y: yb - 1, draw(c) { potDrawPlant(c, px, yb - 28, uid); } }); FD.interactables.push({ x: px, y: yb + 22, r: 44, get label() { return potLabel(uid); }, act: () => potAct(uid) }); }
   });
   FD.interactables.push({ x: ROOMMAP.w / 2, y: ROOMMAP.h - 40, r: 70, label: 'Ra hành lang', act: () => exitRoom() });
   FD.interactables.push({ x: ML + 40, y: WALL + 60, r: 70, label: 'Trang trí phòng', act: () => toggleDecor(true) });
@@ -9279,7 +9307,7 @@ setTimeout(() => { achCheck(); setInterval(achCheck, 2500); }, 2500);
 const RW = 1900, RH = 1300;
 const TREE_SP = { sakura: { name: 'Anh đào', leaf: '#5a9a4a', bloom: ['#ffc0d4', '#ff9ab8', '#ffe0ea'] }, mai: { name: 'Mai vàng', leaf: '#6aa04a', bloom: ['#ffd84a', '#ffe680', '#ffb820'] }, phuong: { name: 'Phượng vĩ', leaf: '#3f8a3a', bloom: ['#ff4a2a', '#ff7a3a', '#e8301a'] } };
 const POOL = { x: 130, y: 300, w: 600, h: 430 };
-const PLOTS = []; (() => { for (let r = 0; r < 3; r++) for (let k = 0; k < 4; k++) PLOTS.push({ x: 210 + k * 180 + (k >= 2 ? 40 : 0), y: 985 + r * 105 }); })();
+const PLOTS = []; (() => { const xs = [180, 300, 420, 660, 780, 900]; for (let r = 0; r < 5; r++) xs.forEach(x => PLOTS.push({ x, y: 972 + r * 62 })); })();
 const inPool = (x, y) => x > POOL.x + 10 && x < POOL.x + POOL.w - 10 && y > POOL.y + 14 && y < POOL.y + POOL.h - 6;
 let roofT = 0;
 function drawDeadTree(c, x, y, sc) { c.save(); c.translate(x, y); c.scale(sc, sc); c.strokeStyle = '#5a4630'; c.lineCap = 'round'; c.lineWidth = 7; c.beginPath(); c.moveTo(0, 0); c.lineTo(-2, -48); c.stroke(); c.lineWidth = 3.5; [[-2, -30, -22, -50], [-2, -40, 18, -62], [-2, -48, -8, -72], [-14, -44, -26, -60], [10, -54, 22, -56]].forEach(([a, b, x2, y2]) => { c.beginPath(); c.moveTo(a, b); c.lineTo(x2, y2); c.stroke(); }); c.fillStyle = '#8a6a40'; [[-20, -8], [12, -4], [4, -12]].forEach(([lx, ly]) => { c.beginPath(); c.ellipse(lx, ly, 5, 2.5, 0.4, 0, 7); c.fill(); }); c.restore(); }
@@ -9361,11 +9389,17 @@ FLOOR_DATA[7] = { solids: [], drawables: [], interactables: [], lights: [], over
     c.fillStyle = '#8a3a2a'; roundRect(c, x + 14, y - 62, 18, 46, 7); c.fill(); c.fillStyle = '#c8c8c8'; [[18, -78], [24, -82], [29, -76]].forEach(([dx, dy]) => { c.fillRect(x + dx, y + dy, 2, 18); c.fillRect(x + dx - 3, y + dy - 2, 7, 4); });
     c.fillStyle = '#fff'; [[-16, -27], [-8, -27], [0, -27]].forEach(([dx, dy]) => { c.beginPath(); c.arc(x + dx, y + dy, 4, 0, 7); c.fill(); });
     const b = Math.sin(t * 3) * 3, near = Math.hypot(S.x - 1450, S.y - 1000) < 420; c.globalAlpha = near ? 1 : 0.85; c.fillStyle = '#ffd36a'; roundRect(c, x - 58, y - 122 + b, 116, 30, 15); c.fill(); c.fillStyle = '#2a1a08'; c.font = '800 13px "Be Vietnam Pro", sans-serif'; c.textAlign = 'center'; c.fillText('E · CHƠI GOLF', x, y - 102 + b); c.globalAlpha = 1; } });
-  // vườn trên mây: 12 ô đất
+  // vườn trên mây: 30 ô đất
   PLOTS.forEach((pl, i) => {
-    solid(pl.x - 22, pl.y - 10, 44, 14);
-    drawables.push({ y: pl.y + 6, draw(c) { const P = gView().plots[i], x = pl.x, y = pl.y; c.fillStyle = P.open ? '#6b4226' : 'rgba(80,60,40,.5)'; roundRect(c, x - 46, y - 18, 92, 34, 8); c.fill(); c.fillStyle = P.open ? '#3a2414' : 'rgba(40,30,20,.5)'; roundRect(c, x - 40, y - 13, 80, 24, 6); c.fill(); if (!P.open) { c.fillStyle = 'rgba(255,255,255,.4)'; c.font = '700 10px "Be Vietnam Pro", sans-serif'; c.textAlign = 'center'; c.fillText('Đất trống · mua', x, y + 3); return; } c.strokeStyle = P.mine ? '#ffd36a' : '#ff8fc8'; c.lineWidth = 2; roundRect(c, x - 46, y - 18, 92, 34, 8); c.stroke(); if (gShared()) { const nm = P.mine ? 'Của bạn' : (P.oname || pName()); c.font = '700 9.5px "Be Vietnam Pro", sans-serif'; c.textAlign = 'center'; const w = c.measureText(nm).width + 12; c.fillStyle = P.mine ? 'rgba(255,211,106,.9)' : 'rgba(255,143,200,.9)'; roundRect(c, x - w / 2, y + 18, w, 14, 7); c.fill(); c.fillStyle = '#2a1408'; c.fillText(nm, x, y + 28.5); } if (!P.tree && P.dead) { drawDeadTree(c, x, y, 0.5); return; } if (P.tree) { drawTree(c, x, y, { sp: P.tree.sp, days: gDraw(P.tree.w) }, roofT, 0.62); const b = Math.sin(roofT * 4 + i) * 3; if (treeNeedsWater(P.tree)) { c.fillStyle = '#7ac8ff'; c.font = '700 13px sans-serif'; c.textAlign = 'center'; c.fillText('💧', x + 30, y - 28 + b); } if (P.mine && P.tree.bank) { c.fillStyle = '#ffd36a'; c.strokeStyle = '#6a4a10'; c.lineWidth = 1.5; c.beginPath(); c.arc(x - 30, y - 30 + b, 8, 0, 7); c.fill(); c.stroke(); c.fillStyle = '#6a4a10'; c.font = '800 9px sans-serif'; c.textAlign = 'center'; c.fillText('$', x - 30, y - 27 + b); } } } });
-    interactables.push({ x: pl.x, y: pl.y + 34, r: 46, get label() { const P = gView().plots[i], own = P.oname || pName(); return !P.open ? `Ô vườn ${i + 1} · mua đất` : !P.tree && P.dead ? (P.mine ? `Dọn cây héo ở ô ${i + 1}` : `Cây héo của ${own}`) : !P.tree ? (P.mine ? `Ô vườn ${i + 1} · trồng cây` : `Ô vườn của ${own}`) : treeNeedsWater(P.tree) ? (P.mine ? `Tưới ${TREE_SP[P.tree.sp].name}` : `Tưới hộ ${TREE_SP[P.tree.sp].name} của ${own}`) : P.mine && P.tree.bank ? `Thu hoạch ${TREE_SP[P.tree.sp].name} (+${P.tree.bank})` : `Xem ${TREE_SP[P.tree.sp].name}${P.mine ? '' : ' của ' + own}`; }, act: () => { const P = gView().plots[i]; if (!P.open) openTree(i); else if (!P.tree && P.dead && P.mine) gClear(i); else if (P.tree && treeNeedsWater(P.tree)) gWater(i); else if (P.tree && P.mine && P.tree.bank) gHarvest(i); else openTree(i); } });
+    solid(pl.x - 22, pl.y - 8, 44, 12);
+    drawables.push({ y: pl.y + 6, draw(c) { const P = gView().plots[i], x = pl.x, y = pl.y; c.fillStyle = P.open ? '#6b4226' : 'rgba(80,60,40,.5)'; roundRect(c, x - 42, y - 14, 84, 28, 8); c.fill(); c.fillStyle = P.open ? '#3a2414' : 'rgba(40,30,20,.5)'; roundRect(c, x - 36, y - 10, 72, 20, 6); c.fill();
+      if (!P.open) { c.fillStyle = 'rgba(255,255,255,.45)'; c.font = '700 9.5px "Be Vietnam Pro", sans-serif'; c.textAlign = 'center'; c.fillText('Ô ' + (i + 1) + ' · mua đất', x, y + 3); return; }
+      c.strokeStyle = P.mine ? '#ffd36a' : '#ff8fc8'; c.lineWidth = 2; roundRect(c, x - 42, y - 14, 84, 28, 8); c.stroke();
+      if (gShared() && !P.mine) { const nm = P.oname || pName(); c.font = '700 9px "Be Vietnam Pro", sans-serif'; c.textAlign = 'center'; const w = c.measureText(nm).width + 10; c.fillStyle = 'rgba(255,143,200,.9)'; roundRect(c, x - w / 2, y + 12, w, 13, 6); c.fill(); c.fillStyle = '#2a1408'; c.fillText(nm, x, y + 21.5); }
+      if (!P.tree && P.dead) { drawDeadTree(c, x, y, 0.42); return; }
+      if (P.tree) { drawTree(c, x, y, { sp: P.tree.sp, days: gDraw(P.tree.w) }, roofT, 0.5); const b = Math.sin(roofT * 4 + i) * 3; if (P.st && P.st.can) { c.font = '700 13px sans-serif'; c.textAlign = 'center'; c.fillText('💧', x + 28, y - 24 + b); } if (P.mine && P.tree.bank) { c.fillStyle = '#ffd36a'; c.strokeStyle = '#6a4a10'; c.lineWidth = 1.5; c.beginPath(); c.arc(x - 28, y - 26 + b, 7, 0, 7); c.fill(); c.stroke(); c.fillStyle = '#6a4a10'; c.font = '800 9px sans-serif'; c.textAlign = 'center'; c.fillText('$', x - 28, y - 23 + b); } } } });
+    interactables.push({ x: pl.x, y: pl.y + 30, r: 36, get label() { const P = gView().plots[i], own = P.oname || pName(); if (!P.open) return `Ô vườn ${i + 1} · mua đất`; if (!P.mine) return `Ô vườn của ${own}`; if (!P.tree && P.dead) return `Nhổ bỏ cây chết ở ô ${i + 1}`; if (!P.tree) return `Ô ${i + 1} · gieo hạt`; const nm = TREE_SP[P.tree.sp].name; return P.st.can ? `Tưới ${nm}${P.st.thirsty ? ' (đang khát)' : ''}` : P.tree.bank ? `Thu hoạch ${nm} (+${P.tree.bank})` : `Xem ${nm}`; },
+      act: () => { const P = gView().plots[i]; if (!P.open || !P.mine) openTree(i); else if (!P.tree && P.dead) gClear(i); else if (P.tree && P.st.can) gWater(i); else if (P.tree && P.tree.bank) gHarvest(i); else openTree(i); } });
   });
   drawables.push({ y: 930, draw(c) { sign(c, 'VƯỜN TRÊN MÂY', 520, 930, '#9ae0b0', 13); } });
   // đèn dây + đèn
@@ -11438,238 +11472,390 @@ function golfDraw() {
   if (GF.banner && performance.now() > GF.banner.at && performance.now() - GF.banner.at < 1300) { const k = (performance.now() - GF.banner.at) / 1300; c.globalAlpha = 1 - k * k; c.font = '800 46px "Big Shoulders Display", Impact'; c.textAlign = 'center'; c.lineWidth = 6; c.strokeStyle = '#1a3a1a'; c.strokeText(GF.banner.t, GWd / 2, GHt / 2 - k * 30); c.fillStyle = '#ffe680'; c.fillText(GF.banner.t, GWd / 2, GHt / 2 - k * 30); c.globalAlpha = 1; }
   c.fillStyle = 'rgba(0,0,0,.45)'; roundRect(c, 30, 28, 150, 26, 13); c.fill(); c.fillStyle = '#fff'; c.font = '700 12.5px "Be Vietnam Pro", sans-serif'; c.textAlign = 'left'; c.fillText(`Lỗ ${GF.hole + 1}/9 · Par ${H.par} · Gậy ${GF.strokes[GF.hole]}`, 42, 45);
 }
-// ----- VƯỜN TRÊN MÂY (bản 2): mua ô đất, mua cây · chỉ chủ ô trồng và thu tiền · người kia được tưới hộ · tính theo ngày thật -----
+// ----- VƯỜN TRÊN MÂY (bản 3): 30 ô phải mua · tưới theo giờ trong game · chỉ chủ cây được tưới và thu · chậu cây trong phòng -----
+// form: tree · flower · bush · cactus · bamboo · bonsai | wi: số giờ trong game giữa 2 lần tưới | pot: trồng được trong chậu
 Object.assign(TREE_SP, {
-  dao: { name: 'Hoa đào', leaf: '#5a8a3a', bloom: ['#ff7aa8', '#ff9ec0', '#ffd0e0'], mult: 1.1, price: 300 },
-  kimtien: { name: 'Cây kim tiền', leaf: '#2f7a3a', bloom: ['#ffd84a', '#ffe680', '#f0c040'], mult: 1.7, price: 1200, coin: true },
-  tung: { name: 'Tùng la hán', leaf: '#2a5a3a', bloom: ['#9ae0b0', '#c8f0d0', '#7ac890'], mult: 0.9, price: 500 },
-  bang: { name: 'Bàng Singapore', leaf: '#4aa04a', bloom: ['#bff08a', '#d8f8a8', '#9ad86a'], mult: 1.2, price: 600 },
+  sakura: Object.assign(TREE_SP.sakura, { form: 'tree', price: 200, wi: 12, mult: 1 }),
+  mai: Object.assign(TREE_SP.mai, { form: 'tree', price: 200, wi: 12, mult: 1 }),
+  phuong: Object.assign(TREE_SP.phuong, { form: 'tree', price: 220, wi: 16, mult: 1 }),
+  dao: { name: 'Hoa đào', form: 'tree', leaf: '#5a8a3a', bloom: ['#ff7aa8', '#ff9ec0', '#ffd0e0'], mult: 1.1, price: 300, wi: 12 },
+  kimtien: { name: 'Cây kim tiền', form: 'tree', leaf: '#2f7a3a', bloom: ['#ffd84a', '#ffe680', '#f0c040'], mult: 1.7, price: 1200, wi: 8, coin: true, pot: true },
+  tung: { name: 'Tùng la hán', form: 'tree', leaf: '#2a5a3a', bloom: ['#9ae0b0', '#c8f0d0', '#7ac890'], mult: 0.9, price: 500, wi: 24 },
+  bang: { name: 'Bàng Singapore', form: 'tree', leaf: '#4aa04a', bloom: ['#bff08a', '#d8f8a8', '#9ad86a'], mult: 1.2, price: 600, wi: 16 },
+  buoi: { name: 'Cây bưởi', form: 'tree', leaf: '#3f8a3a', bloom: ['#ffffff', '#f4f8e8', '#e8f0d0'], fruit: '#c8e04a', mult: 1.35, price: 700, wi: 14 },
+  hong: { name: 'Hoa hồng', form: 'flower', leaf: '#3d7a3a', bloom: ['#e8304a', '#ff5a6a', '#c81a3a'], mult: 0.8, price: 150, wi: 8, pot: true },
+  huongduong: { name: 'Hướng dương', form: 'flower', tall: true, leaf: '#4a9a3a', bloom: ['#ffd23a', '#ffc21a', '#ffe06a'], center: '#6a3a1a', mult: 0.7, price: 120, wi: 6, pot: true },
+  tulip: { name: 'Tulip', form: 'flower', tulip: true, leaf: '#4aa04a', bloom: ['#ff4a7a', '#ffd23a', '#ff7a2a'], mult: 0.85, price: 200, wi: 8, pot: true },
+  lan: { name: 'Lan hồ điệp', form: 'flower', orchid: true, leaf: '#2f6a3a', bloom: ['#f0a0e0', '#ffffff', '#d070c8'], center: '#ffd23a', mult: 1.3, price: 800, wi: 20, pot: true },
+  camtu: { name: 'Cẩm tú cầu', form: 'bush', leaf: '#3f7a4a', bloom: ['#8ab0ff', '#b49aff', '#ff9ad8'], mult: 1, price: 350, wi: 10, pot: true },
+  oaihuong: { name: 'Oải hương', form: 'bush', spike: true, leaf: '#6a8a6a', bloom: ['#9a7ad8', '#b49aff', '#7a5ab8'], mult: 0.9, price: 250, wi: 12, pot: true },
+  quat: { name: 'Cây quất', form: 'bush', leaf: '#2f6a2a', bloom: ['#ffffff', '#f8f8e8', '#f0f0d8'], fruit: '#ff9a1a', mult: 1.1, price: 450, wi: 12, pot: true },
+  xuongrong: { name: 'Xương rồng', form: 'cactus', leaf: '#3d8a5f', bloom: ['#ff6ab0', '#ff9ad0', '#ffd23a'], mult: 0.55, price: 100, wi: 48, pot: true },
+  tre: { name: 'Tre may mắn', form: 'bamboo', leaf: '#5ab04a', bloom: ['#9ad86a', '#bff08a', '#7ac84a'], mult: 0.8, price: 300, wi: 24, pot: true },
+  bonsai: { name: 'Bonsai tùng', form: 'bonsai', leaf: '#2f5a3a', bloom: ['#3f7a4a', '#4a8a5a', '#2a6a3a'], mult: 1.5, price: 1500, wi: 24, pot: true },
 });
-['sakura', 'mai', 'phuong'].forEach(k => Object.assign(TREE_SP[k], { mult: 1, price: 200 }));
-const TREE_INCOME = [0, 10, 25, 60, 120, 250];
-const DAY_MS = 86400000, G_DIE = 3, G_K = 4, G_THIRST = 2, G_CAP = 3, G_MAX_SHARED = 6;
-const G_MILES = [[4, 'Ra hoa · 300 chip'], [10, 'Nở rộ · kỷ vật "Cành hoa ép khô"'], [30, 'Đại thụ · danh hiệu "Người làm vườn"']];
-const GDN = { doc: null, room: null, unsub: null, ready: false, view: null, viewAt: 0, warned: {}, moving: false };
-const gToday = () => new Date().toLocaleDateString('sv');
+const G_N = 30, G_INC = [0, 12, 30, 60, 110, 200], G_CAPD = 2, G_MILES = [[4, 'Ra hoa · 300 chip'], [10, 'Nở rộ · kỷ vật "Cành hoa ép khô"'], [30, 'Đại thụ · danh hiệu "Người làm vườn"']];
+const GDN = { doc: null, room: null, unsub: null, ready: false, view: null, viewAt: 0, warned: {}, claiming: false };
 const gStage = w => w >= 30 ? 5 : w >= 10 ? 4 : w >= 4 ? 3 : w >= 2 ? 2 : w >= 1 ? 1 : 0;
 const gDraw = w => [0, 1, 3, 7, 30, 100][gStage(w)];
+const gNow = () => Math.floor((S.day || 1) * 1440 + (S.minutes || 0)); // phút trong game
 const gRoom = () => accBound() && ACC.db && ACC.checked !== undefined && WORLD && WORLD !== 'solo' ? WORLD : null;
 const gShared = () => !!(GDN.ready && GDN.doc && gRoom() && gRoom() === GDN.room);
 const gMe = () => gShared() ? ACC.user.uid : 'me';
-const gFresh = () => ({ plots: PLOTS.map(() => ({ owner: null, oname: '', tree: null, dead: null })) });
+const gFresh = () => ({ v: 3, plots: Array.from({ length: G_N }, () => ({ owner: null, oname: '', tree: null, dead: null })) });
 const gErr = m => { const e = new Error(m); e.gmsg = m; return e; };
-const gInc = t => Math.round(TREE_INCOME[gStage(t.w)] * (TREE_SP[t.sp].mult || 1) * G_K);
-const gBase = t => t.lastW || t.since;
+const spOf = t => TREE_SP[t.sp] || TREE_SP.sakura;
+const gRate = (t, k) => G_INC[gStage(t.w)] * (spOf(t).mult || 1) * (k || 1) / 1440; // chip mỗi phút game
+const gIncDay = (t, k) => Math.round(G_INC[gStage(t.w)] * (spOf(t).mult || 1) * (k || 1));
+const gNewTree = (sp, now) => ({ sp, w: 0, planted: now, lastW: now - Math.round(TREE_SP[sp].wi * 30), lastAcc: now, bank: 0, gifts: [], pend: [] });
+// trạng thái nước: e = thời gian từ lần tưới trước / chu kỳ tưới
+function tState(t, now) {
+  const wi = spOf(t).wi * 60, el = Math.max(0, now - t.lastW), e = el / wi;
+  return { e, wi, wet: e < 0.5, can: e >= 0.5, thirsty: e >= 1, dying: e >= 2, dead: e >= 3, okAt: t.lastW + 0.5 * wi, dieAt: t.lastW + 3 * wi };
+}
+const gmTxt = m => { m = Math.max(0, Math.round(m)); const h = Math.floor(m / 60), mm = m % 60; return h >= 24 ? `${Math.floor(h / 24)} ngày ${h % 24} giờ` : h ? `${h} giờ${mm ? ' ' + mm + ' phút' : ''}` : `${Math.max(1, mm)} phút`; };
+const gmReal = m => { const r = m / GAME_MIN_PER_SEC / 60; return r < 1 ? 'chưa tới 1 phút thật' : `~${Math.round(r)} phút thật`; };
+const gHourK = () => { const h = (S.minutes || 0) / 60; return (h >= 5 && h < 9) || (h >= 16 && h < 19.5) ? 2 : (h >= 11 && h < 14) ? 0.5 : 1; }; // giờ mát tưới tốt gấp đôi
+function treeTick(t, now, k) { // tích chip đến lúc cây khát quá 1.5 chu kỳ · trả về true nếu cây chết
+  const st = tState(t, now), to = Math.min(now, t.lastW + 1.5 * st.wi), from = t.lastAcc || t.planted || now;
+  if (to > from) t.bank = Math.min(gRate(t, k) * 1440 * G_CAPD, (t.bank || 0) + gRate(t, k) * (to - from));
+  t.lastAcc = Math.max(from, Math.min(now, to));
+  return st.dead;
+}
+function treeWater(t, now) { // tưới đúng lúc: +1 lớn, giờ mát +2
+  const st = tState(t, now); if (!st.can) return 0;
+  treeTick(t, now); const k = gHourK(), g = k >= 2 ? 2 : 1;
+  t.lastW = now; t.lastAcc = now; t.w = (t.w || 0) + g; t.gifts = t.gifts || []; t.pend = t.pend || [];
+  G_MILES.forEach(([d]) => { if (t.w >= d && !t.gifts.includes(d)) { t.gifts.push(d); t.pend.push(d); } });
+  return g;
+}
+// ---------- dữ liệu vườn ----------
 function gLocal() {
-  if (!S.garden2) {
-    const g = gFresh(), now = Date.now(), old = S.garden;
-    if (old && old.plots) old.plots.forEach((p, i) => { if (!p.open || !g.plots[i]) return; Object.assign(g.plots[i], { owner: 'me', oname: S.name || '' }); if (p.tree) { const st = treeStage(p.tree.w || 0); g.plots[i].tree = { sp: p.tree.sp, w: [0, 1, 2, 4, 10, 30][st], since: now, lastW: now, wDay: gToday(), lastAcc: now, bank: p.tree.bank || 0, gifts: [], pend: [] }; } });
-    if (old && old.pot) { const fr = g.plots.find(p => p.owner === 'me' && !p.tree) || g.plots.find(p => !p.owner); if (fr) { fr.owner = 'me'; fr.oname = S.name || ''; fr.tree = { sp: old.pot.sp, w: [0, 1, 2, 4, 10, 30][treeStage(old.pot.w || 0)], since: now, lastW: now, wDay: gToday(), lastAcc: now, bank: 0, gifts: [], pend: [] }; } }
-    S.garden2 = g;
+  if (!S.garden3) {
+    S.garden3 = gFresh(); let chips = 0; const seeds = {};
+    const old = S.garden2 && S.garden2.plots ? S.garden2.plots : [];
+    old.forEach(p => { if (p.owner !== 'me') return; chips += 600; if (p.tree && TREE_SP[p.tree.sp]) seeds[p.tree.sp] = (seeds[p.tree.sp] || 0) + 1; });
+    if (S.garden && S.garden.plots && !S.garden2) S.garden.plots.forEach(p => { if (p.open) chips += 600; if (p.tree && TREE_SP[p.tree.sp]) seeds[p.tree.sp] = (seeds[p.tree.sp] || 0) + 1; });
+    if (chips || Object.keys(seeds).length) { S.chips += chips; S.seeds = S.seeds || {}; Object.entries(seeds).forEach(([k, n]) => { S.seeds[k] = (S.seeds[k] || 0) + n; }); setTimeout(() => notePop('VƯỜN MỚI', 'Vườn trên mây làm lại: 30 ô, mua từ đầu', `Hoàn ${fmt(chips)} chip cho ô đất cũ${Object.keys(seeds).length ? ' · cây cũ đổi thành hạt giống trong túi' : ''}`, '#9ae0b0'), 3000); }
+    S.garden2 = null; save();
   }
-  return S.garden2;
+  return S.garden3;
 }
 const gRaw = () => gShared() ? GDN.doc : gLocal();
-function gTick(g, now) { // tích tiền + cây chết · chạy trước mọi thay đổi
-  const died = [];
-  (g.plots || []).forEach((p, i) => {
-    const t = p.tree; if (!t) return;
-    const base = gBase(t), to = Math.min(now, base + G_THIRST * DAY_MS), from = t.lastAcc || t.since;
-    if (to > from) { const inc = gInc(t); t.bank = Math.min(inc * G_CAP, (t.bank || 0) + inc * (to - from) / DAY_MS); }
-    t.lastAcc = Math.max(from, now);
-    if (now - base >= G_DIE * DAY_MS) { died.push({ i, owner: p.owner, oname: p.oname, sp: t.sp, lost: Math.floor(t.bank || 0) }); p.dead = { sp: t.sp, w: t.w, at: now, lost: Math.floor(t.bank || 0) }; p.tree = null; }
-  });
-  return died;
-}
-function gView() { // bản để vẽ, tính sẵn tiền đang tích
-  const now = Date.now(); if (GDN.view && now - GDN.viewAt < 700) return GDN.view;
-  const g = JSON.parse(JSON.stringify(gRaw())), died = gTick(g, now), me = gMe();
-  GDN.view = { died, plots: g.plots.map((p, i) => ({ i, open: !!p.owner, owner: p.owner, oname: p.oname || '', mine: p.owner === me, dead: p.dead, tree: p.tree ? Object.assign(p.tree, { bank: Math.floor(p.tree.bank || 0) }) : null })) };
-  GDN.viewAt = now; return GDN.view;
+function gTick(g, now, me) { const died = []; (g.plots || []).forEach((p, i) => { const t = p.tree; if (!t || p.owner !== me) return; if (treeTick(t, now)) { died.push({ i, sp: t.sp, lost: Math.floor(t.bank || 0) }); p.dead = { sp: t.sp, w: t.w, at: now }; p.tree = null; } }); return died; }
+function gView() {
+  const rn = performance.now(); if (GDN.view && rn - GDN.viewAt < 700) return GDN.view;
+  const now = gNow(), me = gMe(), g = JSON.parse(JSON.stringify(gRaw())), died = gTick(g, now, me);
+  GDN.view = { died, now, plots: g.plots.map((p, i) => { const mine = p.owner === me, t = p.tree; return { i, open: !!p.owner, owner: p.owner, oname: p.oname || '', mine, dead: p.dead, tree: t ? Object.assign(t, { bank: Math.floor(t.bank || 0) }) : null, st: t && mine ? tState(t, now) : null }; }) };
+  GDN.viewAt = rn; return GDN.view;
 }
 function gardenData() { return gView(); }
-const treeNeedsWater = t => !!t && t.wDay !== gToday();
-const treeDry = t => t ? (Date.now() - gBase(t)) / DAY_MS : 0;
-const treeLeftMs = t => G_DIE * DAY_MS - (Date.now() - gBase(t));
-const gLeftTxt = ms => { const h = ms / 3600000; return h >= 24 ? Math.floor(h / 24) + ' ngày ' + Math.floor(h % 24) + ' giờ' : h >= 1 ? Math.floor(h) + ' giờ' : Math.max(1, Math.ceil(ms / 60000)) + ' phút'; };
+const treeNeedsWater = t => !!t && tState(t, gNow()).thirsty;
 const gOwned = (g, me) => g.plots.filter(p => p.owner === me).length;
-const gPlotPrice = () => 800 + 400 * gOwned(gRaw(), gMe());
-const gLimit = () => gShared() ? Math.max(3, Math.floor(PLOTS.length / Math.max(2, roomMax()))) : PLOTS.length;
+const gPlotPrice = () => 400 + 150 * gOwned(gRaw(), gMe());
+const gLimit = () => gShared() ? Math.max(5, Math.floor(G_N / Math.max(2, roomMax()))) : G_N;
 async function gMut(fn) {
-  const now = Date.now();
+  const now = gNow(), me = gMe();
   if (gShared()) {
     const ref = ACC.db.collection('gardens').doc(GDN.room);
     try {
-      const r = await ACC.db.runTransaction(async tx => { const d = await tx.get(ref); const g = d.exists ? d.data() : gFresh(); const died = gTick(g, now); const res = fn(g, now); tx.set(ref, g); return { res, died }; });
+      const r = await ACC.db.runTransaction(async tx => { const d = await tx.get(ref); const g = d.exists && d.data().v === 3 ? d.data() : gFresh(); const died = gTick(g, now, me); const res = fn(g, now, me); tx.set(ref, g); return { res, died }; });
       GDN.viewAt = 0; gDiedNote(r.died); return r.res;
     } catch (e) { toast(e && e.gmsg ? e.gmsg : 'Vườn chưa đồng bộ được, thử lại sau ít giây'); if (!(e && e.gmsg)) console.error(e); return null; }
   }
   const g = gLocal();
-  try { const died = gTick(g, now); const res = fn(g, now); gDiedNote(died); save(); GDN.viewAt = 0; return res; }
+  try { const died = gTick(g, now, me); const res = fn(g, now, me); gDiedNote(died); save(); GDN.viewAt = 0; return res; }
   catch (e) { if (e && e.gmsg) { toast(e.gmsg); return null; } throw e; }
 }
-function gDiedNote(died) {
-  if (!died || !died.length) return; const me = gMe(), mine = died.filter(d => d.owner === me), other = died.filter(d => d.owner !== me);
-  if (mine.length) { S.treeDead = (S.treeDead || 0) + mine.length; notePop('CÂY ĐÃ CHẾT', `${mine.length} cây héo khô vì ${G_DIE} ngày không ai tưới`, mine.map(d => `${TREE_SP[d.sp].name} ô ${d.i + 1}` + (d.lost ? ` (mất ${fmt(d.lost)} chip)` : '')).join(' · '), '#ff6a5a'); save(); }
-  if (other.length) toast(`Cây của ${other[0].oname || pName()} đã chết vì không ai tưới`);
+function gDiedNote(died, where) {
+  if (!died || !died.length) return; S.treeDead = (S.treeDead || 0) + died.length;
+  notePop('CÂY ĐÃ CHẾT', `${died.length} cây héo khô vì lâu không tưới`, died.map(d => `${TREE_SP[d.sp].name} ${where || 'ô ' + (d.i + 1)}` + (d.lost ? ` (mất ${fmt(d.lost)} chip)` : '')).join(' · ') + ' · nhổ bỏ rồi gieo cây mới', '#ff6a5a'); save();
 }
-// ----- thao tác -----
+// ---------- hạt giống ----------
+const seedN = sp => (S.seeds && S.seeds[sp]) || 0;
+function buySeed(sp, n) { n = n || 1; const s = TREE_SP[sp], cost = TEST_MODE ? 0 : s.price * n; if (S.chips < cost) { toast('Không đủ chip'); return false; } S.chips -= cost; S.seeds = S.seeds || {}; S.seeds[sp] = seedN(sp) + n; refreshHUD(); save(); toast(`Đã mua ${n} hạt ${s.name}${cost ? ' · −' + fmt(cost) + ' chip' : ''}`); return true; }
+function useSeed(sp) { if (seedN(sp) < 1 && !buySeed(sp, 1)) return false; S.seeds[sp] -= 1; return true; }
+// ---------- thao tác ô vườn ----------
 async function gBuyPlot(i) {
   const price = TEST_MODE ? 0 : gPlotPrice(); if (S.chips < price) { toast('Không đủ chip'); return; }
-  const me = gMe(), lim = gLimit();
-  const ok = await gMut(g => { const p = g.plots[i]; if (p.owner) throw gErr('Ô này vừa có người mua rồi'); if (gOwned(g, me) >= lim) throw gErr(`Mỗi người giữ tối đa ${lim} ô trong vườn chung`); p.owner = me; p.oname = S.name || ''; p.dead = null; return true; });
+  const lim = gLimit();
+  const ok = await gMut((g, now, me) => { const p = g.plots[i]; if (p.owner) throw gErr('Ô này đã có chủ'); if (gOwned(g, me) >= lim) throw gErr(`Mỗi người giữ tối đa ${lim} ô trong vườn chung`); p.owner = me; p.oname = S.name || ''; p.dead = null; return true; });
   if (ok) { S.chips -= price; refreshHUD(); save(); toast(`Đã mua ô đất ${i + 1}${price ? ' · −' + fmt(price) + ' chip' : ''}`); gAfter(); }
 }
 async function gPlant(i, sp) {
-  const s = TREE_SP[sp], price = TEST_MODE ? 0 : s.price; if (S.chips < price) { toast('Không đủ chip'); return; }
-  const me = gMe();
-  const ok = await gMut((g, now) => { const p = g.plots[i]; if (p.owner !== me) throw gErr('Đây không phải ô của bạn'); if (p.tree) throw gErr('Ô đã có cây'); p.dead = null; p.tree = { sp, w: 0, since: now, lastW: 0, wDay: '', lastAcc: now, bank: 0, gifts: [], pend: [] }; return true; });
-  if (ok) { S.chips -= price; refreshHUD(); save(); toast('Đã gieo ' + s.name + '! Nhớ tưới mỗi ngày.'); gAfter(); }
-}
-function gWaterOne(p, now, me) {
-  const t = p.tree; if (!t || t.wDay === gToday()) return null;
-  t.lastW = now; t.wDay = gToday(); t.w = (t.w || 0) + 1; t.gifts = t.gifts || []; t.pend = t.pend || [];
-  G_MILES.forEach(([d]) => { if (t.w >= d && !t.gifts.includes(d)) { t.gifts.push(d); t.pend.push(d); } });
-  return { help: p.owner !== me, sp: t.sp, oname: p.oname, owner: p.owner };
+  if (seedN(sp) < 1 && !buySeed(sp, 1)) return;
+  const ok = await gMut((g, now, me) => { const p = g.plots[i]; if (p.owner !== me) throw gErr('Đây không phải ô của bạn'); if (p.tree) throw gErr('Ô đã có cây'); if (p.dead) throw gErr('Nhổ bỏ cây chết trước đã'); p.tree = gNewTree(sp, now); return true; });
+  if (ok) { S.seeds[sp] -= 1; save(); toast(`Đã gieo ${TREE_SP[sp].name} · tưới ngay nhé`); gAfter(); }
 }
 async function gWater(i) {
-  const me = gMe();
-  const r = await gMut((g, now) => { const p = g.plots[i]; if (!p.tree) throw gErr('Ô này chưa có cây'); const x = gWaterOne(p, now, me); if (!x) throw gErr('Hôm nay cây đã được tưới rồi'); return x; });
-  if (!r) return;
-  GDN.splash = { i, at: performance.now() };
-  if (r.help) gHelped(1, [r]); else toast('Tưới cây xong · cây vui lắm');
+  const r = await gMut((g, now, me) => { const p = g.plots[i]; if (p.owner !== me) throw gErr('Chỉ chủ cây mới được tưới'); if (!p.tree) throw gErr('Ô này chưa có cây'); const st = tState(p.tree, now); if (!st.can) throw gErr(`Đất còn ẩm · tưới lại sau ${gmTxt(st.okAt - now)} trong game`); return { g: treeWater(p.tree, now), sp: p.tree.sp }; });
+  if (!r) return; GDN.splash = { i, at: performance.now() };
+  toast(r.g >= 2 ? `Tưới giờ mát · ${TREE_SP[r.sp].name} lớn nhanh gấp đôi` : gHourK() < 1 ? 'Đã tưới · trời nắng gắt, tưới sáng sớm hoặc chiều mát cây lớn nhanh hơn' : 'Tưới cây xong · cây vui lắm');
   gAfter();
 }
-function gHelped(n, list) {
-  const d = duoData(); d.helpW = (d.helpW || 0) + n;
-  toast(`Đã tưới hộ ${list.map(x => TREE_SP[x.sp].name).join(', ')} cho ${list[0].oname || pName()} ♥`);
-  { const by = {}; list.forEach(x => { (by[x.owner] = by[x.owner] || []).push(x); }); Object.keys(by).forEach(o => duoSendTo(o, { t: 'gw', n: by[o].length, sp: by[o][0].sp })); }
-  if (d.helpW >= 10 && !(S.titles || []).includes('Người tưới hộ')) { S.titles = [...(S.titles || []), 'Người tưới hộ']; S.chips += 300; refreshHUD(); notePop('DANH HIỆU MỚI', 'Người tưới hộ', 'Tưới hộ người yêu 10 lần · +300 chip', '#7fd69a'); }
-  save();
-}
 async function gHarvest(i, silent) {
-  const me = gMe();
-  const v = await gMut(g => { const p = g.plots[i]; if (p.owner !== me) throw gErr('Chỉ chủ ô mới được thu hoạch'); const t = p.tree; if (!t) return 0; const v = Math.floor(t.bank || 0); t.bank = (t.bank || 0) - v; return v; });
+  const v = await gMut((g, now, me) => { const p = g.plots[i]; if (p.owner !== me) throw gErr('Chỉ chủ cây mới được thu hoạch'); const t = p.tree; if (!t) return 0; const v = Math.floor(t.bank || 0); t.bank = (t.bank || 0) - v; return v; });
   if (v) { S.chips += v; refreshHUD(); save(); if (!silent) toast(`Thu hoạch +${v} chip`); }
   gAfter(); return v || 0;
 }
-async function gClear(i) { const me = gMe(); const ok = await gMut(g => { const p = g.plots[i]; if (p.owner !== me) throw gErr('Chỉ chủ ô mới dọn được'); p.dead = null; return true; }); if (ok) { toast('Đã dọn ô đất, sẵn sàng trồng cây mới'); gAfter(); } }
+async function gClear(i) {
+  const ok = await gMut((g, now, me) => { const p = g.plots[i]; if (p.owner !== me) throw gErr('Chỉ chủ ô mới nhổ được'); if (p.tree) { S.chips += Math.floor(p.tree.bank || 0); } p.tree = null; p.dead = null; return true; });
+  if (ok) { refreshHUD(); save(); toast('Đã nhổ bỏ · ô đất sẵn sàng gieo hạt mới'); gAfter(); }
+}
 async function waterAll() {
-  const me = gMe();
-  const r = await gMut((g, now) => { const out = []; g.plots.forEach(p => { if (p.tree && (p.owner === me || gShared())) { const x = gWaterOne(p, now, me); if (x) out.push(x); } }); return out; });
-  if (!r || !r.length) { if (r) toast('Hôm nay cả vườn đã được tưới'); return; }
-  const help = r.filter(x => x.help); if (help.length) gHelped(help.length, help);
-  toast(`Đã tưới ${r.length} cây`); gAfter();
+  const r = await gMut((g, now, me) => { let n = 0; g.plots.forEach(p => { if (p.owner === me && p.tree && tState(p.tree, now).can && treeWater(p.tree, now)) n++; }); return n; });
+  const n2 = potWaterAll(); const n = (r || 0) + n2;
+  toast(n ? `Đã tưới ${n} cây${gHourK() >= 2 ? ' · giờ mát, cây lớn gấp đôi' : ''}` : 'Chưa cây nào cần tưới · đất còn ẩm'); gAfter();
 }
 async function harvestAll() {
-  const me = gMe();
-  const v = await gMut(g => { let s = 0; g.plots.forEach(p => { if (p.owner === me && p.tree) { const v = Math.floor(p.tree.bank || 0); p.tree.bank -= v; s += v; } }); return s; });
-  if (v) { S.chips += v; refreshHUD(); save(); toast(`Thu hoạch cả vườn +${v} chip`); } else if (v === 0) toast('Chưa có chip để thu');
+  const v = await gMut((g, now, me) => { let s = 0; g.plots.forEach(p => { if (p.owner === me && p.tree) { const v = Math.floor(p.tree.bank || 0); p.tree.bank -= v; s += v; } }); return s; });
+  const v2 = potHarvestAll(), sum = (v || 0) + v2;
+  if (sum) { S.chips += v || 0; refreshHUD(); save(); toast(`Thu hoạch +${fmt(sum)} chip`); } else toast('Chưa có chip để thu');
   gAfter();
 }
-async function gClaim() { // nhận thưởng mốc cây (kể cả khi người kia tưới hộ chạm mốc)
-  const me = gMe(), raw = gRaw(); if (!raw.plots.some(p => p.owner === me && p.tree && p.tree.pend && p.tree.pend.length)) return;
-  const got = await gMut(g => { const out = []; g.plots.forEach(p => { if (p.owner === me && p.tree && p.tree.pend && p.tree.pend.length) { p.tree.pend.forEach(d => out.push([d, p.tree.sp])); p.tree.pend = []; } }); return out; });
-  (got || []).forEach(([d, sp]) => {
+function gReward(list) {
+  list.forEach(([d, sp]) => {
     if (d === 4) { S.chips += 300; toast(`${TREE_SP[sp].name} ra hoa lần đầu! +300 chip`); }
     if (d === 10) { S.mementos = [...(S.mementos || []), { name: 'Cành hoa ép khô', from: 'Vườn trên mây', day: S.day }]; S.treeBloom30 = true; toast('Cây nở rộ! Nhận kỷ vật "Cành hoa ép khô"'); }
     if (d === 30 && !(S.titles || []).includes('Người làm vườn')) { S.titles = [...(S.titles || []), 'Người làm vườn']; toast('Cây thành đại thụ! Danh hiệu "Người làm vườn"'); }
   });
-  if (got && got.length) { refreshHUD(); save(); achCheck(); }
+  if (list.length) { refreshHUD(); save(); achCheck(); }
 }
-function gAfter() { GDN.viewAt = 0; gardenBadge(); achCheck(); if (!document.getElementById('treeModal').hidden) renderTree(); setTimeout(gClaim, 300); }
-function gardenDayTick() { } // vườn giờ tính theo ngày thật
-function gardenStatus() { const v = gView(); let water = 0, coins = 0, trees = 0, risk = 0; v.plots.forEach(p => { if (!p.tree) return; if (p.mine) { trees++; coins += p.tree.bank || 0; if (treeNeedsWater(p.tree)) water++; } if (treeLeftMs(p.tree) < 1.5 * DAY_MS) risk++; }); return { water, coins, trees, risk }; }
-function gardenRisk() { let m = Infinity; gView().plots.forEach(p => { if (p.tree && p.mine) m = Math.min(m, treeLeftMs(p.tree)); }); return m < 1.5 * DAY_MS ? m : 0; }
-function gardenBadge() { const b = document.getElementById('gardenBtn'); if (!b) return; const st = gardenStatus(); b.hidden = false; const bd = document.getElementById('gardenBadge'); bd.hidden = !st.water && !st.coins; const rk = gardenRisk(); bd.textContent = rk ? '!' : st.water ? st.water : '$'; b.classList.toggle('need', st.water > 0 || !!rk); }
+async function gClaim() {
+  const me = gMe(), raw = gRaw(); if (GDN.claiming || !raw.plots.some(p => p.owner === me && p.tree && p.tree.pend && p.tree.pend.length)) return;
+  GDN.claiming = true; const got = await gMut((g, now, me2) => { const out = []; g.plots.forEach(p => { if (p.owner === me2 && p.tree && p.tree.pend && p.tree.pend.length) { p.tree.pend.forEach(d => out.push([d, p.tree.sp])); p.tree.pend = []; } }); return out; });
+  GDN.claiming = false; gReward(got || []);
+}
+// ---------- chậu cây trong phòng ----------
+const POT_KINDS = { pot_clay: { name: 'Chậu đất nung trồng cây', price: 250, k: 1, col: '#b8673a' }, pot_wood: { name: 'Bồn gỗ trồng cây', price: 500, k: 1.05, col: '#8a5a32' }, pot_blue: { name: 'Chậu sứ men lam', price: 900, k: 1.1, col: '#2e6fa8' }, pot_gold: { name: 'Chậu sứ viền vàng', price: 2600, k: 1.25, col: '#f4f1ea', rim: '#d9a441' } };
+function potList() { return (S.furnInv || []).filter(f => POT_KINDS[f.id]).map(f => { const room = Object.keys(S.rooms || {}).find(no => (S.rooms[no].items || []).some(q => q.uid === f.uid)); return { uid: f.uid, id: f.id, kind: POT_KINDS[f.id], room, d: potData(f.uid) }; }); }
+function potData(uid) { S.pots = S.pots || {}; return S.pots[uid] || (S.pots[uid] = { tree: null, dead: null }); }
+function potK(uid) { const f = (S.furnInv || []).find(x => x.uid === uid); return f && POT_KINDS[f.id] ? POT_KINDS[f.id].k : 1; }
+function potTickAll() { const now = gNow(), died = []; potList().forEach(p => { const t = p.d.tree; if (t && treeTick(t, now, p.kind.k)) { died.push({ i: 0, sp: t.sp, lost: Math.floor(t.bank || 0), uid: p.uid }); p.d.dead = { sp: t.sp, w: t.w, at: now }; p.d.tree = null; } }); if (died.length) gDiedNote(died, 'trong chậu'); return died; }
+function potPlant(uid, sp) { potTickAll(); const d = potData(uid); if (d.tree) { toast('Chậu đã có cây'); return; } if (d.dead) { toast('Nhổ bỏ cây chết trước đã'); return; } if (!TREE_SP[sp].pot) { toast('Cây này quá lớn, chỉ trồng được ngoài vườn'); return; } if (!useSeed(sp)) return; d.tree = gNewTree(sp, gNow()); save(); toast(`Đã gieo ${TREE_SP[sp].name} vào chậu · tưới ngay nhé`); gAfter(); }
+function potWater(uid) { potTickAll(); const d = potData(uid), now = gNow(); if (!d.tree) { toast('Chậu chưa có cây'); return; } const st = tState(d.tree, now); if (!st.can) { toast(`Đất còn ẩm · tưới lại sau ${gmTxt(st.okAt - now)} trong game`); return; } const g = treeWater(d.tree, now); POTFX[uid] = performance.now(); save(); toast(g >= 2 ? 'Tưới giờ mát · cây lớn nhanh gấp đôi' : 'Đã tưới chậu cây'); potClaim(); gAfter(); }
+function potHarvest(uid) { potTickAll(); const d = potData(uid); if (!d.tree) return; const v = Math.floor(d.tree.bank || 0); if (!v) { toast('Chưa có chip để thu'); return; } d.tree.bank -= v; S.chips += v; refreshHUD(); save(); toast(`Thu hoạch chậu cây +${v} chip`); gAfter(); }
+function potClear(uid) { const d = potData(uid); if (d.tree) S.chips += Math.floor(d.tree.bank || 0); d.tree = null; d.dead = null; refreshHUD(); save(); toast('Đã nhổ bỏ · chậu sẵn sàng gieo hạt mới'); gAfter(); }
+function potWaterAll() { potTickAll(); const now = gNow(); let n = 0; potList().forEach(p => { if (p.d.tree && tState(p.d.tree, now).can && treeWater(p.d.tree, now)) n++; }); if (n) { save(); potClaim(); } return n; }
+function potHarvestAll() { potTickAll(); let s = 0; potList().forEach(p => { if (p.d.tree) { const v = Math.floor(p.d.tree.bank || 0); p.d.tree.bank -= v; s += v; } }); if (s) { S.chips += s; save(); } return s; }
+function potClaim() { const out = []; potList().forEach(p => { const t = p.d.tree; if (t && t.pend && t.pend.length) { t.pend.forEach(d => out.push([d, t.sp])); t.pend = []; } }); gReward(out); }
+const POTFX = {};
+function potLabel(uid) { const d = potData(uid), now = gNow(); if (d.dead) return `Nhổ bỏ ${TREE_SP[d.dead.sp].name} đã chết`; if (!d.tree) return 'Chậu trống · gieo hạt'; const st = tState(d.tree, now), nm = TREE_SP[d.tree.sp].name; return st.can ? `Tưới ${nm}${st.thirsty ? ' (đang khát)' : ''}` : d.tree.bank >= 1 ? `Thu hoạch ${nm} (+${Math.floor(d.tree.bank)})` : `Xem ${nm}`; }
+function potAct(uid) { potTickAll(); const d = potData(uid), now = gNow(); if (d.dead) { potClear(uid); return; } if (!d.tree) { openTree({ tab: 'pot', uid }); return; } const st = tState(d.tree, now); if (st.can) potWater(uid); else if (d.tree.bank >= 1) potHarvest(uid); else openTree({ tab: 'pot', uid }); }
+function potDrawPlant(c, x, y, uid, sc) {
+  const d = potData(uid), t = performance.now() / 1000;
+  if (d.dead) { drawDeadTree(c, x, y, 0.32 * (sc || 1)); return; }
+  if (!d.tree) return; const sp = TREE_SP[d.tree.sp];
+  drawTree(c, x, y, { sp: d.tree.sp, days: gDraw(d.tree.w) }, t, (sp.form === 'tree' ? 0.38 : 0.62) * (sc || 1));
+  const st = tState(d.tree, gNow()), b = Math.sin(t * 4 + uid) * 2;
+  if (st.thirsty) { c.font = '700 12px sans-serif'; c.textAlign = 'center'; c.fillText('💧', x + 16, y - 40 + b); }
+  if (d.tree.bank >= 1) { c.fillStyle = '#ffd36a'; c.strokeStyle = '#6a4a10'; c.lineWidth = 1.2; c.beginPath(); c.arc(x - 16, y - 40 + b, 6, 0, 7); c.fill(); c.stroke(); c.fillStyle = '#6a4a10'; c.font = '800 8px sans-serif'; c.textAlign = 'center'; c.fillText('$', x - 16, y - 37.5 + b); }
+  const fx = POTFX[uid]; if (fx && performance.now() - fx < 1100) { const k = (performance.now() - fx) / 1100; c.fillStyle = `rgba(120,200,255,${1 - k})`; for (let i = 0; i < 8; i++) { c.beginPath(); c.arc(x - 12 + (i * 37) % 24, y - 46 + k * 40 + (i * 23) % 12, 2, 0, 7); c.fill(); } }
+}
+// ---------- vẽ các dáng cây ----------
+{ const base = drawTree; drawTree = function (c, x, y, tr, t, scale = 1) {
+  if (!tr) return base(c, x, y, tr, t, scale); const sp = TREE_SP[tr.sp] || TREE_SP.sakura, st = treeStage(tr.days);
+  if (!sp.form || sp.form === 'tree' || st === 0) { base(c, x, y, tr, t, scale); if (sp.fruit && st >= 3) { const H = [0, 40, 70, 110, 140, 170][st] * scale, R = [0, 16, 28, 44, 56, 70][st] * scale, n = st >= 5 ? 16 : st >= 4 ? 10 : 5, sw = Math.sin(t * 1.2) * 2 * scale; for (let i = 0; i < n; i++) { const a = i * 2.39996 + 0.7, r = R * 0.8 * Math.sqrt((i + 0.5) / n); c.fillStyle = sp.fruit; c.beginPath(); c.arc(x + Math.cos(a) * r + sw, y - H + Math.sin(a) * r * 0.7 + R * 0.1, 4.2 * scale, 0, 7); c.fill(); c.fillStyle = 'rgba(255,255,255,.4)'; c.beginPath(); c.arc(x + Math.cos(a) * r + sw - 1.2 * scale, y - H + Math.sin(a) * r * 0.7 + R * 0.1 - 1.2 * scale, 1.3 * scale, 0, 7); c.fill(); } } return; }
+  const s = scale * 1.9, sw = Math.sin(t * 1.4 + x * 0.05) * 1.6 * s, lf = sp.leaf, dk = psh(lf, -18), lt = psh(lf, 16);
+  c.save(); c.lineCap = 'round';
+  if (sp.form === 'flower') {
+    const n = sp.orchid ? 1 : [0, 1, 2, 3, 4, 5][st], hg = (sp.tall ? [0, 26, 40, 54, 66, 74] : [0, 18, 26, 34, 40, 44])[st] * s;
+    for (let k = 0; k < n; k++) {
+      const dx = (k - (n - 1) / 2) * 7 * s, hk = hg * (0.82 + 0.18 * (((k * 37) % 5) / 4)), tx = x + dx * 1.3 + sw * (1 + (k % 2) * 0.4), ty = y - hk;
+      c.strokeStyle = dk; c.lineWidth = Math.max(1, (sp.tall ? 2.4 : 1.6) * s); c.beginPath(); c.moveTo(x + dx * 0.5, y - 2); c.quadraticCurveTo(x + dx, y - hk * 0.5, tx, ty); c.stroke();
+      c.fillStyle = k % 2 ? lf : lt; [[0.35, -1], [0.55, 1]].forEach(([u, sd]) => { const lx = x + dx * (0.5 + u * 0.5) + sw * u, ly = y - hk * u; c.beginPath(); c.ellipse(lx + sd * 4 * s, ly, (sp.tall ? 6 : 4.5) * s, 2 * s, sd * 0.5, 0, 7); c.fill(); });
+      if (st < 2) continue; const col = sp.bloom[k % 3];
+      if (st === 2) { c.fillStyle = sp.tulip || sp.orchid ? col : lt; c.beginPath(); c.ellipse(tx, ty, 2.4 * s, 3.4 * s, 0, 0, 7); c.fill(); continue; }
+      const r = (st >= 4 ? 1.2 : 1) * (sp.tall ? 6 : 4) * s;
+      if (sp.tulip) { c.fillStyle = col; c.beginPath(); c.moveTo(tx - r * 0.8, ty - r * 0.9); c.quadraticCurveTo(tx - r, ty + r * 0.6, tx, ty + r * 0.7); c.quadraticCurveTo(tx + r, ty + r * 0.6, tx + r * 0.8, ty - r * 0.9); c.lineTo(tx + r * 0.35, ty - r * 0.4); c.lineTo(tx, ty - r); c.lineTo(tx - r * 0.35, ty - r * 0.4); c.closePath(); c.fill(); c.fillStyle = 'rgba(255,255,255,.25)'; c.beginPath(); c.ellipse(tx - r * 0.3, ty, r * 0.18, r * 0.5, 0, 0, 7); c.fill(); }
+      else if (sp.orchid) { const m = st >= 4 ? 5 : 3; c.strokeStyle = dk; c.lineWidth = 1.2 * s; c.beginPath(); c.moveTo(tx, ty); c.quadraticCurveTo(tx + 12 * s, ty - 6 * s, tx + 22 * s, ty + 4 * s); c.stroke(); for (let q = 0; q < m; q++) { const u = (q + 1) / (m + 1), fx = tx + 22 * s * u, fy = ty - 6 * s * Math.sin(u * Math.PI) + 4 * s * u; c.fillStyle = sp.bloom[q % 2 ? 1 : 0]; for (let pp = 0; pp < 5; pp++) { const a = pp / 5 * 6.283; c.beginPath(); c.ellipse(fx + Math.cos(a) * 2.6 * s, fy + Math.sin(a) * 2.6 * s, 2.4 * s, 1.8 * s, a, 0, 7); c.fill(); } c.fillStyle = sp.bloom[2]; c.beginPath(); c.arc(fx, fy + 0.6 * s, 1.3 * s, 0, 7); c.fill(); } }
+      else { const np = sp.tall ? 12 : 6; for (let pp = 0; pp < np; pp++) { const a = pp / np * 6.283 + k; c.fillStyle = pp % 2 ? col : sp.bloom[(k + 1) % 3]; c.beginPath(); c.ellipse(tx + Math.cos(a) * r * 0.7, ty + Math.sin(a) * r * 0.7, r * (sp.tall ? 0.55 : 0.6), r * 0.32, a, 0, 7); c.fill(); } c.fillStyle = sp.center || psh(col, -30); c.beginPath(); c.arc(tx, ty, r * (sp.tall ? 0.5 : 0.35), 0, 7); c.fill(); }
+    }
+    if (sp.orchid && st >= 1) { c.fillStyle = lf; [[-1, 0.2], [1, 0.1], [-1, -0.1]].forEach(([sd, a], q) => { c.beginPath(); c.ellipse(x + sd * 7 * s, y - 4 * s - q * 2 * s, 8 * s, 3.2 * s, a * sd, 0, 7); c.fill(); }); }
+  } else if (sp.form === 'bush') {
+    const R = [0, 8, 13, 18, 22, 26][st] * s, cy = y - R * 0.65;
+    [[0, -0.3, 1], [-0.62, 0.05, 0.72], [0.62, 0.05, 0.74], [-0.3, -0.62, 0.62], [0.32, -0.6, 0.6]].forEach(([dx, dy, k], i) => { c.fillStyle = i % 2 ? lf : lt; c.beginPath(); c.arc(x + dx * R + sw * 0.4, cy + dy * R, R * k * 0.7, 0, 7); c.fill(); });
+    c.fillStyle = dk; c.beginPath(); c.ellipse(x, y - 1, R * 0.9, R * 0.18, 0, 0, 7); c.fill();
+    if (st >= 3) {
+      if (sp.spike) { const n = st >= 5 ? 14 : st >= 4 ? 10 : 6; for (let i = 0; i < n; i++) { const ax = x + (i - (n - 1) / 2) * R * 1.5 / n, ay = cy - R * 0.4, h = R * (0.7 + ((i * 7) % 4) * 0.12), swi = sw * 1.4; c.strokeStyle = dk; c.lineWidth = 1 * s; c.beginPath(); c.moveTo(ax, ay + R * 0.3); c.lineTo(ax + swi, ay - h); c.stroke(); for (let q = 0; q < 6; q++) { c.fillStyle = sp.bloom[q % 3]; c.beginPath(); c.ellipse(ax + swi * (0.5 + q / 12), ay - h + q * 2.2 * s, 1.5 * s, 2 * s, 0, 0, 7); c.fill(); } } }
+      else if (sp.fruit) { const n = st >= 5 ? 16 : st >= 4 ? 11 : 6; for (let i = 0; i < n; i++) { const a = i * 2.39996, r = R * 0.75 * Math.sqrt((i + 0.5) / n), fx = x + Math.cos(a) * r + sw * 0.4, fy = cy - R * 0.2 + Math.sin(a) * r * 0.75; c.fillStyle = sp.fruit; c.beginPath(); c.arc(fx, fy, 2.5 * s, 0, 7); c.fill(); c.fillStyle = 'rgba(255,255,255,.45)'; c.beginPath(); c.arc(fx - 0.8 * s, fy - 0.8 * s, 0.8 * s, 0, 7); c.fill(); } }
+      else { const n = st >= 5 ? 5 : st >= 4 ? 4 : 2; for (let i = 0; i < n; i++) { const a = i * 2.2 + 0.5, fx = x + Math.cos(a) * R * 0.55 + sw * 0.4, fy = cy - R * 0.25 + Math.sin(a) * R * 0.4, br = R * (st >= 4 ? 0.36 : 0.3), col = sp.bloom[i % 3]; c.fillStyle = col; c.beginPath(); c.arc(fx, fy, br, 0, 7); c.fill(); c.fillStyle = psh(col, 22); for (let q = 0; q < 9; q++) { const qa = q * 2.4, qr = br * 0.75 * Math.sqrt((q + 0.5) / 9); c.beginPath(); c.arc(fx + Math.cos(qa) * qr, fy + Math.sin(qa) * qr, br * 0.2, 0, 7); c.fill(); } } }
+    }
+  } else if (sp.form === 'cactus') {
+    const h = [0, 12, 18, 25, 31, 36][st] * s, w = 4.5 * s;
+    c.fillStyle = lf; roundRect(c, x - w + sw * 0.2, y - h, w * 2, h, w); c.fill(); c.strokeStyle = dk; c.lineWidth = 0.8 * s; for (let q = -1; q <= 1; q++) { c.beginPath(); c.moveTo(x + q * w * 0.5, y - h + w * 0.6); c.lineTo(x + q * w * 0.5, y - 1); c.stroke(); }
+    const arm = (sd, ay, ah) => { c.fillStyle = lt; roundRect(c, x + sd * w * 0.6 - (sd < 0 ? w * 1.6 : 0), y - ay, w * 1.6, w * 1.1, w * 0.5); c.fill(); roundRect(c, x + sd * w * 1.6 - w * 0.55, y - ay - ah, w * 1.1, ah + w * 0.6, w * 0.55); c.fill(); };
+    if (st >= 3) arm(-1, h * 0.45, h * 0.35); if (st >= 4) arm(1, h * 0.6, h * 0.3);
+    c.fillStyle = 'rgba(255,255,255,.6)'; for (let q = 0; q < 6; q++) c.fillRect(x - w + ((q * 5) % 9) * s, y - h + 4 * s + q * h / 7, 0.8 * s, 0.8 * s);
+    if (st >= 4) { c.fillStyle = sp.bloom[0]; for (let pp = 0; pp < 6; pp++) { const a = pp / 6 * 6.283; c.beginPath(); c.ellipse(x + Math.cos(a) * 2.6 * s, y - h - 1 * s + Math.sin(a) * 1.6 * s, 2.2 * s, 1.3 * s, a, 0, 7); c.fill(); } c.fillStyle = sp.bloom[2]; c.beginPath(); c.arc(x, y - h - 1 * s, 1.2 * s, 0, 7); c.fill(); }
+  } else if (sp.form === 'bamboo') {
+    const n = Math.min(5, st), hs = [0, 22, 30, 38, 46, 54];
+    for (let k = 0; k < n; k++) { const bx = x + (k - (n - 1) / 2) * 5 * s, h = hs[st] * s * (0.7 + 0.3 * ((k * 3) % 4) / 3), segs = 3 + (st >> 1); c.strokeStyle = k % 2 ? lf : lt; c.lineWidth = 3 * s; c.beginPath(); c.moveTo(bx, y - 1); c.lineTo(bx + sw * 0.5, y - h); c.stroke(); c.strokeStyle = dk; c.lineWidth = 1 * s; for (let q = 1; q < segs; q++) { const u = q / segs, nx = bx + sw * 0.5 * u, ny = y - h * u; c.beginPath(); c.moveTo(nx - 1.8 * s, ny); c.lineTo(nx + 1.8 * s, ny); c.stroke(); }
+      c.fillStyle = lt; [[-1, 0.9], [1, 0.8], [-1, 0.6]].forEach(([sd, u]) => { const lx = bx + sw * 0.5 * u, ly = y - h * u; c.beginPath(); c.ellipse(lx + sd * 4.5 * s, ly - 1.5 * s, 4.5 * s, 1.4 * s, sd * -0.5, 0, 7); c.fill(); }); }
+    if (st >= 3) { c.strokeStyle = '#d94a4a'; c.lineWidth = 1.4 * s; c.beginPath(); c.ellipse(x, y - 8 * s, n * 3 * s, 1.4 * s, 0, 0, 7); c.stroke(); }
+  } else if (sp.form === 'bonsai') {
+    const h = [0, 12, 17, 22, 26, 30][st] * s;
+    c.strokeStyle = '#5a3a22'; c.lineWidth = (2 + st * 0.6) * s; c.beginPath(); c.moveTo(x, y - 1); c.bezierCurveTo(x - 9 * s, y - h * 0.35, x + 9 * s, y - h * 0.6, x - 2 * s + sw * 0.3, y - h); c.stroke();
+    c.lineWidth = 1.6 * s; c.beginPath(); c.moveTo(x + 2 * s, y - h * 0.55); c.quadraticCurveTo(x + 10 * s, y - h * 0.6, x + 15 * s + sw * 0.3, y - h * 0.7); c.stroke();
+    const pads = [[-2, -h, 9], [14, -h * 0.72, 7], [-11, -h * 0.55, 6.5], [6, -h * 1.12, 5.5]].slice(0, 1 + st);
+    pads.forEach(([dx, dy, r], i) => { r *= s * (0.7 + st * 0.06); c.fillStyle = dk; c.beginPath(); c.ellipse(x + dx * s * 0.9 + sw * 0.3, y + dy + 1.2 * s, r, r * 0.42, 0, 0, 7); c.fill(); c.fillStyle = i % 2 ? lf : lt; c.beginPath(); c.ellipse(x + dx * s * 0.9 + sw * 0.3, y + dy, r * 0.9, r * 0.36, 0, 0, 7); c.fill(); });
+  }
+  if (st >= 5) { c.globalCompositeOperation = 'lighter'; const g = c.createRadialGradient(x, y - 20 * s, 2, x, y - 20 * s, 30 * s); g.addColorStop(0, 'rgba(255,230,160,.22)'); g.addColorStop(1, 'rgba(255,230,160,0)'); c.fillStyle = g; c.beginPath(); c.arc(x, y - 20 * s, 30 * s, 0, 7); c.fill(); }
+  c.restore();
+}; }
+// ---------- trạng thái chung · nhắc tưới ----------
+function gardenStatus() { const v = gView(), now = gNow(); let water = 0, coins = 0, trees = 0, risk = 0; v.plots.forEach(p => { if (!p.tree || !p.mine) return; trees++; coins += p.tree.bank || 0; if (p.st.thirsty) water++; if (p.st.dying) risk++; }); potList().forEach(p => { const t = p.d.tree; if (!t) return; trees++; coins += Math.floor(t.bank || 0); const st = tState(t, now); if (st.thirsty) water++; if (st.dying) risk++; }); return { water, coins: Math.floor(coins), trees, risk }; }
+function gardenRisk() { return gardenStatus().risk; }
+function gardenBadge() { const b = document.getElementById('gardenBtn'); if (!b) return; let st; try { st = gardenStatus(); } catch (e) { return; } b.hidden = false; const bd = document.getElementById('gardenBadge'); bd.hidden = !st.water && !st.coins; bd.textContent = st.risk ? '!' : st.water ? st.water : '$'; b.classList.toggle('need', st.water > 0 || !!st.risk); }
 function gWarn() {
-  const now = Date.now(); gView().plots.forEach(p => {
-    const t = p.tree; if (!t) return; const left = treeLeftMs(t), k = p.i + ':' + gBase(t);
-    if (left > 1.5 * DAY_MS || (GDN.warned[k] && now - GDN.warned[k] < 6 * 3600000)) return; GDN.warned[k] = now;
-    if (p.mine) notePop(left < DAY_MS / 2 ? 'KHẨN · VƯỜN TRÊN MÂY' : 'NHẮC TƯỚI CÂY', `${TREE_SP[t.sp].name} ô ${p.i + 1} còn ${gLeftTxt(left)} sẽ chết`, 'Tưới ngay để giữ cây và số chip đang tích', left < DAY_MS / 2 ? '#ff6a5a' : '#7ac8ff');
-    else toast(`Cây ${TREE_SP[t.sp].name} của ${p.oname || pName()} còn ${gLeftTxt(left)} sẽ chết · tưới hộ nhé`);
-  });
+  const now = gNow(), list = []; gView().plots.forEach(p => { if (p.tree && p.mine) list.push({ t: p.tree, where: `ô ${p.i + 1}` }); }); potList().forEach(p => { if (p.d.tree) list.push({ t: p.d.tree, where: p.room ? `chậu phòng ${p.room}` : 'chậu trong kho' }); });
+  list.forEach(({ t, where }) => { const st = tState(t, now); if (!st.dying) return; const k = where + ':' + t.lastW; if (GDN.warned[k]) return; GDN.warned[k] = 1; notePop('CÂY SẮP CHẾT', `${TREE_SP[t.sp].name} ${where} còn ${gmTxt(st.dieAt - now)} trong game`, `Tưới ngay (${gmReal(st.dieAt - now)}) · cây chết phải nhổ bỏ và gieo lại`, '#ff6a5a'); });
 }
-// ----- vườn chung theo phòng (Firebase) -----
+function gardenDayTick() { }
+function gAfter() { GDN.viewAt = 0; gardenBadge(); achCheck(); const m = document.getElementById('treeModal'); if (m && !m.hidden) renderTree(); setTimeout(gClaim, 300); }
+// ---------- vườn chung theo phòng (Firebase) ----------
 function gSubscribe(room) {
   if (GDN.unsub) { try { GDN.unsub(); } catch (e) { } } GDN.unsub = null; GDN.ready = false; GDN.doc = null; GDN.room = room; GDN.viewAt = 0;
   if (!room) { gAfter(); return; }
   const ref = ACC.db.collection('gardens').doc(room);
   GDN.unsub = ref.onSnapshot(d => {
-    if (!d.exists) { ACC.db.runTransaction(async tx => { const x = await tx.get(ref); if (!x.exists) tx.set(ref, gFresh()); }).catch(() => { }); return; }
+    if (!d.exists || d.data().v !== 3) { // vườn cũ → làm lại 30 ô, hoàn tiền + hạt cho từng chủ
+      ACC.db.runTransaction(async tx => { const x = await tx.get(ref); if (x.exists && x.data().v === 3) return; const old = x.exists ? x.data() : null, g = gFresh(); g.ref = {};
+        ((old && old.plots) || []).forEach(p => { if (!p.owner) return; const r = g.ref[p.owner] = g.ref[p.owner] || { c: 0, s: {} }; r.c += 600; if (p.tree && TREE_SP[p.tree.sp]) r.s[p.tree.sp] = (r.s[p.tree.sp] || 0) + 1; });
+        tx.set(ref, g); }).catch(() => { });
+      return;
+    }
     const first = !GDN.ready; GDN.doc = d.data(); GDN.ready = true; GDN.viewAt = 0;
-    if (first) { gMoveLocal(); setTimeout(gClaim, 500); setTimeout(gWarn, 1500); }
-    gardenBadge(); if (!document.getElementById('treeModal').hidden) renderTree(true);
+    const me = ACC.user && ACC.user.uid; if (me && GDN.doc.ref && GDN.doc.ref[me] && !GDN.refC) { GDN.refC = 1; ACC.db.runTransaction(async tx => { const x = await tx.get(ref); const g = x.data(); const r = g.ref && g.ref[me]; if (!r) return null; delete g.ref[me]; tx.set(ref, g); return r; }).then(r => { GDN.refC = 0; if (!r) return; S.chips += r.c || 0; S.seeds = S.seeds || {}; Object.entries(r.s || {}).forEach(([k, n]) => { S.seeds[k] = (S.seeds[k] || 0) + n; }); refreshHUD(); save(); notePop('VƯỜN MỚI', 'Vườn chung làm lại: 30 ô, mua từ đầu', `Hoàn ${fmt(r.c || 0)} chip cho ô đất cũ${Object.keys(r.s || {}).length ? ' · cây cũ đổi thành hạt giống' : ''}`, '#9ae0b0'); }, () => { GDN.refC = 0; }); }
+    if (first) { setTimeout(gClaim, 500); setTimeout(gWarn, 1500); }
+    gardenBadge(); const m = document.getElementById('treeModal'); if (m && !m.hidden) renderTree(true);
   }, e => { console.error(e); toast('Chưa mở được vườn chung · kiểm tra luật bảo mật Firebase'); });
 }
-async function gMoveLocal() { // chuyển vườn riêng cũ vào vườn chung một lần
-  const loc = gLocal(); if (GDN.moving || loc.moved === GDN.room) return;
-  const mine = loc.plots.filter(p => p.owner === 'me'); if (!mine.length) { loc.moved = GDN.room; save(); return; }
-  GDN.moving = true; const me = ACC.user.uid;
-  const left = await gMut(g => { let left = 0; mine.forEach(lp => { const fr = g.plots.find(p => !p.owner); if (!fr || gOwned(g, me) >= gLimit()) { left++; return; } fr.owner = me; fr.oname = S.name || ''; fr.tree = lp.tree ? JSON.parse(JSON.stringify(lp.tree)) : null; fr.dead = null; }); return left; });
-  GDN.moving = false; if (left == null) return;
-  loc.moved = GDN.room; loc.plots = gFresh().plots;
-  if (left) { S.chips += left * 1500; refreshHUD(); }
-  save(); notePop('VƯỜN CHUNG', 'Đã chuyển vườn của bạn vào vườn chung', left ? `${left} ô không còn chỗ nên được hoàn ${fmt(left * 1500)} chip` : 'Cây của ai người đó tưới và thu tiền · người kia được tưới hộ', '#9ae0b0');
-}
 setInterval(() => { try { const room = gRoom(); if (room !== GDN.room) gSubscribe(room); } catch (e) { } }, 3000);
-setInterval(() => { try { if (gView().died.length) gMut(() => true).then(gAfter); gWarn(); gardenBadge(); } catch (e) { } }, 60000);
-{ const _r = duoRecv; duoRecv = function (m) { if (m && m.t === 'gw') { toast(`💧 ${pName(m.fr)} vừa tưới hộ ${m.n > 1 ? m.n + ' cây' : TREE_SP[m.sp] ? TREE_SP[m.sp].name : 'cây'} của bạn`); GDN.viewAt = 0; return; } return _r(m); }; }
-(() => { const a = ACH.find(x => x.id === 35); if (a) { a.how = 'Một cây được tưới đủ 10 ngày và nở rộ'; a.prog = () => [S.treeBloom30 ? 10 : Math.min(10, Math.max(0, ...gView().plots.filter(p => p.mine && p.tree).map(p => p.tree.w))), 10]; } })();
-// ----- bảng vườn -----
+setInterval(() => { try { if (gView().died.length) gMut(() => true).then(gAfter); potTickAll(); gWarn(); gardenBadge(); } catch (e) { } }, 5000);
+(() => { const a = ACH.find(x => x.id === 35); if (a) { a.how = 'Một cây được tưới đủ 10 lần và nở rộ'; a.prog = () => [S.treeBloom30 ? 10 : Math.min(10, Math.max(0, ...gView().plots.filter(p => p.mine && p.tree).map(p => p.tree.w), ...potList().map(p => p.d.tree ? p.d.tree.w : 0))), 10]; } })();
+// ---------- hạt giống trong Cửa hàng nội thất ----------
+FCATS.push(['seed', 'Hạt giống']);
+{ const base = renderDecor; renderDecor = function () { base(); if (DECOR.src !== 'shop' || DECOR.cat !== 'seed' || DECOR.q.trim()) return; const box = document.getElementById('decorInv');
+  box.innerHTML = Object.entries(TREE_SP).map(([k, s]) => `<button type="button" class="dinv" data-seed="${k}" title="${s.name} · ${s.pot ? 'trồng chậu hoặc vườn' : 'chỉ trồng vườn'}"><canvas width="120" height="120"></canvas><span>Hạt ${s.name}</span><span class="dprice">${fmt(s.price)} chip · có ${seedN(k)}</span></button>`).join('');
+  box.querySelectorAll('[data-seed]').forEach(b => { const sp = b.dataset.seed, c = b.querySelector('canvas').getContext('2d'); drawTree(c, 60, 112, { sp, days: 100 }, 0, TREE_SP[sp].form === 'tree' ? 0.5 : 0.8); b.addEventListener('click', () => { if (buySeed(sp, 1)) { const sl = box.scrollLeft; renderDecor(); box.scrollLeft = sl; } }); });
+  document.getElementById('decorHint').textContent = 'Hạt giống vào túi · gieo ở Vườn trên mây (Sân thượng) hoặc trong chậu cây. Xem ở nút Cây trên cùng.'; }; }
+// ---------- TRANG CÂY: vườn · chậu · hạt giống · cẩm nang ----------
+const PG = { tab: 'garden', pot: null };
 let gardenSel = 0, gardenRaf = 0;
-function openTree(i) { const m = document.getElementById('treeModal'); m.hidden = false; promptEl.hidden = true; if (typeof i === 'number') gardenSel = i; GDN.viewAt = 0; renderTree(); gClaim(); cancelAnimationFrame(gardenRaf); const lp = () => { if (m.hidden) return; drawGardenThumbs(); gardenRaf = requestAnimationFrame(lp); }; gardenRaf = requestAnimationFrame(lp); }
-const G_MINE = '#ffd36a', G_THEIRS = '#ff8fc8';
+function openTree(i) {
+  const m = document.getElementById('treeModal'); m.hidden = false; promptEl.hidden = true;
+  if (typeof i === 'number') { gardenSel = i; PG.tab = 'garden'; } else if (i && i.tab) { PG.tab = i.tab; if (i.uid) PG.pot = i.uid; }
+  GDN.viewAt = 0; potTickAll(); renderTree(); gClaim(); potClaim(); cancelAnimationFrame(gardenRaf);
+  const lp = () => { if (m.hidden) return; drawGardenThumbs(); gardenRaf = requestAnimationFrame(lp); }; gardenRaf = requestAnimationFrame(lp);
+}
+const G_MINE = '#ffd36a', G_THEIRS = '#ff8fc8', STG = ['Mầm non', 'Cây con', 'Cây nhỡ', 'Ra hoa', 'Nở rộ', 'Đại thụ'];
+function drawBed(c, w, h, soil) { const gg = c.createLinearGradient(0, 0, 0, h); gg.addColorStop(0, '#1e1a3a'); gg.addColorStop(1, '#3a2a4a'); c.fillStyle = gg; c.fillRect(0, 0, w, h); if (soil) { c.fillStyle = '#4a2e1a'; c.beginPath(); c.ellipse(w / 2, h - 14, w * 0.37, 10, 0, 0, 7); c.fill(); } }
+function drawPotThumb(c, w, h, kind) { const x = w / 2, y = h - 6; c.fillStyle = kind.col; c.beginPath(); c.moveTo(x - 22, y - 30); c.lineTo(x + 22, y - 30); c.lineTo(x + 15, y); c.lineTo(x - 15, y); c.closePath(); c.fill(); c.fillStyle = kind.rim || psh(kind.col, -20); c.fillRect(x - 24, y - 34, 48, 6); c.fillStyle = '#3a2414'; c.beginPath(); c.ellipse(x, y - 33, 20, 3, 0, 0, 7); c.fill(); return y - 32; }
 function drawGardenThumbs() {
-  const t = performance.now() / 1000, v = gView();
-  document.querySelectorAll('#treeGrid canvas[data-pl]').forEach(cv5 => {
-    const p = v.plots[+cv5.dataset.pl], c = cv5.getContext('2d'); c.clearRect(0, 0, 120, 110);
-    const gg = c.createLinearGradient(0, 0, 0, 110); gg.addColorStop(0, '#1e1a3a'); gg.addColorStop(1, '#3a2a4a'); c.fillStyle = gg; c.fillRect(0, 0, 120, 110);
-    if (!p.open) { c.fillStyle = 'rgba(255,255,255,.3)'; c.font = '800 13px "Be Vietnam Pro", sans-serif'; c.textAlign = 'center'; c.fillText('ĐẤT TRỐNG', 60, 52); c.font = '700 11px "Be Vietnam Pro", sans-serif'; c.fillText('chưa có chủ', 60, 70); return; }
-    c.fillStyle = '#4a2e1a'; c.beginPath(); c.ellipse(60, 96, 44, 10, 0, 0, 7); c.fill();
-    if (!p.tree && p.dead) drawDeadTree(c, 60, 98, 0.75); else drawTree(c, 60, 98, p.tree ? { sp: p.tree.sp, days: gDraw(p.tree.w) } : null, t, 0.5);
-    c.fillStyle = p.mine ? G_MINE : G_THEIRS; c.fillRect(0, 0, 120, 4);
-    if (p.tree && p.tree.bank && p.mine) { c.fillStyle = '#ffd36a'; c.font = '800 11px "Be Vietnam Pro", sans-serif'; c.textAlign = 'center'; c.fillText('+' + p.tree.bank, 60, 18 + Math.sin(t * 3) * 2); }
-  });
-  const big = document.getElementById('treeCv'); if (big) {
-    const c = big.getContext('2d'), p = v.plots[gardenSel]; const gg = c.createLinearGradient(0, 0, 0, 260); gg.addColorStop(0, '#1a1a3a'); gg.addColorStop(1, '#3a2a4a'); c.fillStyle = gg; c.fillRect(0, 0, 320, 260);
-    c.fillStyle = '#4a2e1a'; c.beginPath(); c.ellipse(160, 228, 90, 22, 0, 0, 7); c.fill(); c.fillStyle = '#a8742f'; c.fillRect(70, 228, 180, 32);
-    if (p && !p.tree && p.dead) drawDeadTree(c, 160, 230, 1.9); else drawTree(c, 160, 230, p && p.tree ? { sp: p.tree.sp, days: gDraw(p.tree.w) } : null, t, 1.15);
-    if (p && p.open) { c.fillStyle = p.mine ? G_MINE : G_THEIRS; c.font = '800 12px "Be Vietnam Pro", sans-serif'; c.textAlign = 'center'; c.fillText(p.mine ? 'Ô CỦA BẠN' : 'Ô CỦA ' + (p.oname || pName()).toUpperCase(), 160, 250); }
-    const sp = GDN.splash; if (sp && sp.i === gardenSel && performance.now() - sp.at < 1200) { const k = (performance.now() - sp.at) / 1200; c.fillStyle = `rgba(120,200,255,${1 - k})`; for (let i = 0; i < 14; i++) { c.beginPath(); c.arc(120 + (i * 37) % 80, 40 + k * 180 + (i * 23) % 30, 2.5, 0, 7); c.fill(); } }
+  const t = performance.now() / 1000;
+  if (PG.tab === 'garden') {
+    const v = gView();
+    document.querySelectorAll('#treeGrid canvas[data-pl]').forEach(cv5 => {
+      const p = v.plots[+cv5.dataset.pl], c = cv5.getContext('2d'); c.clearRect(0, 0, 120, 110); drawBed(c, 120, 110, p.open);
+      if (!p.open) { c.fillStyle = 'rgba(255,255,255,.3)'; c.font = '800 13px "Be Vietnam Pro", sans-serif'; c.textAlign = 'center'; c.fillText('ĐẤT TRỐNG', 60, 52); c.font = '700 11px "Be Vietnam Pro", sans-serif'; c.fillText('cần mua', 60, 70); return; }
+      if (!p.tree && p.dead) drawDeadTree(c, 60, 98, 0.75); else drawTree(c, 60, 98, p.tree ? { sp: p.tree.sp, days: gDraw(p.tree.w) } : null, t, 0.5);
+      c.fillStyle = p.mine ? G_MINE : G_THEIRS; c.fillRect(0, 0, 120, 4);
+      if (p.tree && p.mine && p.tree.bank) { c.fillStyle = '#ffd36a'; c.font = '800 11px "Be Vietnam Pro", sans-serif'; c.textAlign = 'center'; c.fillText('+' + p.tree.bank, 60, 18 + Math.sin(t * 3) * 2); }
+    });
+    const big = document.getElementById('treeCv'); if (big) {
+      const c = big.getContext('2d'), p = v.plots[gardenSel]; const gg = c.createLinearGradient(0, 0, 0, 260); gg.addColorStop(0, '#1a1a3a'); gg.addColorStop(1, '#3a2a4a'); c.fillStyle = gg; c.fillRect(0, 0, 320, 260);
+      c.fillStyle = '#4a2e1a'; c.beginPath(); c.ellipse(160, 228, 90, 22, 0, 0, 7); c.fill(); c.fillStyle = '#a8742f'; c.fillRect(70, 228, 180, 32);
+      if (p && !p.tree && p.dead) drawDeadTree(c, 160, 230, 1.9); else drawTree(c, 160, 230, p && p.tree ? { sp: p.tree.sp, days: gDraw(p.tree.w) } : null, t, 1.15);
+      if (p && p.open) { c.fillStyle = p.mine ? G_MINE : G_THEIRS; c.font = '800 12px "Be Vietnam Pro", sans-serif'; c.textAlign = 'center'; c.fillText(p.mine ? 'Ô CỦA BẠN' : 'Ô CỦA ' + (p.oname || pName()).toUpperCase(), 160, 250); }
+      const sp = GDN.splash; if (sp && sp.i === gardenSel && performance.now() - sp.at < 1200) { const k = (performance.now() - sp.at) / 1200; c.fillStyle = `rgba(120,200,255,${1 - k})`; for (let i = 0; i < 14; i++) { c.beginPath(); c.arc(120 + (i * 37) % 80, 40 + k * 180 + (i * 23) % 30, 2.5, 0, 7); c.fill(); } }
+    }
   }
+  document.querySelectorAll('#treeOther canvas[data-pot]').forEach(cv5 => { const uid = +cv5.dataset.pot, f = (S.furnInv || []).find(x => x.uid === uid); if (!f) return; const c = cv5.getContext('2d'), w = cv5.width, h = cv5.height; drawBed(c, w, h); const top = drawPotThumb(c, w, h, POT_KINDS[f.id]); potDrawPlant(c, w / 2, top + 2, uid, w > 150 ? 1.6 : 1); });
+  document.querySelectorAll('#treeOther canvas[data-sp]').forEach(cv5 => { const c = cv5.getContext('2d'), w = cv5.width, h = cv5.height; drawBed(c, w, h, true); const sp = TREE_SP[cv5.dataset.sp]; drawTree(c, w / 2, h - 12, { sp: cv5.dataset.sp, days: 100 }, t, sp.form === 'tree' ? 0.42 : 0.62); });
+}
+function waterLine(st, now) {
+  if (st.dying) return `<span class="tree-warn">Sắp chết vì khát · còn ${gmTxt(st.dieAt - now)} trong game (${gmReal(st.dieAt - now)})</span>`;
+  if (st.thirsty) return `<span class="tree-warn">Cây đang khát · ngừng sinh chip khi khát lâu · chết sau ${gmTxt(st.dieAt - now)} trong game</span>`;
+  if (st.can) return `<span>Đất đã khô vừa · <b>tưới được rồi</b> · khát sau ${gmTxt(st.okAt + st.wi / 2 - now)}</span>`;
+  return `<span>Đất còn ẩm · tưới lại sau <b>${gmTxt(st.okAt - now)}</b> trong game (${gmReal(st.okAt - now)})</span>`;
+}
+function treeCard(t, now, k) {
+  const st = tState(t, now), sg = gStage(t.w), next = [1, 2, 4, 10, 30, null][sg], sp = spOf(t);
+  return `<div class="tree-stat"><b>${sp.name} · ${STG[sg]}</b><span>Đã lớn <b>${t.w}</b> điểm${next ? ` · còn ${next - t.w} nữa lên giai đoạn tiếp` : ' · đã trưởng thành'}</span>
+    <span>Tưới mỗi ~${sp.wi} giờ trong game · tưới sáng sớm (5–9h) hoặc chiều mát (16–19h) lớn gấp đôi</span>
+    <span>Thu nhập <b>${gIncDay(t, k)}</b> chip mỗi ngày trong game · đang chờ thu <b>${Math.floor(t.bank || 0)}</b></span>${waterLine(st, now)}</div>
+    <div class="tree-miles">${G_MILES.map(([d, r]) => `<div class="${t.w >= d ? 'on' : ''}"><i>${d}</i><span>${r}</span></div>`).join('')}</div>`;
+}
+function seedPick(attr, potOnly) {
+  return `<div class="tree-pick">${Object.entries(TREE_SP).filter(([, s]) => !potOnly || s.pot).map(([k, s]) => `<button type="button" class="tseed" ${attr}="${k}" ${!TEST_MODE && !seedN(k) && S.chips < s.price ? 'disabled' : ''}><b>${s.name}</b><span>${seedN(k) ? `Có ${seedN(k)} hạt · gieo ngay` : `Mua hạt ${fmt(s.price)} chip & gieo`}</span></button>`).join('')}</div>`;
 }
 function renderTree(soft) {
-  const v = gView(), st = gardenStatus(), sh = gShared(), lim = gLimit(), mineN = v.plots.filter(p => p.mine).length;
-  document.getElementById('treeSum').innerHTML = `${sh ? '<b>Vườn chung</b> · ' : ''}Bạn có <b>${mineN}</b>/${lim} ô · <b>${st.water}</b> cây cần tưới · <b>${fmt(st.coins)}</b> chip chờ thu hoạch`;
-  document.getElementById('treeGrid').innerHTML = v.plots.map((p, i) => `<button type="button" class="tplot${i === gardenSel ? ' on' : ''}${p.tree && treeNeedsWater(p.tree) ? ' thirsty' : ''}${p.tree && treeLeftMs(p.tree) < 1.5 * DAY_MS ? ' risk' : ''}${p.open ? (p.mine ? ' gmine' : ' gtheirs') : ''}" data-pl="${i}"><canvas width="120" height="110" data-pl="${i}"></canvas><span>${!p.open ? 'Đất trống' : p.tree ? TREE_SP[p.tree.sp].name : p.dead ? 'Cây đã chết' : (p.mine ? 'Ô của bạn' : 'Ô của ' + escH(p.oname || pName()))}</span>${p.tree && treeNeedsWater(p.tree) ? '<i>💧</i>' : ''}${p.tree && treeLeftMs(p.tree) < 1.5 * DAY_MS ? `<em class="tdry">còn ${gLeftTxt(treeLeftMs(p.tree))}</em>` : ''}</button>`).join('');
+  const m = document.getElementById('treeModal'); if (!m || m.hidden && soft) return;
+  document.querySelectorAll('#treeTabs [data-ptab]').forEach(b => b.setAttribute('aria-selected', b.dataset.ptab === PG.tab));
+  const gBox = document.getElementById('treeGardenBox'), oBox = document.getElementById('treeOther');
+  gBox.hidden = PG.tab !== 'garden'; oBox.hidden = PG.tab === 'garden';
+  const st0 = gardenStatus();
+  document.getElementById('treeSum').innerHTML = `Bạn đang có <b>${st0.trees}</b> cây · <b>${st0.water}</b> cây đang khát · <b>${fmt(st0.coins)}</b> chip chờ thu · túi hạt: <b>${Object.values(S.seeds || {}).reduce((a, b) => a + b, 0)}</b> hạt · giờ game <b>${String(Math.floor(S.minutes / 60)).padStart(2, '0')}:${String(Math.floor(S.minutes % 60)).padStart(2, '0')}</b>${gHourK() >= 2 ? ' · đang là giờ mát, tưới lớn gấp đôi' : ''}`;
+  if (PG.tab === 'garden') return renderGardenTab();
+  if (PG.tab === 'pot') return renderPotTab();
+  if (PG.tab === 'seed') return renderSeedTab();
+  return renderGuideTab();
+}
+function renderGardenTab() {
+  const v = gView(), sh = gShared(), lim = gLimit(), mineN = v.plots.filter(p => p.mine).length, now = v.now;
+  document.getElementById('treeGrid').innerHTML = v.plots.map((p, i) => `<button type="button" class="tplot${i === gardenSel ? ' on' : ''}${p.st && p.st.thirsty ? ' thirsty' : ''}${p.st && p.st.dying ? ' risk' : ''}${p.open ? (p.mine ? ' gmine' : ' gtheirs') : ''}" data-pl="${i}"><canvas width="120" height="110" data-pl="${i}"></canvas><span>${!p.open ? 'Ô ' + (i + 1) + ' · trống' : !p.mine ? (p.oname || pName()) : p.dead && !p.tree ? 'Cây chết' : !p.tree ? 'Ô ' + (i + 1) + ' · chưa gieo' : TREE_SP[p.tree.sp].name}</span>${p.st && p.st.can ? '<i>💧</i>' : ''}</button>`).join('');
   document.querySelectorAll('#treeGrid button[data-pl]').forEach(b => b.addEventListener('click', () => { gardenSel = +b.dataset.pl; renderTree(); }));
   const p = v.plots[gardenSel], box = document.getElementById('treeInfo'), own = p.oname || pName();
   const bind = (id, f) => { const e = document.getElementById(id); if (e) e.addEventListener('click', f); };
-  if (!p.open) {
-    const price = TEST_MODE ? 0 : gPlotPrice(), full = mineN >= lim;
-    box.innerHTML = `<div class="tree-stat"><b>Ô đất ${gardenSel + 1} · chưa có chủ</b><span>Mua ô này để trồng cây của riêng bạn. Chỉ chủ ô được trồng cây và thu tiền${sh ? ', người kia vẫn tưới hộ được' : ''}.</span><span>Giá tăng dần theo số ô bạn đang có${sh ? ` · mỗi người tối đa ${lim} ô` : ''}.</span></div><div class="tree-btns"><button class="sbtn buy" type="button" id="tBuyPlot" ${full || S.chips < price ? 'disabled' : ''}>${full ? `Bạn đã có đủ ${lim} ô` : 'Mua ô · ' + (price ? fmt(price) + ' chip' : 'miễn phí (bản thử)')}</button></div>`;
-    bind('tBuyPlot', () => gBuyPlot(gardenSel)); return;
-  }
-  if (!p.tree && p.dead) {
-    box.innerHTML = `<div class="tree-stat"><b>Ô ${gardenSel + 1} · ${TREE_SP[p.dead.sp].name} đã chết</b><span class="tree-warn">Cây héo khô vì ${G_DIE} ngày không ai tưới${p.dead.lost ? ` · mất ${fmt(p.dead.lost)} chip đang tích` : ''}.</span>${p.mine ? '' : `<span>Ô của ${escH(own)}.</span>`}</div>${p.mine ? '<div class="tree-btns"><button class="sbtn buy" type="button" id="tClear">Dọn cây héo</button></div>' : ''}`;
-    bind('tClear', () => gClear(gardenSel)); return;
-  }
-  if (!p.tree) {
-    if (!p.mine) { box.innerHTML = `<div class="tree-stat"><b>Ô ${gardenSel + 1} · của ${escH(own)}</b><span>${escH(own)} chưa trồng cây ở ô này.</span></div>`; return; }
-    box.innerHTML = `<div class="tree-stat"><b>Ô đất ${gardenSel + 1} · của bạn · đang trống</b><span>Chọn giống cây để trồng. Cây kim tiền sinh nhiều chip nhất.</span></div><div class="tree-pick">${Object.entries(TREE_SP).map(([k, s]) => `<button type="button" class="tseed" data-tsp="${k}" ${!TEST_MODE && S.chips < s.price ? 'disabled' : ''}><b>${s.name}</b><span>${TEST_MODE ? 'Miễn phí' : fmt(s.price) + ' chip'} · thu ×${s.mult}</span></button>`).join('')}</div>`;
-    box.querySelectorAll('[data-tsp]').forEach(b => b.addEventListener('click', () => gPlant(gardenSel, b.dataset.tsp))); return;
-  }
-  const t = p.tree, sg = gStage(t.w), names = ['Mầm non', 'Cây con', 'Cây nhỡ', 'Ra hoa', 'Nở rộ', 'Đại thụ'], next = [1, 2, 4, 10, 30, null][sg], inc = gInc(t), need = treeNeedsWater(t), left = treeLeftMs(t), dry = treeDry(t);
-  const nextInc = sg < 5 ? Math.round(TREE_INCOME[sg + 1] * (TREE_SP[t.sp].mult || 1) * G_K) : null;
-  box.innerHTML = `<div class="tree-stat"><b>Ô ${gardenSel + 1} · ${TREE_SP[t.sp].name} · ${names[sg]}${p.mine ? '' : ' · của ' + escH(own)}</b><span>Đã tưới <b>${t.w}</b> ngày${next ? ` · còn ${next - t.w} ngày nữa lên giai đoạn tiếp` : ' · đã trưởng thành'}</span>
-    <span>Thu nhập: <b>${inc}</b> chip mỗi ngày${nextInc ? ` · lớn lên được ${nextInc}` : ''}${p.mine ? ` · đang chờ thu <b>${t.bank || 0}</b> (giữ tối đa ${G_CAP} ngày)` : ` · tiền thuộc về ${escH(own)}`}</span>
-    <span class="${left < 1.5 * DAY_MS ? 'tree-warn' : ''}">${need ? 'Hôm nay chưa tưới' : 'Hôm nay đã tưới ✓'}${dry > G_THIRST ? ' · cây khát nên ngừng sinh chip' : ''} · ${G_DIE} ngày không ai tưới cây sẽ chết${left < 1.5 * DAY_MS ? ` · <b>còn ${gLeftTxt(left)}</b>` : ''}</span></div>
-  <div class="tree-miles">${G_MILES.map(([d, r]) => `<div class="${t.w >= d ? 'on' : ''}"><i>${d}</i><span>${r}</span></div>`).join('')}</div>
-  <div class="tree-btns"><button class="sbtn buy" type="button" id="tWater" ${need ? '' : 'disabled'}>${need ? (p.mine ? 'Tưới cây' : 'Tưới hộ ' + escH(own)) : 'Hôm nay đã tưới ✓'}</button>${p.mine ? `<button class="sbtn" type="button" id="tHarvest" ${t.bank ? '' : 'disabled'}>Thu hoạch ${t.bank ? '+' + t.bank : ''}</button>` : ''}${TEST_MODE && p.mine ? '<button class="sbtn ghost" type="button" id="tSkip">Tua 1 ngày (test)</button>' : ''}</div>`;
-  bind('tWater', () => gWater(gardenSel)); bind('tHarvest', () => gHarvest(gardenSel));
-  bind('tSkip', () => gMut(g => { const tt = g.plots[gardenSel].tree; if (!tt) return; ['since', 'lastW', 'lastAcc'].forEach(k => { if (tt[k]) tt[k] -= DAY_MS; }); tt.wDay = ''; return true; }).then(gAfter));
+  document.getElementById('treeGardenNote').textContent = `${sh ? 'Vườn chung · ' : ''}Bạn có ${mineN}/${lim} ô · ô kế tiếp giá ${fmt(gPlotPrice())} chip · chỉ chủ cây được tưới và thu hoạch`;
+  if (!p.open) { const price = TEST_MODE ? 0 : gPlotPrice(), full = mineN >= lim;
+    box.innerHTML = `<div class="tree-stat"><b>Ô đất ${gardenSel + 1} · chưa có chủ</b><span>Mua ô đất trước, rồi gieo hạt giống. Cây trên ô của bạn chỉ bạn tưới và thu hoạch được.</span><span>Giá tăng dần theo số ô bạn đang có${sh ? ` · mỗi người tối đa ${lim} ô` : ''}.</span></div><div class="tree-btns"><button class="sbtn buy" type="button" id="tBuyPlot" ${full || (!TEST_MODE && S.chips < price) ? 'disabled' : ''}>${full ? 'Đã đủ số ô tối đa' : 'Mua ô đất · ' + fmt(price) + ' chip'}</button></div>`;
+    bind('tBuyPlot', () => gBuyPlot(gardenSel)); return; }
+  if (!p.mine) { box.innerHTML = `<div class="tree-stat"><b>Ô ${gardenSel + 1} · của ${escH(own)}</b><span>${p.tree ? TREE_SP[p.tree.sp].name + ' · ' + STG[gStage(p.tree.w)] : p.dead ? 'Cây đã héo' : 'Chưa gieo cây'}</span><span>Chỉ ${escH(own)} được tưới và thu hoạch cây này.</span></div>`; return; }
+  if (!p.tree && p.dead) { box.innerHTML = `<div class="tree-stat"><b>Ô ${gardenSel + 1} · ${TREE_SP[p.dead.sp].name} đã chết</b><span class="tree-warn">Cây héo khô vì lâu không tưới. Nhổ bỏ rồi gieo hạt mới.</span></div><div class="tree-btns"><button class="sbtn buy" type="button" id="tClear">Nhổ bỏ cây chết</button></div>`; bind('tClear', () => gClear(gardenSel)); return; }
+  if (!p.tree) { box.innerHTML = `<div class="tree-stat"><b>Ô đất ${gardenSel + 1} · của bạn · đang trống</b><span>Chọn hạt giống để gieo. Hết hạt sẽ tự mua 1 hạt.</span></div>${seedPick('data-tsp')}`; box.querySelectorAll('[data-tsp]').forEach(b => b.addEventListener('click', () => gPlant(gardenSel, b.dataset.tsp))); return; }
+  const t = p.tree, st = p.st;
+  box.innerHTML = treeCard(t, now) + `<div class="tree-btns"><button class="sbtn buy" type="button" id="tWater" ${st.can ? '' : 'disabled'}>${st.can ? 'Tưới cây' : 'Đất còn ẩm'}</button><button class="sbtn" type="button" id="tHarvest" ${t.bank ? '' : 'disabled'}>Thu hoạch ${t.bank ? '+' + t.bank : ''}</button><button class="sbtn ghost" type="button" id="tClear">Nhổ bỏ</button>${TEST_MODE ? '<button class="sbtn ghost" type="button" id="tSkip">+6 giờ (test)</button>' : ''}</div>`;
+  bind('tWater', () => gWater(gardenSel)); bind('tHarvest', () => gHarvest(gardenSel)); bind('tClear', () => { if (confirmTwice('tClear')) gClear(gardenSel); });
+  bind('tSkip', () => { S.minutes += 360; if (S.minutes >= 1440) { S.minutes -= 1440; S.day++; } GDN.viewAt = 0; renderTree(); });
 }
+const confirmTwice = id => { const e = document.getElementById(id); if (e && e.dataset.ok) return true; if (e) { e.dataset.ok = 1; e.textContent = 'Bấm lần nữa để nhổ'; } return false; };
+function renderPotTab() {
+  const box = document.getElementById('treeOther'), list = potList(), now = gNow();
+  if (!PG.pot || !list.some(p => p.uid === PG.pot)) PG.pot = list.length ? list[0].uid : null;
+  const sel = list.find(p => p.uid === PG.pot);
+  const shop = `<div class="pg-shop"><b>Mua chậu</b>${Object.entries(POT_KINDS).map(([id, k]) => `<button type="button" class="tseed" data-bpot="${id}" ${!TEST_MODE && S.chips < k.price ? 'disabled' : ''}><b>${k.name}</b><span>${fmt(k.price)} chip${k.k > 1 ? ` · +${Math.round((k.k - 1) * 100)}% chip` : ''}</span></button>`).join('')}<span class="note" style="margin:0">Chậu cũng bán trong Cửa hàng nội thất (Trang trí → Cây & Hoa). Mua xong vào phòng, bấm Trang trí để đặt chậu.</span></div>`;
+  let side = '';
+  if (sel) { const d = sel.d, t = d.tree;
+    side = `<div class="pg-side"><canvas width="300" height="230" data-pot="${sel.uid}"></canvas><div class="tree-stat"><b>${sel.kind.name}</b><span>${sel.room ? 'Đặt ở phòng ' + sel.room : 'Đang cất trong kho · vào phòng bấm Trang trí để đặt'}</span></div>` +
+      (d.dead && !t ? `<div class="tree-stat"><span class="tree-warn">${TREE_SP[d.dead.sp].name} đã chết vì lâu không tưới.</span></div><div class="tree-btns"><button class="sbtn buy" type="button" id="pClear">Nhổ bỏ cây chết</button></div>` :
+        !t ? `<div class="tree-stat"><span>Chậu trống · chọn hạt giống hợp với chậu:</span></div>${seedPick('data-psp', true)}` :
+          treeCard(t, now, sel.kind.k) + `<div class="tree-btns"><button class="sbtn buy" type="button" id="pWater" ${tState(t, now).can ? '' : 'disabled'}>${tState(t, now).can ? 'Tưới cây' : 'Đất còn ẩm'}</button><button class="sbtn" type="button" id="pHarvest" ${t.bank >= 1 ? '' : 'disabled'}>Thu hoạch ${t.bank >= 1 ? '+' + Math.floor(t.bank) : ''}</button><button class="sbtn ghost" type="button" id="pClear">Nhổ bỏ</button></div>`) + '</div>'; }
+  box.innerHTML = `<div class="pg-pots"><div class="pg-list">${list.length ? list.map(p => { const t = p.d.tree, st = t ? tState(t, now) : null; return `<button type="button" class="tplot${p.uid === PG.pot ? ' on' : ''}${st && st.thirsty ? ' thirsty' : ''}${st && st.dying ? ' risk' : ''}" data-pid="${p.uid}"><canvas width="120" height="110" data-pot="${p.uid}"></canvas><span>${t ? TREE_SP[t.sp].name : p.d.dead ? 'Cây chết' : 'Chậu trống'} · ${p.room ? 'P.' + p.room : 'kho'}</span>${st && st.can ? '<i>💧</i>' : ''}</button>`; }).join('') : '<p class="note">Bạn chưa có chậu nào. Mua chậu bên dưới rồi đặt trong phòng khách sạn của bạn.</p>'}</div>${side}</div>${shop}`;
+  box.querySelectorAll('[data-pid]').forEach(b => b.addEventListener('click', () => { PG.pot = +b.dataset.pid; renderTree(); }));
+  box.querySelectorAll('[data-psp]').forEach(b => b.addEventListener('click', () => potPlant(PG.pot, b.dataset.psp)));
+  box.querySelectorAll('[data-bpot]').forEach(b => b.addEventListener('click', () => { const id = b.dataset.bpot, k = POT_KINDS[id]; if (!TEST_MODE) { if (S.chips < k.price) { toast('Không đủ chip'); return; } S.chips -= k.price; } S.furnInv.push({ uid: ++furnUid, id }); PG.pot = furnUid; refreshHUD(); save(); toast(`Đã mua ${k.name} · vào phòng bấm Trang trí để đặt`); renderTree(); }));
+  const bind = (id, f) => { const e = document.getElementById(id); if (e) e.addEventListener('click', f); };
+  bind('pWater', () => potWater(PG.pot)); bind('pHarvest', () => potHarvest(PG.pot)); bind('pClear', () => { if (!potData(PG.pot).tree || confirmTwice('pClear')) potClear(PG.pot); });
+}
+function renderSeedTab() {
+  const box = document.getElementById('treeOther'), fm = { tree: 'Cây lớn', flower: 'Hoa', bush: 'Bụi hoa', cactus: 'Xương rồng', bamboo: 'Tre', bonsai: 'Bonsai' };
+  box.innerHTML = `<div class="pg-seeds">${Object.entries(TREE_SP).map(([k, s]) => `<div class="pg-seed"><canvas width="140" height="120" data-sp="${k}"></canvas><b>${s.name}</b><span>${fm[s.form] || 'Cây'}${s.pot ? ' · trồng chậu được' : ' · chỉ trồng vườn'}</span><span>Tưới mỗi ~${s.wi} giờ game · chết sau ~${s.wi * 3} giờ khát</span><span>Thu nhập tối đa <b>${Math.round(G_INC[5] * (s.mult || 1))}</b> chip/ngày game</span><span>Trong túi: <b>${seedN(k)}</b> hạt</span><div class="tree-btns"><button class="sbtn buy" type="button" data-bs="${k}" data-n="1" ${!TEST_MODE && S.chips < s.price ? 'disabled' : ''}>Mua 1 · ${fmt(s.price)}</button><button class="sbtn" type="button" data-bs="${k}" data-n="5" ${!TEST_MODE && S.chips < s.price * 5 ? 'disabled' : ''}>Mua 5</button></div></div>`).join('')}</div>`;
+  box.querySelectorAll('[data-bs]').forEach(b => b.addEventListener('click', () => { if (buySeed(b.dataset.bs, +b.dataset.n)) renderTree(); }));
+}
+function renderGuideTab() {
+  document.getElementById('treeOther').innerHTML = `<div class="pg-guide">
+    <h3>Cách chăm cây</h3>
+    <p><b>1. Mua ô đất hoặc chậu.</b> Vườn trên mây (Sân thượng) có 30 ô, ô nào cũng phải mua. Chậu mua ở Cửa hàng nội thất hoặc tab Chậu, đặt trong phòng khách sạn của bạn.</p>
+    <p><b>2. Mua hạt giống rồi gieo.</b> Hạt bán ở tab Hạt giống và trong Cửa hàng nội thất (mục Hạt giống). Cây lớn chỉ trồng ngoài vườn, hoa và cây nhỏ trồng được trong chậu.</p>
+    <p><b>3. Tưới theo giờ trong game.</b> Mỗi loài có chu kỳ tưới riêng (đồng hồ góc trên, 1 ngày trong game = 30 phút chơi). Đất còn ẩm thì chưa tưới được. Tưới vào sáng sớm 5–9h hoặc chiều mát 16–19h cây lớn gấp đôi; tưới giữa trưa nắng vẫn được nhưng chỉ lớn bình thường.</p>
+    <p><b>4. Đừng để cây khát lâu.</b> Khát quá 1,5 chu kỳ cây ngừng sinh chip. Khát tới 3 chu kỳ cây chết, phải nhổ bỏ và gieo cây mới. Thời gian chỉ trôi khi bạn đang chơi, tắt game cây không chết.</p>
+    <p><b>5. Cây của ai người đó chăm.</b> Trong phòng chơi chung, không ai tưới hay thu hoạch được cây của người khác.</p>
+    <p><b>6. Thu hoạch.</b> Cây lớn càng cao càng nhiều chip, giữ tối đa ${G_CAPD} ngày trong game. Chậu sứ đắt tiền cho thêm chip.</p></div>`;
+}
+document.querySelectorAll('#treeTabs [data-ptab]').forEach(b => b.addEventListener('click', () => { PG.tab = b.dataset.ptab; renderTree(); }));
+
 // ----- NGẮM SAO THẬT: bầu trời theo giờ thật, đặt ở Việt Nam -----
 // [tên, RA (giờ), Dec (độ), cấp sao, màu]
 const SKY_STARS = [
@@ -12108,41 +12294,68 @@ function sfxDramaSky(c, W, H, t, hz, a) {
     sfxBlit(c, W, H, 0.25, 5, 'source-over', 1); }
   c.globalAlpha = 1; c.restore();
 }
-// khung cảnh đồi núi hoa cho cầu vồng
+// khung cảnh đồi núi hoa cho cầu vồng · vẽ kiểu tranh mềm: núi có rãnh, rừng tán tròn, hoa đỗ quyên mềm
+function sfxMeadowTex() {
+  if (SFX.mtex) return; let sd = 17; const rnd = () => (sd = (sd * 16807) % 2147483647) / 2147483647;
+  const n = document.createElement('canvas'); n.width = n.height = 256; const g = n.getContext('2d'); g.fillStyle = '#808080'; g.fillRect(0, 0, 256, 256);
+  for (let i = 0; i < 2600; i++) { const v = 70 + rnd() * 120 | 0, x = rnd() * 256, y = rnd() * 256, r = 0.6 + rnd() * 2.6; g.fillStyle = `rgba(${v},${v},${v},.55)`; for (const dx of [-256, 0, 256]) for (const dy of [-256, 0, 256]) { g.beginPath(); g.ellipse(x + dx, y + dy, r * 1.6, r, 0, 0, 7); g.fill(); } }
+  SFX.mtex = n;
+  // hoa: cụm đỗ quyên mềm (5 tông)
+  SFX.fsp = ['255,92,170', '236,70,150', '255,140,200', '206,40,110', '255,170,215'].map((col, ci) => { const cv = document.createElement('canvas'); cv.width = 64; cv.height = 52; const q = cv.getContext('2d');
+    q.fillStyle = 'rgba(40,90,40,.75)'; [[-16, 10, -0.5], [16, 12, 0.5], [0, 16, 0]].forEach(([dx, dy, a]) => { q.beginPath(); q.ellipse(32 + dx, 26 + dy, 12, 4.5, a, 0, 7); q.fill(); });
+    for (let k = 0; k < 7; k++) { const a = k / 7 * 6.283 + ci, r = k ? 10 : 0, x = 32 + Math.cos(a) * r * 1.2, y = 24 + Math.sin(a) * r * 0.8, R = k ? 9 : 10; const gr = q.createRadialGradient(x - 2, y - 2, 1, x, y, R); gr.addColorStop(0, 'rgba(255,240,248,.95)'); gr.addColorStop(0.35, `rgba(${col},.95)`); gr.addColorStop(1, `rgba(${col},0)`); q.fillStyle = gr; q.beginPath(); q.arc(x, y, R, 0, 7); q.fill(); }
+    return cv; });
+}
 function sfxMeadow(c, W, H, t, o) {
-  const hy = o.hq[1], az0 = SKY.az, GH = Math.max(0, H - hy); if (hy > H + 400) return;
+  const hy = o.hq[1], az0 = SKY.az, GH = Math.max(0, H - hy); if (hy > H + 400) return; sfxMeadowTex();
   const ridge = (L, lift, amp, pw, step) => { const pts = []; for (let a = az0 - 100; a <= az0 + 100; a += step) { const m = 0.45 + 0.55 * (0.5 + 0.5 * Math.sin(a * 0.011 + L * 1.7)), h = lift + amp * Math.pow(sfxPeaks(L + 5, a * 0.8), pw) * m * 1.8; const q = skyProjRaw(h * d2r, a * d2r, W, H); if (q[2] > 0) pts.push(q); } return pts; };
-  const fillR = (pts, top, bot, y1, y2) => { if (pts.length < 2) return; c.beginPath(); c.moveTo(pts[0][0], H + 40); pts.forEach(p => c.lineTo(p[0], p[1])); c.lineTo(pts[pts.length - 1][0], H + 40); c.closePath(); const g = c.createLinearGradient(0, y1, 0, y2); g.addColorStop(0, top); g.addColorStop(1, bot); c.fillStyle = g; c.fill(); };
-  // nền đất thung lũng
-  const gg = c.createLinearGradient(0, hy, 0, H); gg.addColorStop(0, '#6f9a52'); gg.addColorStop(1, '#2f6a2c'); c.fillStyle = gg; c.fillRect(-20, hy - 2, W + 40, H - hy + 40);
-  // dãy núi xa tím xanh
-  fillR(ridge(0, 0.2, 8, 1.6, 0.8), 'rgb(128,118,170)', 'rgb(170,150,185)', hy - H * 0.2, hy);
-  // núi xanh lớn
-  const r1 = ridge(1, -0.4, 11, 1.3, 0.8); fillR(r1, '#7fae63', '#3d7a3a', hy - H * 0.25, hy + H * 0.04);
-  c.save(); c.globalCompositeOperation = 'soft-light'; const sl = c.createLinearGradient(0, 0, W, 0); sl.addColorStop(0, 'rgba(255,200,120,.55)'); sl.addColorStop(0.5, 'rgba(255,230,160,.2)'); sl.addColorStop(1, 'rgba(40,40,90,.45)'); c.fillStyle = sl; c.beginPath(); c.moveTo(r1[0][0], H + 40); r1.forEach(p => c.lineTo(p[0], p[1])); c.lineTo(r1[r1.length - 1][0], H + 40); c.closePath(); c.fill(); c.restore();
+  const path = pts => { c.beginPath(); c.moveTo(pts[0][0], H + 40); pts.forEach(p => c.lineTo(p[0], p[1])); c.lineTo(pts[pts.length - 1][0], H + 40); c.closePath(); };
+  const grad = (y1, y2, stops) => { const g = c.createLinearGradient(0, y1, 0, y2); stops.forEach(([k, v]) => g.addColorStop(k, v)); return g; };
+  const texIn = (a, comp) => { c.save(); c.clip(); c.globalAlpha = a; c.globalCompositeOperation = comp || 'overlay'; c.fillStyle = c.createPattern(SFX.mtex, 'repeat'); c.fillRect(0, 0, W, H); c.restore(); };
+  // nền thung lũng
+  c.fillStyle = grad(hy, H, [[0, '#7aa35a'], [1, '#2f6a2c']]); c.fillRect(-20, hy - 2, W + 40, H - hy + 40);
+  // 1) núi xa xanh tím, mờ theo khí quyển
+  const r0 = ridge(0, 0.2, 8, 1.6, 0.7); if (r0.length > 1) { path(r0); c.fillStyle = grad(hy - H * 0.2, hy, [[0, 'rgb(122,116,172)'], [0.7, 'rgb(160,146,190)'], [1, 'rgb(205,170,195)']]); c.fill(); path(r0); texIn(0.12); }
+  // 2) núi xanh lớn: thân, rãnh núi, sườn nắng
+  const r1 = ridge(1, -0.4, 11, 1.3, 0.7);
+  if (r1.length > 1) {
+    path(r1); c.fillStyle = grad(hy - H * 0.26, hy + H * 0.04, [[0, '#86b26a'], [0.45, '#5f9650'], [1, '#2f6a36']]); c.fill();
+    const g = sfxLayer(W, H, 0.25); g.lineCap = 'round';
+    for (let i = 8; i < r1.length - 8; i++) { const p = r1[i]; let top = true; for (let k = -8; k <= 8; k++) if (k && r1[i + k][1] < p[1]) { top = false; break; } if (!top || hy - p[1] < H * 0.05) continue;
+      for (let k = 0; k < 6; k++) { const hsh = Math.sin(i * 12.9 + k * 78.2) * 43758.5, rr = hsh - Math.floor(hsh), side = k % 2 ? 1 : -1, len = (hy - p[1]) * (0.5 + rr * 0.6), dx = side * (18 + rr * 50 + k * 8);
+        g.strokeStyle = `rgba(18,58,30,${0.12 + rr * 0.1})`; g.lineWidth = 6 + rr * 8; g.beginPath(); g.moveTo(p[0] + side * (4 + k * 3), p[1] + 6 + k * 4); g.bezierCurveTo(p[0] + dx * 0.3 + rr * 10, p[1] + len * 0.3, p[0] + dx * 0.8 - rr * 12, p[1] + len * 0.65, p[0] + dx * 1.1, p[1] + len); g.stroke(); } }
+    c.save(); path(r1); c.clip(); sfxBlit(c, W, H, 0.25, 10, 'source-over', 1); c.restore();
+    path(r1); texIn(0.28);
+    c.save(); path(r1); c.clip(); c.globalCompositeOperation = 'soft-light'; const sl = c.createLinearGradient(0, 0, W, 0); sl.addColorStop(0, 'rgba(255,190,110,.75)'); sl.addColorStop(0.5, 'rgba(255,230,160,.25)'); sl.addColorStop(1, 'rgba(40,40,100,.5)'); c.fillStyle = sl; c.fillRect(0, 0, W, H); c.restore();
+    c.save(); c.strokeStyle = 'rgba(255,220,160,.35)'; c.lineWidth = 1.4; c.beginPath(); r1.forEach((p, i) => i ? c.lineTo(p[0], p[1] + 0.5) : c.moveTo(p[0], p[1] + 0.5)); c.stroke(); c.restore();
+  }
   // sương thung lũng
-  const mg = c.createLinearGradient(0, hy - H * 0.06, 0, hy + H * 0.05); mg.addColorStop(0, 'rgba(255,225,215,0)'); mg.addColorStop(0.6, 'rgba(255,225,215,.38)'); mg.addColorStop(1, 'rgba(255,225,215,0)'); c.fillStyle = mg; c.fillRect(0, hy - H * 0.06, W, H * 0.11);
-  // đồi rừng gần
-  const r2 = ridge(2, -2.2, 4.5, 1, 1.2); fillR(r2, '#4f8f3e', '#24592a', hy - H * 0.08, hy + H * 0.15);
-  c.fillStyle = 'rgba(25,70,30,.55)'; for (let i = 0; i < r2.length; i += 2) { const p = r2[i], h = 6 + (i * 7) % 6; c.beginPath(); c.moveTo(p[0] - h * 0.35, p[1] + 2); c.lineTo(p[0], p[1] - h); c.lineTo(p[0] + h * 0.35, p[1] + 2); c.fill(); }
-  // sườn đồi hoa phía trước (trái → phải dốc xuống)
+  c.fillStyle = grad(hy - H * 0.07, hy + H * 0.05, [[0, 'rgba(255,225,215,0)'], [0.6, 'rgba(255,228,220,.42)'], [1, 'rgba(255,225,215,0)']]); c.fillRect(0, hy - H * 0.07, W, H * 0.12);
+  // 3) đồi rừng gần: tán cây tròn san sát
+  const r2 = ridge(2, -2.2, 4.5, 1, 1);
+  if (r2.length > 1) { path(r2); c.fillStyle = grad(hy - H * 0.08, hy + H * 0.15, [[0, '#4a8a3c'], [1, '#1f5228']]); c.fill();
+    for (let i = 0; i < r2.length; i++) { const p = r2[i], r = 5 + ((i * 7) % 5); c.fillStyle = i % 3 ? '#2f6e34' : '#3d7e3a'; c.beginPath(); c.arc(p[0], p[1] + r * 0.4, r, 0, 7); c.fill(); c.fillStyle = 'rgba(255,230,160,.18)'; c.beginPath(); c.arc(p[0] - r * 0.3, p[1] - r * 0.1, r * 0.55, 0, 7); c.fill(); }
+    path(r2); texIn(0.35); }
+  // 4) sườn đồi hoa phía trước
   const crest = []; for (let x = -10; x <= W * 0.72; x += 8) { const u = x / (W * 0.72); crest.push([x, hy - H * 0.06 + (H - hy + H * 0.06) * Math.pow(u, 1.5) * 0.98 + Math.sin(x * 0.02) * 6 + Math.sin(x * 0.007) * 10]); }
-  c.beginPath(); c.moveTo(-10, H + 10); crest.forEach(p => c.lineTo(p[0], p[1])); c.lineTo(W * 0.74, H + 10); c.closePath(); const hg = c.createLinearGradient(0, hy, 0, H); hg.addColorStop(0, '#9cc768'); hg.addColorStop(1, '#4f8a35'); c.fillStyle = hg; c.fill();
+  const crestP = () => { c.beginPath(); c.moveTo(-10, H + 10); crest.forEach(p => c.lineTo(p[0], p[1])); c.lineTo(W * 0.74, H + 10); c.closePath(); };
+  crestP(); c.fillStyle = grad(hy - H * 0.06, H, [[0, '#a8cf72'], [0.4, '#79ad4c'], [1, '#3f7a30']]); c.fill(); crestP(); texIn(0.4);
+  c.strokeStyle = 'rgba(255,240,180,.45)'; c.lineWidth = 2; c.beginPath(); crest.forEach((p, i) => i ? c.lineTo(p[0], p[1]) : c.moveTo(p[0], p[1])); c.stroke();
   // đồi nhỏ bên phải
-  c.beginPath(); c.moveTo(W + 10, H + 10); for (let x = W + 10; x >= W * 0.62; x -= 8) { const u = (W - x) / (W * 0.38); c.lineTo(x, H - GH * 0.32 * Math.pow(1 - u, 0.8) - Math.sin(x * 0.03) * 4); } c.lineTo(W * 0.6, H + 10); c.closePath(); c.fillStyle = '#5f9a42'; c.fill();
-  // hoa đỗ quyên hồng phủ sườn đồi
-  if (!SFX.flw) { let sd = 3; const rnd = () => (sd = (sd * 16807) % 2147483647) / 2147483647; SFX.flw = Array.from({ length: 1100 }, () => ({ u: rnd(), v: rnd(), c: (rnd() * 5) | 0, ph: rnd() * 9 })); }
-  const PAL = ['255,79,163', '232,62,140', '255,124,192', '194,24,91', '255,153,204'];
-  // bóng lá xanh đậm dưới hoa
-  for (let i = 0; i < 260; i++) { const f = SFX.flw[i], x = ((f.u + 0.37) % 1) * W * 0.72, ci = Math.min(crest.length - 1, Math.floor((x + 10) / 8)), top = crest[ci][1] + 6, v = Math.pow((f.v + 0.5) % 1, 0.8), y = top + (H - top) * v, r = 2 + v * 14; c.fillStyle = 'rgba(46,96,34,.45)'; c.beginPath(); c.ellipse(x, y, r * 1.6, r * 0.6, 0, 0, 7); c.fill(); }
-  SFX.flw.forEach(f => { const x = f.u * W * 0.72, ci = Math.min(crest.length - 1, Math.floor((x + 10) / 8)), top = crest[ci][1] + 5, v = Math.pow(f.v, 0.85), y = top + (H - top) * v; if (y > H + 6) return;
-    const s = 0.7 + v * v * GH * 0.026, sw = Math.sin(t * 1.2 + f.ph + x * 0.01) * s * 0.3;
-    c.fillStyle = `rgba(${PAL[f.c]},.95)`; c.beginPath(); c.arc(x + sw, y, s, 0, 7); c.arc(x + sw + s * 0.9, y + s * 0.4, s * 0.8, 0, 7); c.arc(x + sw - s * 0.8, y + s * 0.5, s * 0.75, 0, 7); c.fill();
-    c.fillStyle = 'rgba(255,230,240,.6)'; c.beginPath(); c.arc(x + sw - s * 0.2, y - s * 0.3, s * 0.35, 0, 7); c.fill(); });
-  // cỏ lay
-  c.strokeStyle = 'rgba(60,120,40,.8)'; c.lineWidth = 1.2; for (let i = 0; i < 90; i++) { const x = (i / 90) * W * 0.7, ci = Math.min(crest.length - 1, Math.floor((x + 10) / 8)), base = crest[ci][1] + 3, h = 6 + (i * 13) % 8, sw = Math.sin(t * 1.5 + i * 0.6) * 2.5; c.beginPath(); c.moveTo(x, base); c.quadraticCurveTo(x + sw * 0.5, base - h * 0.6, x + sw, base - h); c.stroke(); }
-  // nắng chiều ấm phủ cảnh
-  c.save(); c.globalCompositeOperation = 'soft-light'; const wl = c.createRadialGradient(W * 0.1, hy, 0, W * 0.1, hy, W * 0.9); wl.addColorStop(0, 'rgba(255,190,110,.5)'); wl.addColorStop(1, 'rgba(255,190,110,0)'); c.fillStyle = wl; c.fillRect(0, 0, W, H); c.restore();
+  c.beginPath(); c.moveTo(W + 10, H + 10); for (let x = W + 10; x >= W * 0.62; x -= 8) { const u = (W - x) / (W * 0.38); c.lineTo(x, H - GH * 0.32 * Math.pow(1 - u, 0.8) - Math.sin(x * 0.03) * 4); } c.lineTo(W * 0.6, H + 10); c.closePath(); c.fillStyle = grad(H - GH * 0.35, H, [[0, '#6a9e48'], [1, '#2f6a2c']]); c.fill();
+  // cỏ mảnh nhiều sắc
+  const crestY = x => crest[Math.max(0, Math.min(crest.length - 1, Math.floor((x + 10) / 8)))][1];
+  for (let i = 0; i < 260; i++) { const x = ((i * 0.6180339) % 1) * W * 0.72, v = ((i * 0.3819) % 1), base = crestY(x) + 2 + (H - crestY(x)) * v * v, h = 4 + v * v * 22 + (i % 5), sw = Math.sin(t * 1.5 + i * 0.6) * (1.5 + v * 3); c.strokeStyle = ['rgba(70,130,50,.8)', 'rgba(120,170,70,.75)', 'rgba(45,100,40,.8)', 'rgba(170,200,100,.6)'][i % 4]; c.lineWidth = 0.8 + v; c.beginPath(); c.moveTo(x, base); c.quadraticCurveTo(x + sw * 0.5, base - h * 0.6, x + sw, base - h); c.stroke(); }
+  // 5) hoa đỗ quyên: xa mềm (nửa độ phân giải), gần sắc nét
+  if (!SFX.flw2) { let sd = 3; const rnd = () => (sd = (sd * 16807) % 2147483647) / 2147483647; SFX.flw2 = Array.from({ length: 900 }, () => ({ u: rnd(), v: rnd(), c: (rnd() * 5) | 0, ph: rnd() * 9, r: rnd() })).sort((a, b) => a.v - b.v); }
+  const far = sfxLayer(W, H, 0.5);
+  SFX.flw2.forEach(f => { const x = f.u * W * 0.72, top = crestY(x) + 4, v = Math.pow(f.v, 0.8), y = top + (H - top) * v; if (y > H + 20) return; const edge = Math.max(0, Math.min(1, (W * 0.72 - x) / (W * 0.1))); if (edge < f.r * 0.6) return;
+    const s = (0.25 + v * v * 1.25) * (0.75 + f.r * 0.5) * Math.min(1.4, GH / 300 + 0.2), sw = Math.sin(t * 1.1 + f.ph + x * 0.01) * s * 2.5, w = 64 * s * 0.6, h = 52 * s * 0.6; const tg = v < 0.45 ? far : c;
+    tg.globalAlpha = v < 0.45 ? 0.9 : 1; tg.drawImage(SFX.fsp[f.c], x + sw - w / 2, y - h * 0.6, w, h); });
+  far.globalAlpha = 1; sfxBlit(c, W, H, 0.5, 0, 'source-over', 1);
+  // 6) nắng chiều ấm + tối nhẹ bốn góc
+  c.save(); c.globalCompositeOperation = 'soft-light'; const wl = c.createRadialGradient(W * 0.08, hy - H * 0.05, 0, W * 0.08, hy, W * 0.9); wl.addColorStop(0, 'rgba(255,190,110,.7)'); wl.addColorStop(1, 'rgba(255,190,110,0)'); c.fillStyle = wl; c.fillRect(0, 0, W, H);
+  c.globalCompositeOperation = 'source-over'; const vg = c.createRadialGradient(W / 2, H * 0.55, Math.min(W, H) * 0.45, W / 2, H * 0.55, Math.max(W, H) * 0.8); vg.addColorStop(0, 'rgba(30,15,50,0)'); vg.addColorStop(1, 'rgba(30,15,50,.35)'); c.fillStyle = vg; c.fillRect(0, 0, W, H); c.restore();
 }
 function sfxRainbow(c, W, H, sAlt, sAz, a, t) {
   if (a <= 0.02 || sAlt < 0 || sAlt > 42 * d2r) return; t = t || 0;
@@ -12159,7 +12372,7 @@ function sfxRainbow(c, W, H, sAlt, sAz, a, t) {
   // 3) cung chính + vân phụ + cung phụ (màu đảo, nhạt)
   const g = sfxLayer(W, H, 0.5); g.lineCap = 'butt';
   const BW = SFX.pick === 'rainbow' ? 4.4 : 2.7, N = 72; for (let i = 0; i < N; i++) { const f = i / (N - 1), w = Math.sin(Math.PI * (0.02 + f * 0.96)); g.strokeStyle = `rgb(${spec(f)})`; g.globalAlpha = 0.95 * a * (0.55 + 0.45 * w); g.lineWidth = Math.max(1.6, px * BW / N * 1.8); skyRingStroke(g, W, H, skyRing(aA, aZ, (42.7 - f * BW) * d2r, 1), 0.002); }
-  [[42.7 - BW - 0.35, '205,150,235', 0.26], [42.7 - BW - 0.85, '150,235,175', 0.16], [42.7 - BW - 1.35, '215,160,230', 0.09]].forEach(([r, cl, al]) => { g.strokeStyle = `rgb(${cl})`; g.globalAlpha = al * a; g.lineWidth = px * 0.22; skyRingStroke(g, W, H, skyRing(aA, aZ, r * d2r, 1), 0.002); });
+  (SFX.pick === 'rainbow' ? [] : [[42.7 - BW - 0.35, '205,150,235', 0.26], [42.7 - BW - 0.85, '150,235,175', 0.16]]).forEach(([r, cl, al]) => { g.strokeStyle = `rgb(${cl})`; g.globalAlpha = al * a; g.lineWidth = px * 0.22; skyRingStroke(g, W, H, skyRing(aA, aZ, r * d2r, 1), 0.002); });
   for (let i = 0; i < 30; i++) { const f = i / 29; g.strokeStyle = `rgb(${spec(f)})`; g.globalAlpha = (SFX.pick === 'rainbow' ? 0.32 : 0.2) * a * Math.sin(Math.PI * (0.05 + f * 0.9)); g.lineWidth = Math.max(1.4, px * 0.2); skyRingStroke(g, W, H, skyRing(aA, aZ, (50.4 + (1 - f) * (SFX.pick === 'rainbow' ? 4.6 : 3.6)) * d2r, 1.2), 0.002); }
   // chân cầu vồng đậm, đỉnh nhạt dần, sát chân trời tan vào mưa
   g.globalAlpha = 1; g.globalCompositeOperation = 'destination-in'; const m = g.createLinearGradient(0, hz - H * 0.85, 0, hz); m.addColorStop(0, `rgba(0,0,0,${SFX.pick === 'rainbow' ? 0.9 : 0.72})`); m.addColorStop(0.7, 'rgba(0,0,0,1)'); m.addColorStop(0.93, 'rgba(0,0,0,.95)'); m.addColorStop(1, 'rgba(0,0,0,.35)'); g.fillStyle = m; g.fillRect(0, -H, W, H * 3);
