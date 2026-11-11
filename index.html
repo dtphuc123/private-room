@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta http-equiv="Cache-Control" content="no-cache"><title>Private Room · bản 91</title><style>html,body{margin:0;padding:0;height:100%}</style></head><body>
+<html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta http-equiv="Cache-Control" content="no-cache"><title>Private Room · bản 93</title><style>html,body{margin:0;padding:0;height:100%}</style></head><body>
 <title>Private Room Casino</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -1869,7 +1869,7 @@ canvas#world { position: absolute; inset: 0; width: 100%; height: 100%; display:
   <!-- Help modal -->
   <div class="modal-wrap" id="helpModal" hidden>
     <div class="modal loan-modal set-modal" role="dialog" aria-label="Cài đặt">
-      <div class="shop-head"><h2 class="panel-title" style="margin:0">Cài đặt</h2><span class="note" id="gameVer" style="margin:0 10px 0 auto;font-weight:700;color:#ffd36a">Phiên bản 91</span><button class="xbtn" id="setX" type="button" aria-label="Đóng" style="margin-left:auto">✕</button></div>
+      <div class="shop-head"><h2 class="panel-title" style="margin:0">Cài đặt</h2><span class="note" id="gameVer" style="margin:0 10px 0 auto;font-weight:700;color:#ffd36a">Phiên bản 93</span><button class="xbtn" id="setX" type="button" aria-label="Đóng" style="margin-left:auto">✕</button></div>
       <div class="set-tabs" role="tablist"><button class="fchip" type="button" data-stab2="sound" aria-pressed="true">Âm thanh</button><button class="fchip" type="button" data-stab2="view" aria-pressed="false">Hiển thị</button><button class="fchip" type="button" data-stab2="save" aria-pressed="false">Lưu game</button><button class="fchip" type="button" data-stab2="keys" aria-pressed="false">Phím điều khiển</button></div>
       <section class="set-pane" data-pane="sound">
         <label class="set-row"><span>Âm lượng tổng <b id="vMasterV"></b></span><input type="range" id="vMaster" min="0" max="100" step="1"></label>
@@ -11803,7 +11803,7 @@ function wxDrawFx(c, W, H, t, K, dark, dt) {
   if (K.cc > 70) { c.fillStyle = `rgba(${dark > 0.5 ? '30,32,42' : '170,176,186'},${(K.cc - 70) / 30 * (dark > 0.5 ? 0.25 : 0.15)})`; c.fillRect(0, 0, W, H); }
   if (K.rain) { SKY.rainP = SKY.rainP || Array.from({ length: 260 }, () => ({ x: Math.random(), y: Math.random(), s: 0.6 + Math.random() * 0.6 }));
     const n = Math.round(260 * K.rain), slant = Math.sin((K.wd - SKY.az) * d2r) * Math.min(1, K.wind / 30) * 0.35;
-    c.strokeStyle = dark > 0.5 ? 'rgba(170,190,230,.35)' : 'rgba(255,255,255,.45)'; c.lineWidth = 1.1; c.beginPath();
+    c.strokeStyle = dark > 0.5 ? 'rgba(170,190,230,.35)' : K.rainSoft ? 'rgba(235,240,255,.22)' : 'rgba(255,255,255,.45)'; c.lineWidth = K.rainSoft ? 0.8 : 1.1; c.beginPath();
     for (let i = 0; i < n; i++) { const p = SKY.rainP[i]; p.y += dt * 1.6 * p.s; p.x += dt * slant * p.s; if (p.y > 1) { p.y -= 1; p.x = Math.random(); } const x = ((p.x % 1) + 1) % 1 * W, y = p.y * H, L = 14 * p.s; c.moveTo(x, y); c.lineTo(x + slant * L * 2.5, y + L); }
     c.stroke(); }
   if (K.kind === 'storm') { SKY.bolt = SKY.bolt || { next: t + 3, at: -9 }; if (t > SKY.bolt.next) { SKY.bolt.at = t; SKY.bolt.next = t + 4 + Math.random() * 9; } const k = t - SKY.bolt.at; if (k < 0.5) { c.fillStyle = `rgba(230,235,255,${(k < 0.08 || (k > 0.18 && k < 0.26) ? 0.55 : 0.1) * (1 - k * 2)})`; c.fillRect(0, 0, W, H); } }
@@ -12084,15 +12084,38 @@ function sfxRays(c, W, H, sAlt, sAz, a, t) {
   g.restore(); sfxBlit(c, W, H, 0.5, 5, 'lighter', 1);
 }
 // ----- cầu vồng: phổ màu liền mạch, phía trong cung sáng hơn, hai đầu nhạt dần -----
-function sfxRainbow(c, W, H, sAlt, sAz, a) {
-  if (a <= 0.02 || sAlt < 0 || sAlt > 42 * d2r) return; const aA = -sAlt, aZ = sAz + Math.PI, g = sfxLayer(W, H, 0.5), px = W / SKY.fov, lw = Math.max(1, px * 0.13);
-  g.globalCompositeOperation = 'source-over'; g.lineCap = 'butt';
-  const spec = (f) => `hsl(${Math.round(f * 275)},100%,${f < 0.15 ? 52 : f > 0.8 ? 60 : 55}%)`;
-  for (let i = 0; i < 26; i++) { const f = i / 25; g.strokeStyle = spec(f); g.globalAlpha = 0.9 * a * (0.6 + 0.4 * Math.sin(Math.PI * (0.1 + f * 0.8))); g.lineWidth = lw; skyRingStroke(g, W, H, skyRing(aA, aZ, (42.5 - f * 2.4) * d2r, 1.5), 0.005); }
-  for (let i = 0; i < 20; i++) { const f = i / 19; g.strokeStyle = spec(f); g.globalAlpha = 0.35 * a; g.lineWidth = lw * 1.4; skyRingStroke(g, W, H, skyRing(aA, aZ, (50.3 + f * 3.4) * d2r, 2), 0.005); }
-  // trong cung sáng hơn
-  g.globalAlpha = 1; g.globalCompositeOperation = 'lighter'; for (let r = 39.6; r > 3; r -= 1.2) { g.strokeStyle = `rgba(255,255,255,${0.007 * a * (r / 40)})`; g.lineWidth = px * 1.3; skyRingStroke(g, W, H, skyRing(aA, aZ, r * d2r, 3), 0.005); }
-  sfxBlit(c, W, H, 0.5, 1.1, 'source-over', 0.62); sfxBlit(c, W, H, 0.5, 3, 'screen', 0.35);
+function sfxRainbow(c, W, H, sAlt, sAz, a, t) {
+  if (a <= 0.02 || sAlt < 0 || sAlt > 42 * d2r) return; t = t || 0;
+  const aA = -sAlt, aZ = sAz + Math.PI, px = W / SKY.fov, hz = skyProjRaw(0, SKY.az * d2r, W, H)[1], ac = skyProjRaw(aA, aZ, W, H);
+  const SP = [[255, 50, 60], [255, 130, 40], [255, 222, 70], [110, 225, 90], [60, 175, 235], [70, 100, 240], [150, 80, 225]];
+  const spec = f => { const x = Math.max(0, Math.min(0.999, f)) * (SP.length - 1), k = Math.floor(x), u = x - k; return SP[k].map((v, i) => Math.round(v + (SP[k + 1][i] - v) * u)); };
+  c.save();
+  // 1) nền mây mưa xanh xám sau cung để cầu vồng nổi bật
+  if (ac[2] > -0.5) { const R = px * 64, bg = c.createRadialGradient(ac[0], ac[1], R * 0.15, ac[0], ac[1], R * 1.2); bg.addColorStop(0, `rgba(54,62,88,${0.62 * a})`); bg.addColorStop(0.55, `rgba(66,76,104,${0.5 * a})`); bg.addColorStop(1, 'rgba(80,92,124,0)'); c.fillStyle = bg; c.fillRect(0, 0, W, H); }
+  // màn mưa rủ xuống (các cột mưa mờ)
+  { const g = sfxLayer(W, H, 0.25); for (let i = 0; i < 26; i++) { const x = ((i * 97.3 + t * (3 + (i % 4))) % (W * 1.2)) - W * 0.1, w = 18 + ((i * 37) % 60), top = hz - H * (0.35 + ((i * 13) % 9) / 30), gr = g.createLinearGradient(0, top, 0, hz); gr.addColorStop(0, 'rgba(60,70,98,0)'); gr.addColorStop(0.6, `rgba(60,70,98,${0.16 * a})`); gr.addColorStop(1, `rgba(70,80,108,${0.26 * a})`); g.fillStyle = gr; g.fillRect(x, top, w, hz - top); }
+    sfxBlit(c, W, H, 0.25, 4, 'source-over', 1); }
+  // 2) dải tối Alexander giữa hai cung, phía trong cung chính sáng hơn
+  { const g3 = sfxLayer(W, H, 0.25); g3.strokeStyle = `rgba(30,36,62,${0.24 * a})`; g3.lineWidth = px * 7; skyRingStroke(g3, W, H, skyRing(aA, aZ, 46.4 * d2r, 1.5), 0.002); sfxBlit(c, W, H, 0.25, 8, 'source-over', 1); }
+  { const g2 = sfxLayer(W, H, 0.25); g2.globalCompositeOperation = 'lighter'; for (let r = 40.2; r > 6; r -= 1.1) { const u = r / 40.2; g2.strokeStyle = `rgba(255,250,240,${0.024 * a * u * u * u})`; g2.lineWidth = px * 1.9; skyRingStroke(g2, W, H, skyRing(aA, aZ, r * d2r, 3), 0.002); }
+    sfxBlit(c, W, H, 0.25, 9, 'lighter', 1); }
+  // 3) cung chính + vân phụ + cung phụ (màu đảo, nhạt)
+  const g = sfxLayer(W, H, 0.5); g.lineCap = 'butt';
+  const N = 44; for (let i = 0; i < N; i++) { const f = i / (N - 1), w = Math.sin(Math.PI * (0.04 + f * 0.92)); g.strokeStyle = `rgb(${spec(f)})`; g.globalAlpha = 0.85 * a * (0.55 + 0.45 * w); g.lineWidth = Math.max(1.2, px * 0.07); skyRingStroke(g, W, H, skyRing(aA, aZ, (42.45 - f * 2.1) * d2r, 1), 0.002); }
+  [[40.05, '205,150,235', 0.32], [39.55, '150,235,175', 0.22], [39.05, '215,160,230', 0.13]].forEach(([r, cl, al]) => { g.strokeStyle = `rgb(${cl})`; g.globalAlpha = al * a; g.lineWidth = px * 0.22; skyRingStroke(g, W, H, skyRing(aA, aZ, r * d2r, 1), 0.002); });
+  for (let i = 0; i < 30; i++) { const f = i / 29; g.strokeStyle = `rgb(${spec(f)})`; g.globalAlpha = 0.3 * a * Math.sin(Math.PI * (0.05 + f * 0.9)); g.lineWidth = Math.max(1.2, px * 0.15); skyRingStroke(g, W, H, skyRing(aA, aZ, (50.4 + (1 - f) * 3.6) * d2r, 1.2), 0.002); }
+  // chân cầu vồng đậm, đỉnh nhạt dần, sát chân trời tan vào mưa
+  g.globalAlpha = 1; g.globalCompositeOperation = 'destination-in'; const m = g.createLinearGradient(0, hz - H * 0.85, 0, hz); m.addColorStop(0, 'rgba(0,0,0,.5)'); m.addColorStop(0.75, 'rgba(0,0,0,1)'); m.addColorStop(0.93, 'rgba(0,0,0,.95)'); m.addColorStop(1, 'rgba(0,0,0,.35)'); g.fillStyle = m; g.fillRect(0, -H, W, H * 3);
+  sfxBlit(c, W, H, 0.5, 1.3, 'source-over', 0.82); sfxBlit(c, W, H, 0.5, 7, 'screen', 0.55);
+  // 4) giọt mưa lấp lánh dọc theo cung
+  c.globalCompositeOperation = 'lighter'; const pts = skyRing(aA, aZ, 41.4 * d2r, 2);
+  for (let i = 0; i < 60; i++) { const p = pts[(i * 37) % pts.length]; if (p[0] < 0.01) continue; const q = skyProj(p[0], p[1], W, H); if (!q) continue; const tw = Math.pow(Math.max(0, Math.sin(t * (1.2 + (i % 5) * 0.4) + i * 2.7)), 12); if (tw < 0.05) continue;
+    const x = q[0] + ((i * 13) % 9 - 4) * px * 0.15, y = q[1] + ((i * 7) % 9 - 4) * px * 0.15, s = 3 + (i % 3) * 1.5, cl = spec(((i * 17) % 10) / 10);
+    const rg = c.createRadialGradient(x, y, 0, x, y, s * 2); rg.addColorStop(0, `rgba(255,255,255,${0.9 * tw * a})`); rg.addColorStop(0.4, `rgba(${cl},${0.5 * tw * a})`); rg.addColorStop(1, `rgba(${cl},0)`); c.fillStyle = rg; c.fillRect(x - s * 2, y - s * 2, s * 4, s * 4);
+    c.strokeStyle = `rgba(255,255,255,${0.7 * tw * a})`; c.lineWidth = 0.8; c.beginPath(); c.moveTo(x - s * 1.6, y); c.lineTo(x + s * 1.6, y); c.moveTo(x, y - s * 1.6); c.lineTo(x, y + s * 1.6); c.stroke(); }
+  // 5) nắng vàng chiều sau lưng chiếu lên màn mưa
+  c.globalCompositeOperation = 'screen'; const wg = c.createLinearGradient(0, hz - H * 0.7, 0, hz); wg.addColorStop(0, 'rgba(255,200,140,0)'); wg.addColorStop(1, `rgba(255,190,120,${0.16 * a})`); c.fillStyle = wg; c.fillRect(0, hz - H * 0.7, W, H * 0.7);
+  c.restore();
 }
 // ----- quầng 22° (mềm) + hai mặt trời giả (sundog) -----
 function sfxHalo(c, W, H, alt, az, a, sun) {
@@ -12122,6 +12145,137 @@ function sfxMeteors(c, dt) {
   });
 }
 
+// ---------- BIỂN SƯƠNG: đứng trên đỉnh cao nhìn xuống, sương phủ kín thung lũng, núi nhô lên như đảo, đèn thành phố hắt qua sương ----------
+const sfxSeaOn = K => SFX.pick === 'fog' || (K && (K.fog || 0) >= 0.35);
+function sfxPeaks(L, a) { let v = 0, amp = 1, f = 1, n = 0; for (let i = 0; i < 5; i++) { const s = Math.sin(a * 0.045 * f + L * 3.1 + i * 1.3) * 0.6 + Math.sin(a * 0.039 * f + L * 5.2 + i * 2.1) * 0.4; v += amp * (1 - Math.abs(s)); n += amp; amp *= 0.5; f *= 2.03; } return v / n; }
+function sfxTint(rgb, a) { const k = rgb.join(',') + '|' + (a || 1); SFX.fogTint = SFX.fogTint || {}; if (!SFX.fogTint[k]) { const tc = document.createElement('canvas'); tc.width = SFX.fogTex.width; tc.height = SFX.fogTex.height; const g = tc.getContext('2d'); g.globalAlpha = a || 1; g.drawImage(SFX.fogTex, 0, 0); g.globalAlpha = 1; g.globalCompositeOperation = 'source-atop'; g.fillStyle = `rgb(${rgb})`; g.fillRect(0, 0, tc.width, tc.height); SFX.fogTint[k] = tc; const ks = Object.keys(SFX.fogTint); if (ks.length > 24) delete SFX.fogTint[ks[0]]; } return SFX.fogTint[k]; }
+function sfxBillows() {
+  if (SFX.billL) return; let sd = 7; const rnd = () => (sd = (sd * 16807) % 2147483647) / 2147483647;
+  const mk = () => { const cv = document.createElement('canvas'); cv.width = 1024; cv.height = 220; return cv; }, L = mk(), S = mk(), gl = L.getContext('2d'), gs = S.getContext('2d');
+  const blob = (g, x, y, rx, ry, a) => { for (const dx of [-1024, 0, 1024]) { g.save(); g.translate(x + dx, y); g.scale(rx / 50, ry / 50); const gr = g.createRadialGradient(0, 0, 0, 0, 0, 50); gr.addColorStop(0, `rgba(255,255,255,${a})`); gr.addColorStop(0.6, `rgba(255,255,255,${a * 0.55})`); gr.addColorStop(1, 'rgba(255,255,255,0)'); g.fillStyle = gr; g.beginPath(); g.arc(0, 0, 50, 0, 7); g.fill(); g.restore(); } };
+  for (let i = 0; i < 150; i++) { const x = rnd() * 1024, y = 70 + rnd() * 90, r = 26 + rnd() * 60; blob(gs, x + r * 0.15, y + r * 0.32, r * 1.5, r * 0.55, 0.55); blob(gl, x, y, r * 1.35, r * 0.48, 0.75); blob(gl, x - r * 0.2, y - r * 0.18, r * 0.8, r * 0.3, 0.6); }
+  SFX.billL = L; SFX.billS = S;
+}
+function sfxTintC(src, rgb) { const k = 'b' + (src === SFX.billL ? 'L' : 'S') + rgb.join(','); SFX.fogTint = SFX.fogTint || {}; if (!SFX.fogTint[k]) { const tc = document.createElement('canvas'); tc.width = src.width; tc.height = src.height; const g = tc.getContext('2d'); g.drawImage(src, 0, 0); g.globalCompositeOperation = 'source-atop'; g.fillStyle = `rgb(${rgb})`; g.fillRect(0, 0, tc.width, tc.height); SFX.fogTint[k] = tc; const ks = Object.keys(SFX.fogTint); if (ks.length > 30) delete SFX.fogTint[ks[0]]; } return SFX.fogTint[k]; }
+// ánh lấp lánh trên mặt sương
+function sfxGlints(c, W, H, t, y0, rgb, k, lx) {
+  if (k <= 0.02) return; c.save(); c.globalCompositeOperation = 'lighter';
+  for (let i = 0; i < 120; i++) { const h1 = Math.sin(i * 127.1) * 43758.5453, r1 = h1 - Math.floor(h1), h2 = Math.sin(i * 311.7) * 24634.6345, r2 = h2 - Math.floor(h2);
+    const pr = Math.pow(r2, 1.5), y = y0 + 3 + (H - y0) * pr; let x = r1 * W; if (lx != null && i % 2 === 0) x = lx + (r1 - 0.5) * (30 + pr * W * 0.3);
+    const tw = Math.pow(Math.max(0, Math.sin(t * (0.7 + r1 * 1.8) + i * 2.3)), 9), al = tw * k * (lx != null && i % 2 === 0 ? 1 : 0.6); if (al < 0.03) continue; const s = 1.6 + pr * 6;
+    const rg = c.createRadialGradient(x, y, 0, x, y, s * 1.6); rg.addColorStop(0, `rgba(255,255,255,${al})`); rg.addColorStop(0.3, `rgba(${rgb},${al * 0.5})`); rg.addColorStop(1, `rgba(${rgb},0)`); c.fillStyle = rg; c.fillRect(x - s * 1.6, y - s * 1.6, s * 3.2, s * 3.2);
+    c.strokeStyle = `rgba(${rgb},${al * 0.8})`; c.lineWidth = 0.8; c.beginPath(); c.moveTo(x - s * 1.8, y); c.lineTo(x + s * 1.8, y); c.moveTo(x, y - s); c.lineTo(x, y + s); c.stroke(); }
+  c.restore();
+}
+// đèn trời bay lên từ thành phố chìm trong sương
+function sfxLanterns(c, W, H, t, cAz, dark) {
+  if (dark < 0.15) return; const px = W / SKY.fov, A = Math.min(1, (dark - 0.15) / 0.3); c.save();
+  for (let i = 0; i < 18; i++) { const sp = 0.008 + ((i * 7) % 5) * 0.0025, p = (t * sp + i * 0.618) % 1, near = ((i * 11) % 7) / 6;
+    const az = cAz - 38 + ((i * 53.7) % 80) + Math.sin(t * 0.12 + i) * 1.5 + p * (3 + near * 6), alt = -2.4 + p * (9 + near * 15), q = skyProjRaw(alt * d2r, az * d2r, W, H);
+    if (q[2] < 0 || q[0] < -40 || q[0] > W + 40) continue;
+    const s = px * (0.22 + near * 0.5) * (1 - p * 0.3), fade = Math.min(1, p / 0.1) * Math.min(1, (1 - p) / 0.3) * A, fl = 0.82 + 0.18 * Math.sin(t * 7 + i * 3) * Math.sin(t * 3.3 + i);
+    const x = q[0] + Math.sin(t * 0.45 + i * 2) * s * 0.5, y = q[1];
+    c.globalCompositeOperation = 'lighter'; const R = s * 6, rg = c.createRadialGradient(x, y, 0, x, y, R); rg.addColorStop(0, `rgba(255,180,90,${0.5 * fade * fl})`); rg.addColorStop(0.3, `rgba(255,130,60,${0.16 * fade * fl})`); rg.addColorStop(1, 'rgba(255,110,40,0)'); c.fillStyle = rg; c.fillRect(x - R, y - R, R * 2, R * 2);
+    c.globalCompositeOperation = 'source-over'; c.globalAlpha = fade; const lg = c.createLinearGradient(0, y - s, 0, y + s); lg.addColorStop(0, '#fff0b8'); lg.addColorStop(0.55, '#ffb54e'); lg.addColorStop(1, '#ff7b2c');
+    c.fillStyle = lg; c.beginPath(); c.moveTo(x - s * 0.5, y - s); c.quadraticCurveTo(x, y - s * 1.15, x + s * 0.5, y - s); c.lineTo(x + s * 0.38, y + s * 0.85); c.lineTo(x - s * 0.38, y + s * 0.85); c.closePath(); c.fill();
+    c.fillStyle = `rgba(255,255,235,${0.95 * fl})`; c.beginPath(); c.arc(x, y + s * 0.65, Math.max(0.8, s * 0.17), 0, 7); c.fill(); c.globalAlpha = 1; }
+  c.restore();
+}
+// chùm sáng chiếu xiên xuống biển sương
+function sfxBeams(c, W, H, q, rgb, a, t) {
+  if (a <= 0.02 || !q) return; const R = Math.max(W, H) * 1.5, g = sfxLayer(W, H, 0.5); g.globalCompositeOperation = 'lighter'; g.save(); g.translate(q[0], q[1]);
+  for (let i = 0; i < 34; i++) { const ang = Math.PI * (0.06 + 0.88 * i / 33) + Math.sin(t * 0.05 + i * 1.7) * 0.025, wd = 0.008 + ((i * 7) % 5) * 0.006, al = a * (0.035 + ((i * 13) % 7) / 100) * (0.55 + 0.45 * Math.sin(t * 0.3 + i * 2.1));
+    const gr = g.createLinearGradient(0, 0, Math.cos(ang) * R, Math.sin(ang) * R); gr.addColorStop(0, `rgba(${rgb},${al})`); gr.addColorStop(0.45, `rgba(${rgb},${al * 0.5})`); gr.addColorStop(1, `rgba(${rgb},0)`); g.fillStyle = gr; g.beginPath(); g.moveTo(0, 0); g.lineTo(Math.cos(ang - wd) * R, Math.sin(ang - wd) * R); g.lineTo(Math.cos(ang + wd) * R, Math.sin(ang + wd) * R); g.closePath(); g.fill(); }
+  g.restore(); sfxBlit(c, W, H, 0.5, 7, 'lighter', 1);
+}
+// bụi sáng lơ lửng (lung linh)
+function sfxMotes(c, W, H, t, rgb, k) {
+  if (k <= 0.02) return; c.save(); c.globalCompositeOperation = 'lighter';
+  for (let i = 0; i < 34; i++) { const h1 = Math.sin(i * 91.7) * 43758.5, r1 = h1 - Math.floor(h1), h2 = Math.sin(i * 47.3) * 12345.6, r2 = h2 - Math.floor(h2);
+    const x = ((r1 * W + t * (4 + r2 * 9) + Math.sin(t * 0.3 + i) * 30) % (W + 40) + W + 40) % (W + 40) - 20, y = H * (0.25 + 0.7 * r2) - ((t * (3 + r1 * 5)) % (H * 0.3)) + Math.cos(t * 0.5 + i) * 10;
+    const a = k * (0.3 + 0.7 * Math.pow(Math.max(0, Math.sin(t * (0.9 + r2) + i * 1.9)), 3)), s = 1.2 + r1 * 2.6;
+    const rg = c.createRadialGradient(x, y, 0, x, y, s * 3); rg.addColorStop(0, `rgba(255,255,255,${a})`); rg.addColorStop(0.35, `rgba(${rgb},${a * 0.45})`); rg.addColorStop(1, `rgba(${rgb},0)`); c.fillStyle = rg; c.fillRect(x - s * 3, y - s * 3, s * 6, s * 6); }
+  c.restore();
+}
+function sfxFogSea(c, W, H, t, o) {
+  sfxInit(); sfxBillows();
+  const { dark, sa, K, hz, hq, SM, mAlt, mAz } = o, night = dark > 0.55, dawn = !night && sa < 9 && sa > -10, hy = hq[1];
+  const mix = (a, b, k) => a.map((v, i) => Math.round(v + (b[i] - v) * Math.max(0, Math.min(1, k))));
+  const moonK = night && mAlt > 0 ? Math.min(1, mAlt / 0.35) * (0.25 + (SM.moon.illum || 0) * 0.75) : 0;
+  const lightRGB = night ? [205, 218, 255] : dawn ? [255, 196, 150] : [255, 252, 240];
+  // màu sương: đỉnh sương (sáng) · thân sương · bóng sương
+  const T = night ? mix([70, 78, 120], [158, 170, 215], moonK) : dawn ? [250, 205, 196] : [243, 246, 250];
+  const Sh = night ? mix([26, 28, 54], [72, 80, 122], moonK) : dawn ? [178, 140, 158] : [196, 207, 224];
+  const skyH = night ? [28, 34, 60] : dawn ? [240, 170, 150] : [200, 220, 245];
+  // 1) núi xa → gần, nhọn đỉnh, chân chìm trong sương; mỗi lớp có dải sương quấn chân
+  const LAY = [{ amp: 5, lift: 0.4, k: 0.78 }, { amp: 7.5, lift: -1.4, k: 0.55 }, { amp: 10, lift: -3.6, k: 0.3 }];
+  LAY.forEach((ly, L) => {
+    const col = night ? mix([10, 12, 26], skyH, ly.k) : mix(dawn ? [96, 70, 98] : [70, 92, 120], skyH, ly.k), pts = [];
+    for (let a = SKY.az - 110; a <= SKY.az + 110; a += 0.8) { const m = 0.35 + 0.65 * (0.5 + 0.5 * Math.sin(a * 0.013 + L * 2.2)), h = ly.lift + ly.amp * Math.pow(sfxPeaks(L, a), 2.4) * m * 1.9; const q = skyProjRaw(h * d2r, a * d2r, W, H); if (q[2] > 0) pts.push([q[0], q[1], h]); }
+    if (pts.length < 2) return;
+    c.beginPath(); c.moveTo(pts[0][0], H + 50); pts.forEach(p => c.lineTo(p[0], p[1])); c.lineTo(pts[pts.length - 1][0], H + 50); c.closePath();
+    const gr = c.createLinearGradient(0, hy - H * 0.16, 0, hy + 4); gr.addColorStop(0, `rgb(${col})`); gr.addColorStop(1, `rgb(${mix(col, T, 0.35)})`); c.fillStyle = gr; c.fill();
+    // viền sáng trăng / nắng trên sống núi
+    if (moonK > 0.1 || dawn) { c.save(); c.beginPath(); pts.forEach((p, i) => i ? c.lineTo(p[0], p[1]) : c.moveTo(p[0], p[1])); c.strokeStyle = `rgba(${lightRGB},${(night ? 0.3 * moonK : 0.35) * (1 - ly.k * 0.6)})`; c.lineWidth = 1.2; c.stroke(); c.restore(); }
+    // sương quấn chân lớp núi này
+    const by = skyProjRaw((ly.lift + 0.6) * d2r, SKY.az * d2r, W, H)[1], bh = H * (0.035 + L * 0.02), sw = W * (1.3 + L * 0.5), off = ((t * (3 + L * 2) + L * 177) % sw + sw) % sw;
+    const fogb = c.createLinearGradient(0, by - bh * 1.6, 0, by + bh); fogb.addColorStop(0, `rgba(${T},0)`); fogb.addColorStop(0.7, `rgba(${T},.75)`); fogb.addColorStop(1, `rgba(${T},.95)`); c.fillStyle = fogb; c.fillRect(-10, by - bh * 1.6, W + 20, bh * 2.6);
+    const tex = sfxTint(mix(T, [255, 255, 255], 0.25)); c.globalAlpha = 0.85; for (let x = -off; x < W; x += sw) c.drawImage(tex, x, by - bh * 1.4, sw, bh * 2.4); c.globalAlpha = 1;
+  });
+  // 2) mặt biển sương phía trước
+  const y0 = skyProjRaw(-3.2 * d2r, SKY.az * d2r, W, H)[1];
+  c.save(); c.beginPath(); c.rect(-50, Math.min(y0, hy) - 4, W + 100, H + 60);
+  c.restore(); c.save(); const sg = c.createLinearGradient(0, y0 - 26, 0, H); sg.addColorStop(0, `rgba(${T},0)`); sg.addColorStop(0.07, `rgba(${T},1)`); sg.addColorStop(0.55, `rgb(${mix(T, Sh, 0.4)})`); sg.addColorStop(1, `rgb(${mix(T, Sh, 0.8)})`); c.fillStyle = sg; c.fillRect(-50, y0 - 26, W + 100, H - y0 + 80);
+  // 4) cụm cao ốc nhô khỏi sương
+  const city = [[-6, 2.2, 3.6], [-4.6, 2.5, 2.4], [-3.2, 2.0, 5.2], [-1.6, 2.6, 3.0], [0, 2.3, 4.3], [1.5, 2.7, 2.2], [3.2, 2.2, 2.8], [5.4, 2.6, 1.8]];
+  const cAz = SKY.az + 18, bc = night ? 'rgba(14,16,30,.96)' : dawn ? 'rgba(110,80,100,.85)' : 'rgba(120,135,160,.8)';
+  city.forEach(([da, dep, hgt], i) => { const b = skyProjRaw(-dep * d2r, (cAz + da) * d2r, W, H), tp = skyProjRaw((hgt - dep) * d2r, (cAz + da) * d2r, W, H); if (b[2] < 0 || b[0] < -60 || b[0] > W + 60) return; const w2 = Math.max(6, W / SKY.fov * (0.7 + ((i * 7) % 4) * 0.25));
+    c.fillStyle = bc; c.fillRect(b[0] - w2 / 2, tp[1], w2, b[1] - tp[1]);
+    if (i % 3 === 1) { c.fillRect(b[0] - 1, tp[1] - w2 * 1.2, 2, w2 * 1.2); if (dark > 0.3 && Math.sin(t * 2.6 + i) > 0.3) { c.save(); c.globalCompositeOperation = 'lighter'; const rg = c.createRadialGradient(b[0], tp[1] - w2 * 1.2, 0, b[0], tp[1] - w2 * 1.2, 8); rg.addColorStop(0, 'rgba(255,70,60,.95)'); rg.addColorStop(1, 'rgba(255,70,60,0)'); c.fillStyle = rg; c.beginPath(); c.arc(b[0], tp[1] - w2 * 1.2, 8, 0, 7); c.fill(); c.restore(); } }
+    if (night) for (let k = 0; k < 14; k++) { const wx = b[0] - w2 / 2 + 2 + ((k * 5 + i) % Math.max(2, w2 - 4)), wy = tp[1] + 4 + ((k * 7 + i * 3) % Math.max(4, b[1] - tp[1] - 8)); if (Math.sin(k * 12.9 + i * 7.3) > 0.1) { c.fillStyle = `rgba(255,${200 + (k % 3) * 20},140,${0.55 + 0.35 * Math.sin(t * 0.3 + k + i)})`; c.fillRect(wx, wy, 1.6, 1.6); } }
+    else { c.fillStyle = `rgba(${lightRGB},.25)`; c.fillRect(b[0] - w2 / 2, tp[1], 1.5, b[1] - tp[1]); } });
+  // 5) sương cuồn cuộn: mỗi hàng có bóng phía dưới + đỉnh sáng phía trên, gần to xa dẹt
+  const tL = sfxTintC(SFX.billL, mix(T, [255, 255, 255], night ? 0.18 + moonK * 0.25 : 0.6)), tS = sfxTintC(SFX.billS, night ? mix(Sh, [0, 0, 0], 0.25) : mix(Sh, dawn ? [120, 80, 110] : [120, 138, 172], 0.45)), drift = 5 + (K.wind || 4) * 0.8;
+  for (let r = 0; r < 14; r++) { const pr = r / 13, y = y0 + (H - y0) * (pr * pr) - 6, h = 14 + pr * pr * H * 0.62, sw = W * (0.8 + pr * 2.6), off = ((t * drift * (0.3 + pr * 2.2) + r * 271) % sw + sw) % sw;
+    c.globalAlpha = 0.5 + 0.3 * pr; for (let x = -off; x < W; x += sw) c.drawImage(tS, x, y - h * 0.5, sw, h);
+    c.globalAlpha = night ? 0.9 : 0.78; for (let x = -off; x < W; x += sw) c.drawImage(tL, x, y - h * 0.5, sw, h); }
+  c.globalAlpha = 1;
+  // 3) đèn thành phố dưới sương (ban đêm) — các đốm cam mờ nhoè
+  if (dark > 0.3) { const g = sfxLayer(W, H, 0.5); g.globalCompositeOperation = 'lighter';
+    for (let i = 0; i < 46; i++) { const az = SKY.az - 60 + ((i * 47.3) % 120), dep = 4 + ((i * 29) % 17) * 1.1, q = skyProjRaw(-dep * d2r, az * d2r, W, H); if (q[2] < 0 || q[0] < -80 || q[0] > W + 80 || q[1] < y0 || q[1] > H + 40) continue;
+      const pr = (q[1] - y0) / (H - y0 + 1), r = 18 + pr * 90, fl = 0.8 + 0.2 * Math.sin(t * 0.5 + i * 1.3), hue = i % 6 === 0 ? '255,235,200' : '255,160,80';
+      g.save(); g.translate(q[0], q[1]); g.scale(1.8, 0.6); const rg = g.createRadialGradient(0, 0, 0, 0, 0, r); rg.addColorStop(0, `rgba(${hue},${0.42 * dark * fl})`); rg.addColorStop(1, `rgba(${hue},0)`); g.fillStyle = rg; g.beginPath(); g.arc(0, 0, r, 0, 7); g.fill(); g.restore(); }
+    sfxBlit(c, W, H, 0.5, 8, 'lighter', 1); }
+  // 6) vệt trăng / nắng trải trên mặt sương
+  const lA = night ? mAlt : o.sAlt, lZ = night ? mAz : o.sAz, lk = night ? moonK : (o.sAlt > -0.03 && o.sAlt < 0.5 ? 1 - o.sAlt / 0.5 : 0);
+  if (lk > 0.05) { const q = skyProjRaw(lA, lZ, W, H); if (q[2] > 0 && q[0] > -W * 0.4 && q[0] < W * 1.4) { const g = sfxLayer(W, H, 0.5); g.globalCompositeOperation = 'lighter';
+      g.save(); g.translate(q[0], y0 + (H - y0) * 0.3); g.scale(0.35, 1); const rg = g.createRadialGradient(0, 0, 0, 0, 0, (H - y0) * 0.9); rg.addColorStop(0, `rgba(${lightRGB},${0.35 * lk})`); rg.addColorStop(1, `rgba(${lightRGB},0)`); g.fillStyle = rg; g.beginPath(); g.arc(0, 0, (H - y0) * 0.9, 0, 7); g.fill(); g.restore();
+      for (let i = 0; i < 46; i++) { const yy = y0 + 2 + (H - y0) * Math.pow(i / 46, 1.7), ww = 5 + i * 2.4, sh = 0.4 + 0.6 * Math.abs(Math.sin(t * 1.3 + i * 1.9)); g.fillStyle = `rgba(${lightRGB},${0.12 * lk * sh})`; g.fillRect(q[0] - ww / 2 + Math.sin(t * 0.6 + i) * 5, yy, ww, 1.5 + i * 0.1); }
+      sfxBlit(c, W, H, 0.5, 2.5, 'lighter', 1); } }
+  { const q = lk > 0.05 ? skyProjRaw(lA, lZ, W, H) : null, lx = q && q[2] > 0 ? q[0] : null; sfxGlints(c, W, H, t, y0, night ? '190,210,255' : dawn ? '255,205,150' : '255,250,225', night ? 0.55 + 0.45 * moonK : 0.8, lx); }
+  c.restore();
+  // 7) làn sương mỏng bay ngang tầm mắt
+  const hv = c.createLinearGradient(0, hy - H * 0.1, 0, hy + H * 0.12); hv.addColorStop(0, `rgba(${T},0)`); hv.addColorStop(0.55, `rgba(${T},.32)`); hv.addColorStop(1, `rgba(${T},0)`); c.fillStyle = hv; c.fillRect(0, hy - H * 0.1, W, H * 0.22);
+  { c.save(); c.globalCompositeOperation = 'lighter'; const gb = c.createLinearGradient(0, hy - H * 0.22, 0, hy + H * 0.2), gc = night ? '120,95,210' : dawn ? '255,135,165' : '255,235,200', ga = night ? 0.14 : dawn ? 0.16 : 0.07; gb.addColorStop(0, `rgba(${gc},0)`); gb.addColorStop(0.5, `rgba(${gc},${ga})`); gb.addColorStop(1, `rgba(${gc},0)`); c.fillStyle = gb; c.fillRect(0, hy - H * 0.22, W, H * 0.42); c.restore(); }
+  { const q = skyProjRaw(lA, lZ, W, H); if (q[2] > 0 && lA > -0.02) sfxBeams(c, W, H, q, night ? '185,205,255' : dawn ? '255,190,130' : '255,245,215', night ? moonK * 0.9 : dawn ? 1 : 0.45, t); }
+  sfxLanterns(c, W, H, t, cAz, dark);
+  // 8) tiền cảnh: mỏm núi mình đứng, thông, cỏ, đèn lồng
+  const fg = night ? '#04050b' : dawn ? '#2b1d27' : '#22302a', fgL = night ? `rgba(${lightRGB},${0.18 * moonK})` : `rgba(${lightRGB},.18)`;
+  const crest = []; for (let x = -10; x <= W * 0.46; x += 6) { const u = x / (W * 0.46); crest.push([x, H - H * 0.24 * Math.pow(1 - u, 1.3) - Math.sin(x * 0.045) * 4 - Math.sin(x * 0.13) * 2 - H * 0.015]); }
+  c.fillStyle = fg; c.beginPath(); c.moveTo(-10, H + 10); crest.forEach(p => c.lineTo(p[0], p[1])); c.lineTo(W * 0.48, H + 10); c.closePath(); c.fill();
+  c.strokeStyle = fgL; c.lineWidth = 1.2; c.beginPath(); crest.forEach((p, i) => i ? c.lineTo(p[0], p[1]) : c.moveTo(p[0], p[1])); c.stroke();
+  c.fillStyle = fg; c.beginPath(); c.moveTo(W + 10, H + 10); for (let x = W + 10; x >= W * 0.76; x -= 6) { const u = (W - x) / (W * 0.24); c.lineTo(x, H - H * 0.12 * Math.pow(1 - u, 1.1) - Math.sin(x * 0.07) * 2); } c.lineTo(W * 0.74, H + 10); c.closePath(); c.fill();
+  // cỏ lay
+  c.strokeStyle = fg; c.lineWidth = 1.3; for (let i = 0; i < 70; i++) { const x = (i / 70) * W * 0.44, base = crest[Math.min(crest.length - 1, Math.floor(x / 6) + 2)][1] + 2, hgt = 6 + ((i * 17) % 9), sw2 = Math.sin(t * 1.6 + i * 0.7) * 2.5; c.beginPath(); c.moveTo(x, base); c.quadraticCurveTo(x + sw2 * 0.5, base - hgt * 0.6, x + sw2, base - hgt); c.stroke(); }
+  const pine = (x, y, h) => { const sw3 = Math.sin(t * 0.7 + x) * h * 0.012; c.beginPath(); c.moveTo(x + sw3, y - h); for (let k = 0; k < 6; k++) { const yy = y - h + (k + 1) * h / 6.3, ww = h * (0.07 + k * 0.06); c.lineTo(x + ww + sw3 * (1 - k / 6), yy); c.lineTo(x + ww * 0.3, yy - h * 0.02); } c.lineTo(x + h * 0.025, y); c.lineTo(x - h * 0.025, y); for (let k = 5; k >= 0; k--) { const yy = y - h + (k + 1) * h / 6.3, ww = h * (0.07 + k * 0.06); c.lineTo(x - ww * 0.3, yy - h * 0.02); c.lineTo(x - ww + sw3 * (1 - k / 6), yy); } c.closePath(); c.fill(); };
+  c.fillStyle = fg; pine(W * 0.05, H - H * 0.2, H * 0.3); pine(W * 0.115, H - H * 0.165, H * 0.22); pine(W * 0.18, H - H * 0.12, H * 0.15); pine(W * 0.94, H - H * 0.085, H * 0.17);
+  { const wt = sfxTint(mix(T, [255, 255, 255], night ? 0.12 : 0.5)); for (let L = 0; L < 2; L++) { const sw = W * (1.8 + L * 0.7), off = ((t * (7 + L * 5) + L * 400) % sw + sw) % sw, yy = H * (0.6 + L * 0.17), hh = H * (0.22 + L * 0.1); c.globalAlpha = night ? 0.2 : 0.28; for (let x = -off; x < W; x += sw) c.drawImage(wt, x, yy, sw, hh); } c.globalAlpha = 1; }
+  if (night) { const lx = W * 0.29, ly = H - H * 0.07; c.save(); c.globalCompositeOperation = 'lighter'; const rg = c.createRadialGradient(lx, ly - 12, 0, lx, ly - 12, 55); rg.addColorStop(0, `rgba(255,190,110,${0.5 + 0.07 * Math.sin(t * 6) + 0.05 * Math.sin(t * 13)})`); rg.addColorStop(1, 'rgba(255,170,90,0)'); c.fillStyle = rg; c.beginPath(); c.arc(lx, ly - 12, 55, 0, 7); c.fill(); c.restore(); c.fillStyle = '#ffd890'; c.fillRect(lx - 3, ly - 16, 6, 9); c.fillStyle = fg; c.fillRect(lx - 4, ly - 17, 8, 2); c.fillRect(lx - 1, ly - 7, 2, 9); }
+  // đom đóm bay quanh mỏm núi
+  if (night) { c.save(); c.globalCompositeOperation = 'lighter'; for (let i = 0; i < 16; i++) { const x = W * (0.04 + ((i * 37) % 40) / 100) + Math.sin(t * 0.6 + i * 2) * 25, y = H * (0.72 + ((i * 13) % 17) / 100) + Math.cos(t * 0.8 + i) * 12, a = Math.max(0, Math.sin(t * 2 + i * 1.7)); const rg = c.createRadialGradient(x, y, 0, x, y, 7); rg.addColorStop(0, `rgba(210,255,150,${a})`); rg.addColorStop(1, 'rgba(210,255,150,0)'); c.fillStyle = rg; c.beginPath(); c.arc(x, y, 7, 0, 7); c.fill(); } c.restore(); }
+  sfxMotes(c, W, H, t, night ? '170,200,255' : dawn ? '255,200,160' : '255,245,220', night ? 0.55 : dawn ? 0.45 : 0.25);
+}
+
 // sương mù: nhiều lớp trôi theo gió, dày ở sát đất, ánh đèn thành phố hắt lên ban đêm
 function sfxFog(c, W, H, K, dark, sa, t, hor) {
   const f = K.fog || 0; if (f <= 0.02) return; sfxInit();
@@ -12148,10 +12302,10 @@ function sfxBolt(c, W, H, t, hor) {
 { const _wx = wxSky; wxSky = function (date, sa) {
   const K = _wx(date, sa), P = SFX.pick;
   if (K.w && K.w.hum != null && K.w.hum >= 93 && sa < 8 && !K.rain) K.fog = Math.max(K.fog || 0, 0.18 + (K.w.hum - 93) * 0.04); // sương đêm / sương sớm
-  if (P === 'fog') { K.fog = 0.75; K.clear = Math.min(K.clear, 0.35); }
+  if (P === 'fog') { K.fog = 0.75; K.clear = 1; K.cc = 8; K.rain = 0; K.kind = 'clear'; }
   else if (P === 'storm') { K.kind = 'storm'; K.rain = 0.9; K.cc = 95; K.clear = 0.08; K.fog = 0; }
   else if (P === 'mw' || P === 'meteor' || P === 'aurora') { K.cc = 3; K.clear = 1; K.fog = 0; K.rain = 0; K.kind = 'clear'; }
-  else if (P === 'rainbow') { K.rain = 0.12; K.kind = 'rain'; K.cc = 35; K.clear = 0.8; K.fog = 0; }
+  else if (P === 'rainbow') { K.rain = 0.1; K.rainSoft = 1; K.kind = 'rain'; K.cc = 22; K.clear = 0.8; K.fog = 0; }
   else if (P === 'halo') { K.cc = 25; K.clear = 0.85; K.fog = 0; K.rain = 0; K.hiForce = 1; }
   else if (P === 'rays') { K.cc = 55; K.clear = 0.6; K.fog = 0; K.rain = 0; }
   return K;
@@ -12164,6 +12318,7 @@ function sfxPick(v) {
   if (v === 'rainbow' || v === 'rays') goLow();
   if (v === 'mw') { const d = new Date(Date.now() + SKY.hourOfs * 3600000), l2 = skyLST(d); let best = null; for (let l = 0; l < 360; l += 10) { const [ra, dec] = gal2eq(l, 0), [al, az] = eqToHor(ra, dec, l2), sc = al / d2r + Math.max(0, Math.cos(l * d2r)) ** 3 * 35; if (al > 0.2 && (!best || sc > best.sc)) best = { sc, al, az }; } if (best) { SKY.az = best.az / d2r; SKY.alt = Math.max(25, Math.min(65, best.al / d2r)); } SKY.fov = 125; }
   if (v === 'aurora') { SKY.az = 0; SKY.alt = 18; SKY.fov = 120; }
+  if (v === 'fog') { const d = new Date(Date.now() + SKY.hourOfs * 3600000), ss = sunMoon(d), l2 = skyLST(d), [ma, mz] = eqToHor(ss.moon.ra, ss.moon.dec, l2), [sa2, sz] = eqToHor(ss.sun.ra, ss.sun.dec, l2); SKY.az = (sa2 > 0 ? sz : ma > 0 ? mz : 90 * d2r) / d2r; SKY.alt = 4; SKY.fov = 115; }
   if (v === 'rainbow') { const ss = sunMoon(new Date(Date.now() + SKY.hourOfs * 3600000)), l2 = skyLST(new Date(Date.now() + SKY.hourOfs * 3600000)), az = eqToHor(ss.sun.ra, ss.sun.dec, l2)[1] / d2r; SKY.az = (az + 180) % 360; SKY.alt = 20; SKY.fov = 120; }
   if (v === 'rays') { const ss = sunMoon(new Date(Date.now() + SKY.hourOfs * 3600000)), l2 = skyLST(new Date(Date.now() + SKY.hourOfs * 3600000)), az = eqToHor(ss.sun.ra, ss.sun.dec, l2)[1] / d2r; SKY.az = az; SKY.alt = 10; SKY.fov = 110; }
   if (v === 'halo') { const at = () => new Date(Date.now() + SKY.hourOfs * 3600000), pos = () => { const d = at(), ss = sunMoon(d), l2 = skyLST(d); return { m: eqToHor(ss.moon.ra, ss.moon.dec, l2), s: eqToHor(ss.sun.ra, ss.sun.dec, l2) }; };
@@ -12178,7 +12333,7 @@ function sfxDraw(stage, c, W, H, t, o) {
   if (stage === 'sky') {
     const K = o.K, sAlt = o.sAlt, sa = sAlt / d2r, w = K.w || {};
     // cầu vồng: mặt trời thấp sau lưng + có mưa nhẹ hoặc vừa mưa
-    const rb = P === 'rainbow' ? 1 : (K.rain > 0 && K.rain < 0.6 && (K.sun == null || K.sun > 0.25) && sa > 2 && sa < 40) ? 0.8 : 0; sfxRainbow(c, W, H, sAlt, o.sAz, rb);
+    const rb = P === 'rainbow' ? 1 : (K.rain > 0 && K.rain < 0.6 && (K.sun == null || K.sun > 0.25) && sa > 2 && sa < 40) ? 0.8 : 0; sfxRainbow(c, W, H, sAlt, o.sAz, rb, t);
     // quầng 22°: mây ti (mây cao mỏng) và trăng đủ sáng
     const thin = K.hiForce || ((w.hi || 0) >= 40 && (w.lo || 0) < 40);
     if (P === 'halo') { if (o.mAlt > 0.1 && o.dark > 0.3) sfxHalo(c, W, H, o.mAlt, o.mAz, 1, false); else if (sAlt > 0.1) sfxHalo(c, W, H, sAlt, o.sAz, 1, true); }
@@ -12199,11 +12354,11 @@ function sfxDraw(stage, c, W, H, t, o) {
     }
     return;
   }
-  if (stage === 'fog') { sfxFog(c, W, H, o.K, o.dark, o.sAlt / d2r, t, o.hor); if (o.K.kind === 'storm') sfxBolt(c, W, H, t, o.hor); return; }
+  if (stage === 'fog') { if (!sfxSeaOn(o.K)) sfxFog(c, W, H, o.K, o.dark, o.sAlt / d2r, t, o.hor); if (o.K.kind === 'storm') sfxBolt(c, W, H, t, o.hor); return; }
   if (stage === 'label') {
     const L = [], K = o.K, sa = o.sAlt / d2r;
     if (o.mwA > 0.25) L.push('Ngân hà'); if (SFX.sh && o.starVis > 0.35) L.push(SFX.sh.n.startsWith('Mưa') ? SFX.sh.n : 'Mưa sao băng ' + SFX.sh.n + (SFX.sh.peak ? ' · đỉnh ' + SFX.sh.peak.getDate() + '/' + (SFX.sh.peak.getMonth() + 1) : ''));
-    if ((K.fog || 0) > 0.1) L.push(K.fog > 0.45 ? 'Sương mù dày' : 'Sương mỏng'); if (K.kind === 'storm') L.push('Dông sét'); if (P === 'aurora' || Math.abs(SKY.lat) > 58 && o.dark > 0.5) L.push('Cực quang');
+    if (sfxSeaOn(K)) L.push('Biển sương'); else if ((K.fog || 0) > 0.1) L.push('Sương mỏng'); if (K.kind === 'storm') L.push('Dông sét'); if (P === 'aurora' || Math.abs(SKY.lat) > 58 && o.dark > 0.5) L.push('Cực quang');
     if (P === 'rainbow' || (K.rain > 0 && K.rain < 0.6 && sa > 2 && sa < 40)) L.push('Cầu vồng (quay lưng về mặt trời)'); if (P === 'halo' || K.hiForce) L.push(o.dark > 0.3 ? 'Quầng trăng 22°' : 'Quầng mặt trời 22°'); if (P === 'rays' || (sa > -2 && sa < 12 && K.cc > 25 && K.cc < 85 && !K.rain)) L.push('Tia nắng xuyên mây');
     if (!L.length) { const nx = skyNextShower(o.date); if (nx) L.push('Mưa sao băng tới: ' + nx.n + ' (' + nx.pk.getDate() + '/' + (nx.pk.getMonth() + 1) + ')'); }
     if (!L.length) return; const txt = '✦ ' + L.join(' · '); c.save(); c.font = '600 12px "Be Vietnam Pro", sans-serif'; const w2 = c.measureText(txt).width + 22; c.fillStyle = 'rgba(0,0,0,.5)'; roundRect(c, 12, H - 40, w2, 26, 13); c.fill(); c.fillStyle = '#ffe9b0'; c.textAlign = 'left'; c.fillText(txt, 23, H - 23); c.restore();
@@ -12262,6 +12417,8 @@ function drawSky(c, W, H, t) {
   // mặt đất: vòng chân trời chiếu lập thể là một đường tròn; nhìn lên thì đất nằm ngoài vòng, nhìn xuống thì nằm trong
   const hz = []; for (let a = 0; a < 360; a += 1.5) hz.push(skyProjRaw(0, a * d2r, W, H));
   const ground = dark > 0.5 ? ['#0c0a18', '#05040a'] : [mixC('#2a3a2a', '#0c0a18', dark * 2), mixC('#141c14', '#05040a', dark * 2)];
+  if (sfxSeaOn(K)) sfxFogSea(c, W, H, t, { dark, sa, K, hz, hq, cHor, SM, mAlt, mAz, sAlt, sAz });
+  else {
   c.save(); c.beginPath(); if (SKY.alt > 0 || Math.abs(SKY.alt) < 0.4) c.rect(-50, -50, W + 100, H + 100); hz.forEach((q, i) => i ? c.lineTo(q[0], q[1]) : c.moveTo(q[0], q[1])); c.closePath();
   const gg = c.createLinearGradient(0, hq[1], 0, hq[1] + H * 0.6); gg.addColorStop(0, ground[0]); gg.addColorStop(1, ground[1]); c.fillStyle = gg; c.fill('evenodd');
   c.beginPath(); hz.forEach((q, i) => i ? c.lineTo(q[0], q[1]) : c.moveTo(q[0], q[1])); c.closePath(); c.strokeStyle = 'rgba(255,200,140,.25)'; c.lineWidth = 1; c.stroke(); c.restore();
@@ -12269,6 +12426,7 @@ function drawSky(c, W, H, t) {
   if (dark > 0.4 && SKY.ff2) { c.save(); c.globalCompositeOperation = 'lighter'; SKY.ff2.forEach(f => { if (!f.q) return; const q = f.q; f.q = null; const a = Math.max(0, Math.sin(t * 2.2 + f.ph)) * dark; const fg = c.createRadialGradient(q[0], q[1], 0, q[0], q[1], 9); fg.addColorStop(0, `rgba(200,255,140,${a})`); fg.addColorStop(1, 'rgba(200,255,140,0)'); c.fillStyle = fg; c.beginPath(); c.arc(q[0], q[1], 9, 0, 7); c.fill(); }); c.restore(); }
   // ánh đèn thành phố ngay dưới chân trời
   if (dark > 0.2) { c.fillStyle = `rgba(255,190,110,${0.55 * dark})`; for (let i = 0; i < 160; i++) { const az = ((i * 137.5) % 360) * d2r, al = -(0.4 + ((i * 53) % 30) / 10) * d2r, q = skyProjRaw(al, az, W, H); if (q[2] > -0.2 && q[0] > 0 && q[0] < W && q[1] > 0 && q[1] < H) c.fillRect(q[0], q[1], 2, 2); } }
+  }
   sfxDraw('fog', c, W, H, t, { K, dark, sAlt, hor: hq });
   [['B', 0], ['ĐB', 45], ['Đ', 90], ['ĐN', 135], ['N', 180], ['TN', 225], ['T', 270], ['TB', 315]].forEach(([lb, a]) => { const q = skyProj(-0.03, a * d2r, W, H); if (!q || q[2] < 0) return; c.fillStyle = lb.length === 1 ? '#ffd36a' : 'rgba(255,211,106,.6)'; c.font = `800 ${lb.length === 1 ? 16 : 12}px "Be Vietnam Pro", sans-serif`; c.textAlign = 'center'; c.fillText(lb, q[0], q[1] + 8); });
   // bảng thông tin
@@ -12295,7 +12453,7 @@ document.getElementById('treeX').addEventListener('click', () => hideAnim(docume
 document.querySelectorAll('[data-stab]').forEach(b => b.addEventListener('click', () => { ST.tab = b.dataset.stab; starTabs(); }));
 (() => { const sc = document.getElementById('starCv');
   sc.addEventListener('pointerdown', e => { const r = sc.getBoundingClientRect(); if (ST.tab === 'sky') { SKY.drag = { x: e.clientX, y: e.clientY, az: SKY.az, alt: SKY.alt, w: r.width }; try { sc.setPointerCapture(e.pointerId); } catch (x) { } sc.style.cursor = 'grabbing'; return; } if (ST.tab === 'cons' && !ST.solved) { const px = (e.clientX - r.left) / r.width * SW, py = (e.clientY - r.top) / r.height * SH, i = starAt(px, py); if (i >= 0) { try { sc.setPointerCapture(e.pointerId); } catch (x) { } ST.drag = { from: i, x: px, y: py, moved: false, sx: px, sy: py }; return; } } starClick((e.clientX - r.left) / r.width * SW, (e.clientY - r.top) / r.height * SH); });
-  sc.addEventListener('pointermove', e => { if (ST.drag) { const r = sc.getBoundingClientRect(), D = ST.drag; D.x = (e.clientX - r.left) / r.width * SW; D.y = (e.clientY - r.top) / r.height * SH; if (Math.hypot(D.x - D.sx, D.y - D.sy) > 10) D.moved = true; return; } if (ST.tab === 'sky' && !SKY.drag) { const r = sc.getBoundingClientRect(); SKY.hover = [e.clientX - r.left, e.clientY - r.top]; } const d = SKY.drag; if (!d) return; const k = SKY.fov / d.w; SKY.az = (d.az - (e.clientX - d.x) * k + 360) % 360; SKY.alt = Math.max(-5, Math.min(90, d.alt + (e.clientY - d.y) * k)); });
+  sc.addEventListener('pointermove', e => { if (ST.drag) { const r = sc.getBoundingClientRect(), D = ST.drag; D.x = (e.clientX - r.left) / r.width * SW; D.y = (e.clientY - r.top) / r.height * SH; if (Math.hypot(D.x - D.sx, D.y - D.sy) > 10) D.moved = true; return; } if (ST.tab === 'sky' && !SKY.drag) { const r = sc.getBoundingClientRect(); SKY.hover = [e.clientX - r.left, e.clientY - r.top]; } const d = SKY.drag; if (!d) return; const k = SKY.fov / d.w; SKY.az = (d.az - (e.clientX - d.x) * k + 360) % 360; SKY.alt = Math.max(-25, Math.min(90, d.alt + (e.clientY - d.y) * k)); });
   ['pointerup', 'pointercancel'].forEach(ev => sc.addEventListener(ev, () => { if (ST.drag) { const D = ST.drag; ST.drag = null; if (!D.moved) starClick(D.sx, D.sy); else { const j = starAt(D.x, D.y); if (j >= 0 && j !== D.from) { starLink(D.from, j); ST.sel = -1; } } } SKY.drag = null; if (ST.tab === 'sky') sc.style.cursor = 'grab'; }));
   sc.addEventListener('pointerleave', () => { SKY.hover = null; });
   sc.addEventListener('wheel', e => { if (ST.tab !== 'sky') return; e.preventDefault(); SKY.fov = Math.max(15, Math.min(170, SKY.fov * (e.deltaY > 0 ? 1.1 : 0.9))); }, { passive: false });
